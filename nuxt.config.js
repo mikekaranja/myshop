@@ -1,0 +1,101 @@
+export default {
+  mode: 'universal',
+  /*
+   ** Headers of the page
+   */
+  head: {
+    title: 'MyShop',
+    meta: [
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      {
+        hid: 'description',
+        name: 'description',
+        content: process.env.npm_package_description || ''
+      }
+    ],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'
+      },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css?family=Open+Sans&display=swap'
+      },
+      {
+        rel: 'stylesheet',
+        href: '/progressiveimg.css'
+      }
+    ],
+    script: [
+      {
+        src:
+          'https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js'
+      },
+      { src: 'https://unpkg.com/progressive-image@1.2.0/dist/index.js' },
+      {
+        src:
+          'https://cdn.polyfill.io/v2/polyfill.min.js?features=IntersectionObserver'
+      },
+      {
+        src: 'https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js'
+      }
+    ]
+  },
+  /*
+   ** Customize the progress-bar color
+   */
+  loading: { color: '#92302f' },
+  /*
+   ** Global CSS
+   */
+  css: [],
+  /*
+   ** Plugins to load before mounting the App
+   */
+  plugins: [
+    { src: '~/plugins/ga.js', ssr: false },
+    '~plugins/croppa.js',
+    '~plugins/vuetify.js',
+    '~/plugins/bus',
+    '~/plugins/firebase',
+    { src: '~/plugins/localStorage.js', ssr: false },
+    { src: '~plugins/quill.js', mode: 'client' }
+  ],
+  /*
+   ** Nuxt.js modules
+   */
+  modules: [
+    // Doc: https://axios.nuxtjs.org/usage
+    '@nuxtjs/axios',
+    '@nuxtjs/pwa',
+    '@nuxtjs/eslint-module',
+    '@nuxtjs/vuetify'
+  ],
+  // manifest
+  manifest: {
+    name: 'MyShop-E-merse',
+    short_name: 'MyShop',
+    start_url: '.',
+    display: 'standalone',
+    background_color: '#fff',
+    description: 'Launch your WhatsApp connected shop on E-merse.'
+  },
+  /*
+   ** Axios module configuration
+   ** See https://axios.nuxtjs.org/options
+   */
+  axios: {},
+  /*
+   ** Build configuration
+   */
+  build: {
+    /*
+     ** You can extend webpack config here
+     */
+    extend(config, ctx) {}
+  }
+}
