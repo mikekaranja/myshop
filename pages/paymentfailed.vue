@@ -24,6 +24,13 @@ export default {
   },
 
   mounted() {
+    // ga analytics
+    this.$ga.event({
+      eventCategory: 'Payment button',
+      eventAction: 'Payment failed screen',
+      eventLabel: this.$store.state.user.shopname,
+      eventValue: 25
+    })
     setTimeout(() => {
       window.location.href = 'https://myshop.e-merse.com/inventory'
     }, 5000)

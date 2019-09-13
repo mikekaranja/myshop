@@ -50,6 +50,13 @@ export default {
     }
   },
   mounted() {
+    // ga analytics
+    this.$ga.event({
+      eventCategory: 'Add to home screen button',
+      eventAction: 'Add to home screen click',
+      eventLabel: this.$store.state.user.shopname,
+      eventValue: 23
+    })
     const md = new window.MobileDetect(window.navigator.userAgent)
     if (md.os() === 'AndroidOS') {
       this.image = 'android.png'

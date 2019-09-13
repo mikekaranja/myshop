@@ -24,6 +24,13 @@ export default {
   },
 
   mounted() {
+    // ga analytics
+    this.$ga.event({
+      eventCategory: 'Payment button',
+      eventAction: 'Payment successful screen',
+      eventLabel: this.$store.state.user.shopname,
+      eventValue: 24
+    })
     setTimeout(() => {
       // change name in store
       this.$store.commit('changeExpiryDate', this.addDays(30).toString())

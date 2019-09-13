@@ -67,7 +67,7 @@
           </div>
           <vue-cropper
             ref="cropper"
-            :zoomable="true"
+            :zoomable="false"
             :min-crop-box-width="290"
             :min-crop-box-height="100"
             :crop-box-resizable="false"
@@ -242,6 +242,13 @@ export default {
       })
     },
     addUploadBannerToDB(url) {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'upload banner button',
+        eventAction: 'Uploaded banner to DB',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 21
+      })
       return db
         .ref(`pwa/products/banner-${this.$store.state.user.shopid}`)
         .set({
@@ -283,6 +290,13 @@ export default {
       }
     },
     addBannerToDB() {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'select banner button',
+        eventAction: 'Selected new banner to DB',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 20
+      })
       this.loader = 'loading'
       const shopId = this.$store.state.user.shopid
       return db

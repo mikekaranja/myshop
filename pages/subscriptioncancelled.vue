@@ -24,6 +24,13 @@ export default {
   },
 
   mounted() {
+    // ga analytics
+    this.$ga.event({
+      eventCategory: 'cancel button',
+      eventAction: 'Subscription cancelled click',
+      eventLabel: this.$store.state.user.shopname,
+      eventValue: 26
+    })
     setTimeout(() => {
       window.location.href = 'https://myshop.e-merse.com/inventory'
     }, 5000)

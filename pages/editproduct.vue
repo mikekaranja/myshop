@@ -336,6 +336,13 @@ export default {
       this.deleteDialog = !this.deleteDialog
     },
     deleteProductForSure() {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'Save button',
+        eventAction: 'Deleted a Product',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 12
+      })
       this.overlay = true
       return db
         .ref(`pwa/products/${this.item.id}`)
@@ -519,6 +526,13 @@ export default {
       }
     },
     saveProduct() {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'Save button',
+        eventAction: 'Edited a Product',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 11
+      })
       // start overlay loader
       this.overlay = true
       const shopid = this.$store.state.user.shopid

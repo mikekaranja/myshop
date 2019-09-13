@@ -46,6 +46,15 @@ export default {
         return product.name.toLowerCase().includes(this.search.toLowerCase())
       })
     }
+  },
+  mounted() {
+    // ga analytics
+    this.$ga.event({
+      eventCategory: 'Save button',
+      eventAction: 'Search icon click',
+      eventLabel: this.$store.state.user.shopname,
+      eventValue: 13
+    })
   }
 }
 </script>

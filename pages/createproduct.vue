@@ -385,6 +385,13 @@ export default {
       }
     },
     saveProduct() {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'Save button',
+        eventAction: 'Added Product',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 10
+      })
       // start overlay loader
       this.overlay = true
       const randomnumber = Math.floor(Math.random() * 1000000) + 1

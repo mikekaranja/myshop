@@ -31,6 +31,13 @@ export default {
   },
 
   mounted() {
+    // ga analytics
+    this.$ga.event({
+      eventCategory: 'Catalogue button',
+      eventAction: 'Catalogue button click',
+      eventLabel: this.$store.state.user.shopname,
+      eventValue: 14
+    })
     this.overlay = true
     setTimeout(() => {
       this.overlay = false

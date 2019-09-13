@@ -31,6 +31,13 @@ const MyShopStore = () => {
 
         user.id = newPostKey
 
+        const md = new window.MobileDetect(window.navigator.userAgent)
+        if (md.os() === 'AndroidOS') {
+          user.phoneos = 'android'
+        } else {
+          user.phoneos = 'iphone'
+        }
+
         const updates = {}
         updates['pwa/users/' + newPostKey] = user
 

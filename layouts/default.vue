@@ -637,7 +637,7 @@
           </div>
           <vue-cropper
             ref="cropper"
-            :zoomable="true"
+            :zoomable="false"
             :min-crop-box-width="200"
             :min-crop-box-height="100"
             :crop-box-resizable="false"
@@ -1043,6 +1043,23 @@ export default {
         const signupdate = new Date(this.$store.state.user.sign_up_date)
         const today = new Date()
         this.setPaymentMessage(today, expirydate, signupdate)
+        // step 6 complete
+        // ga analytics
+        this.$ga.event({
+          eventCategory: 'View catalogue button',
+          eventAction: 'Onboarding complete',
+          eventLabel: this.$store.state.user.shopname,
+          eventValue: 9
+        })
+        db.ref(
+          `pwa/onboardingstats/onboarding-step6${this.$store.state.user.shopId}`
+        )
+          .set({
+            step: 'Final',
+            shopid: this.$store.state.user.shopid,
+            phonenumber: this.$store.state.user.phonenumber
+          })
+          .then(snap => {})
       }
       if (to.path === '/inventory' && from.path === '/login') {
         // set account details
@@ -1149,7 +1166,12 @@ export default {
       this.snackbar = true
       const user = this.$store.state.user
       user.reason = this.radioReason
-      return db.ref('pwa/cancelledsubscriptions').push(user)
+      return db
+        .ref('pwa/cancelledsubscriptions')
+        .push(user)
+        .then(snap => {
+          this.$router.push('/subscriptioncancelled')
+        })
     },
     setPaymentMessage(today, expirydate, signupdate) {
       const hours = this.date_signup_diff_hours(signupdate, today)
@@ -1220,6 +1242,13 @@ export default {
       }
     },
     openFlutterwave(amount) {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'flutterwave button',
+        eventAction: 'Payment attempt flutterwave',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 29
+      })
       this.kindlyPayBeforeDialog = false
       this.kindlyPayAfterDialog = false
       this.paymentPlanDialog = false
@@ -1474,6 +1503,13 @@ export default {
       })
     },
     addLogoToDB(url) {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'upload logo button',
+        eventAction: 'Uploaded logo to DB',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 22
+      })
       return db
         .ref(`pwa/products/logo-${this.$store.state.user.shopid}`)
         .set({
@@ -1483,11 +1519,12 @@ export default {
         .then(snap => {
           this.alertsuccess8 = true
           setTimeout(() => {
-            this.alertsuccess8 = false
-            this.myLogo = {}
-            this.cropLogoDialog = false
-            this.img = ''
-            this.$refs.cropper.reset()
+            window.location.href = 'https://myshop.e-merse.com/inventory'
+            // this.alertsuccess8 = false
+            // this.myLogo = {}
+            // this.cropLogoDialog = false
+            // this.img = ''
+            // this.$refs.cropper.reset()
           }, 2500)
         })
     },
@@ -1518,6 +1555,13 @@ export default {
       }, 1300)
     },
     updateAccount() {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'edit account button',
+        eventAction: 'Edited Account details',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 19
+      })
       this.loader2 = 'loading2'
       const shopName = this.shopname
         .trim()
@@ -1630,6 +1674,14 @@ export default {
       const updates = {}
       updates['pwa/products/' + newPostKey] = category
 
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'category button',
+        eventAction: 'Category added',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 15
+      })
+
       return db
         .ref()
         .update(updates)
@@ -1665,6 +1717,13 @@ export default {
       }
     },
     editCategoryNameToDB(categoryName, categoryid) {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'category button',
+        eventAction: 'Category edited',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 16
+      })
       return db
         .ref(`pwa/products/${categoryid}`)
         .update({
@@ -1756,6 +1815,13 @@ export default {
       }
     },
     addNewSubCategoryToDB(subcategories, categoryid) {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'subcategory button',
+        eventAction: 'Subcategory added',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 17
+      })
       return db
         .ref(`pwa/products/${categoryid}`)
         .update({ subcategories: subcategories })
@@ -1803,6 +1869,13 @@ export default {
       }
     },
     editSubcategoryNameToDB(subcategories, categoryid, subcategoryName) {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'subcategory button',
+        eventAction: 'Subcategory edited',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 18
+      })
       return db
         .ref(`pwa/products/${categoryid}`)
         .update({
@@ -1993,6 +2066,13 @@ export default {
               console.error('Sign Out Error', error)
             }
           )
+          // User log out
+          this.$ga.event({
+            eventCategory: 'Log out button',
+            eventAction: 'Log out',
+            eventLabel: this.$store.state.user.shopname,
+            eventValue: 3
+          })
           break
         default:
           break
@@ -2010,6 +2090,13 @@ export default {
             paymentPlan === '1 - 50 products - $7.50/month' &&
             totalProducts > 50
           ) {
+            // ga analytics
+            this.$ga.event({
+              eventCategory: 'limit exceeded button',
+              eventAction: 'Limit Exceeded by 50 products',
+              eventLabel: this.$store.state.user.shopname,
+              eventValue: 27
+            })
             this.limitExceededDialog = true
             this.limitexceededby = totalProducts - 50
             this.radioPlan = '51 - 300 products - $24/month'
@@ -2019,6 +2106,13 @@ export default {
             paymentPlan === '51 - 300 products - $24/month' &&
             totalProducts > 300
           ) {
+            // ga analytics
+            this.$ga.event({
+              eventCategory: 'limit exceeded button',
+              eventAction: 'Limit Exceeded by 300 products',
+              eventLabel: this.$store.state.user.shopname,
+              eventValue: 28
+            })
             this.limitExceededDialog = true
             this.limitexceededby = totalProducts - 50
             this.radioPlan = '51 - 300 products - $24/month'

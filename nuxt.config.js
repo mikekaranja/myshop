@@ -57,7 +57,12 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    { src: '~/plugins/ga', ssr: false },
+    [
+      '@nuxtjs/google-analytics',
+      {
+        id: 'UA-121366089-30'
+      }
+    ],
     '~plugins/croppa',
     '~plugins/vuetify',
     '~/plugins/bus',

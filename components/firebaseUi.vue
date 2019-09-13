@@ -67,11 +67,25 @@ export default {
             this.$bus.$emit('showpaymentplan', true)
             // set router
             this.$router.push('/inventory')
+            // User sign in
+            this.$ga.event({
+              eventCategory: 'Sign in button',
+              eventAction: 'Logins',
+              eventLabel: values[0].shopname,
+              eventValue: 1
+            })
             return false
           } else {
             this.$store.commit('setOnboardingUid', uid)
             this.$store.commit('setOnboardingEmail', email)
             this.$router.push('/onboarding')
+            // User sign up
+            this.$ga.event({
+              eventCategory: 'Sign up button',
+              eventAction: 'New sign up',
+              eventLabel: email,
+              eventValue: 2
+            })
           }
         })
     }

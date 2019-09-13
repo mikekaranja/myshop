@@ -437,12 +437,20 @@ export default {
           /[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi,
           ''
         )
+        // ga analytics
+        this.$ga.event({
+          eventCategory: 'Next button',
+          eventAction: 'Step 3 complete',
+          eventLabel: shopName,
+          eventValue: 6
+        })
         const shopId = shopName.replace(/ /g, '-').toLowerCase()
         return db
           .ref(`pwa/onboardingstats/onboarding-step3${shopId}`)
           .set({
-            step: 'complete',
-            shopid: shopId
+            step: 'step3',
+            shopid: shopId,
+            phonenumber: this.number
           })
           .then(snap => {})
       } else {
@@ -493,12 +501,20 @@ export default {
           /[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi,
           ''
         )
+        // ga analytics
+        this.$ga.event({
+          eventCategory: 'Next button',
+          eventAction: 'Step 5 complete',
+          eventLabel: shopName,
+          eventValue: 8
+        })
         const shopId = shopName.replace(/ /g, '-').toLowerCase()
         return db
           .ref(`pwa/onboardingstats/onboarding-step5${shopId}`)
           .set({
-            step: 'complete',
-            shopid: shopId
+            step: 'step5',
+            shopid: shopId,
+            phonenumber: this.number
           })
           .then(snap => {})
       }
@@ -558,12 +574,20 @@ export default {
         /[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi,
         ''
       )
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'Next button',
+        eventAction: 'Step 4 complete',
+        eventLabel: shopName,
+        eventValue: 7
+      })
       const shopId = shopName.replace(/ /g, '-').toLowerCase()
       return db
         .ref(`pwa/onboardingstats/onboarding-step4${shopId}`)
         .set({
-          step: 'complete',
-          shopid: shopId
+          step: 'step4',
+          shopid: shopId,
+          phonenumber: this.number
         })
         .then(snap => {})
     },
@@ -591,11 +615,18 @@ export default {
           } else {
             this.e1 = 2
             // step 1 complete
+            this.$ga.event({
+              eventCategory: 'Next button',
+              eventAction: 'Step 2 complete',
+              eventLabel: shopName,
+              eventValue: 4
+            })
             return db
               .ref(`pwa/onboardingstats/onboarding-step1${shopId}`)
               .set({
-                step: 'complete',
-                shopid: shopId
+                step: 'step1',
+                shopid: shopId,
+                phonenumber: this.number
               })
               .then(snap => {})
           }
@@ -622,11 +653,19 @@ export default {
           ''
         )
         const shopId = shopName.replace(/ /g, '-').toLowerCase()
+        // ga analytics
+        this.$ga.event({
+          eventCategory: 'Next button',
+          eventAction: 'Step 2 complete',
+          eventLabel: shopName,
+          eventValue: 5
+        })
         return db
           .ref(`pwa/onboardingstats/onboarding-step2${shopId}`)
           .set({
-            step: 'complete',
-            shopid: shopId
+            step: 'step2',
+            shopid: shopId,
+            phonenumber: this.number
           })
           .then(snap => {})
       }
