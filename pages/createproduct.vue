@@ -54,27 +54,11 @@
       <v-text-field
         v-model="price"
         :rules="priceRules"
+        type="number"
         label="Price"
-        type="text"
         required
         @keypress="isNumber"
       ></v-text-field>
-
-      <!-- <v-select
-        v-model="category"
-        :items="categories"
-        :rules="[v => !!v || 'Category is required']"
-        label="Category"
-        required
-      ></v-select>
-
-      <v-select
-        v-model="subcategory"
-        :items="subcategories"
-        :rules="[v => !!v || 'Subcategory is required']"
-        label="Subcategory"
-        required
-      ></v-select> -->
 
       <v-select
         v-model="category"
@@ -111,53 +95,6 @@
         >Create Product</v-btn
       >
     </v-form>
-    <!-- Crop Image dialog -->
-    <!-- <v-dialog v-model="cropImageDialog" max-width="350">
-      <v-card class="rounded-card" color="white">
-        <v-card-text>
-          <div id="crop-title-2" class="subtitle-1">CROP PRODUCT IMAGE</div>
-          <croppa
-            v-model="myImage"
-            :width="250"
-            :height="250"
-            :quality="2"
-            :initial-image="initialimage"
-            style="text-align: center;"
-            :placeholder-font-size="16"
-            placeholder-color="gray"
-            canvas-color="transparent"
-            :show-remove-button="false"
-            :show-loading="true"
-            :prevent-white-space="true"
-          ></croppa>
-          <div>
-            <v-btn
-              :loading="loading"
-              style="margin-top:40px;font-weight:700;text-transform:none;"
-              color="primary"
-              rounded
-              depressed
-              block
-              large
-              @click="uploadImage"
-              >Done</v-btn
-            >
-            <v-btn
-              :disabled="loading"
-              style="margin-top:10px;font-weight:700;text-transform:none;"
-              color="primary"
-              text
-              rounded
-              depressed
-              block
-              large
-              @click="cropImageDialog = !cropImageDialog"
-              >Close</v-btn
-            >
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-dialog> -->
     <!-- snackbar to show too many items to be uploaded at a time -->
     <v-snackbar v-model="snackbar">
       {{ snackbartext }}
@@ -263,21 +200,21 @@ export default {
       }
     },
     price: function(val, oldval) {
-      const valy = val.replace(/,/g, '')
-      // set comma to price
-      if (
-        valy.length === 4 ||
-        valy.length === 5 ||
-        valy.length === 6 ||
-        valy.length === 7 ||
-        valy.length === 8 ||
-        valy.length === 9 ||
-        valy.length === 10 ||
-        valy.length === 11 ||
-        valy.length === 12
-      ) {
-        this.price = valy.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      }
+      // const valy = val.replace(/,/g, '')
+      // // set comma to price
+      // if (
+      //   valy.length === 4 ||
+      //   valy.length === 5 ||
+      //   valy.length === 6 ||
+      //   valy.length === 7 ||
+      //   valy.length === 8 ||
+      //   valy.length === 9 ||
+      //   valy.length === 10 ||
+      //   valy.length === 11 ||
+      //   valy.length === 12
+      // ) {
+      //   this.price = valy.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      // }
     }
   },
   mounted() {
@@ -313,55 +250,6 @@ export default {
         this.focus = false
       }
     },
-    // cropImageFirst(e) {
-    //   const image = URL.createObjectURL(e.target.files[0])
-    //   this.initialimage = image
-    //   this.cropImageDialog = true
-    // },
-    // uploadImage() {
-    //   this.myImage.generateBlob(
-    //     blob => {
-    //       this.uploadBannerAsPromise(blob)
-    //     },
-    //     'image/jpeg',
-    //     0.8
-    //   )
-    // },
-    // uploadBannerAsPromise(imageFile) {
-    //   return new Promise((resolve, reject) => {
-    //     const randomnumber = Math.floor(Math.random() * 100000) + 1
-    //     const imagename = `image-${randomnumber}`
-    //     const uploadTask = storage.ref(`test/${imagename}`).put(imageFile)
-
-    //     // Register three observers:
-    //     // 1. 'state_changed' observer, called any time the state changes
-    //     // 2. Error observer, called on failure
-    //     // 3. Completion observer, called on successful completion
-    //     uploadTask.on(
-    //       'state_changed',
-    //       function(snapshot) {
-    //         // Observe state change events such as progress, pause, and resume
-    //         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-    //       },
-    //       function(error) {
-    //         // Handle unsuccessful uploads
-    //         // eslint-disable-next-line no-console
-    //         console.log(error)
-    //       },
-    //       function() {
-    //         storage
-    //           .ref(`test/${imagename}`)
-    //           .getDownloadURL()
-    //           .then(downloadURL => {
-    //             if (downloadURL) {
-    //               console.log(downloadURL)
-    //             }
-    //           })
-    //       }
-    //     )
-    //     resolve()
-    //   })
-    // },
     setImage(e) {
       const image = URL.createObjectURL(e.target.files[0])
       switch (this.imageselected) {

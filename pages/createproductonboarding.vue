@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-btn class="back-btn" text icon color="black" to="/onboarding">
+    <!-- <v-btn class="back-btn" text icon color="black" to="/onboarding">
       <v-icon>arrow_back_ios</v-icon>
-    </v-btn>
+    </v-btn> -->
     <div class="headline">
       Create a product
     </div>
@@ -50,6 +50,7 @@
         v-model="price"
         :rules="priceRules"
         label="Price"
+        type="number"
         required
       ></v-text-field>
 
@@ -109,7 +110,7 @@
       to="/onboardingcomplete"
       >done</nuxt-link
     > -->
-    <v-btn ref="nextpage" @click="opennew"></v-btn>
+    <!-- <v-btn ref="nextpage" @click="opennew"></v-btn> -->
   </div>
 </template>
 
@@ -148,23 +149,23 @@ export default {
     }
   },
   watch: {
-    price: function(val, oldval) {
-      const valy = val.replace(/,/g, '')
-      // set comma to price
-      if (
-        valy.length === 4 ||
-        valy.length === 5 ||
-        valy.length === 6 ||
-        valy.length === 7 ||
-        valy.length === 8 ||
-        valy.length === 9 ||
-        valy.length === 10 ||
-        valy.length === 11 ||
-        valy.length === 12
-      ) {
-        this.price = valy.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      }
-    }
+    // price: function(val, oldval) {
+    //   const valy = val.replace(/,/g, '')
+    //   // set comma to price
+    //   if (
+    //     valy.length === 4 ||
+    //     valy.length === 5 ||
+    //     valy.length === 6 ||
+    //     valy.length === 7 ||
+    //     valy.length === 8 ||
+    //     valy.length === 9 ||
+    //     valy.length === 10 ||
+    //     valy.length === 11 ||
+    //     valy.length === 12
+    //   ) {
+    //     this.price = valy.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    //   }
+    // }
   },
   mounted() {
     this.windowHeight = window.innerHeight
@@ -377,11 +378,11 @@ export default {
 
 <style scoped>
 .headline {
-  margin-top: 50px;
+  margin-top: 10px;
   font-family: 'Open Sans', sans-serif !important;
   margin-bottom: 20px;
   margin-left: 5px;
-  font-weight: 700;
+  font-weight: 900;
   text-align: left;
 }
 .display-3 {

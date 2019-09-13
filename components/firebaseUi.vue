@@ -64,6 +64,7 @@ export default {
             // insert user data into vuex
             this.$store.commit('authUser', true)
             this.$store.commit('setUserData', shopdata)
+            this.$bus.$emit('showpaymentplan', true)
             // set router
             this.$router.push('/inventory')
             return false

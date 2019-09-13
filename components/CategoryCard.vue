@@ -74,7 +74,7 @@ export default {
 }
 .mx-auto {
   margin-top: 12px;
-  width: 100%;
+  width: 95%;
   padding: 12px;
   cursor: pointer;
 }

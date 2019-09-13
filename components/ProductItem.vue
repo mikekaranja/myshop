@@ -59,7 +59,6 @@ export default {
   },
   methods: {
     emitShareDialog() {
-      console.log('sodko')
       this.$bus.$emit('shareProduct', {
         name: this.item.name,
         id: this.item.id

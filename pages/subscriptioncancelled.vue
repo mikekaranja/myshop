@@ -25,13 +25,13 @@ export default {
 
   mounted() {
     setTimeout(() => {
-      window.location.href = 'https://emersetest.netlify.com/inventory'
+      window.location.href = 'https://myshop.e-merse.com/inventory'
     }, 5000)
   },
 
   methods: {
     refresh() {
-      window.location.href = 'https://emersetest.netlify.com/inventory'
+      window.location.href = 'https://myshop.e-merse.com/inventory'
     }
   }
 }

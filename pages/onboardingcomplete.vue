@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { db } from '~/plugins/firebase'
 import SweetAlert from '~/components/SweetAlertAnimation'
 export default {
   components: {
@@ -28,6 +29,16 @@ export default {
       this.$store.commit('authUser', true)
       this.$store.commit('addToHomeScreen', 'newshop')
       this.$router.push('/catalogue')
+      // step 6 complete
+      return db
+        .ref(
+          `pwa/onboardingstats/onboarding-step7${this.$store.state.user.shopId}`
+        )
+        .set({
+          step: 'complete',
+          shopid: this.$store.state.user.shopId
+        })
+        .then(snap => {})
     }
   }
 }

@@ -56,25 +56,10 @@
         v-model="price"
         :rules="priceRules"
         label="Price"
+        type="number"
         :placeholder="item ? price : ''"
         required
       ></v-text-field>
-
-      <!-- <v-select
-        v-model="category"
-        :items="categories"
-        :rules="[v => !!v || 'Category is required']"
-        label="Category"
-        required
-      ></v-select>
-
-      <v-select
-        v-model="subcategory"
-        :items="subcategories"
-        :rules="[v => !!v || 'Subcategory is required']"
-        label="Subcategory"
-        required
-      ></v-select> -->
 
       <v-select
         v-model="category"
@@ -84,15 +69,6 @@
         label="Select categories"
         multiple
       ></v-select>
-
-      <!-- <v-select
-        v-model="subcategory"
-        :items="subcategories"
-        attach
-        chips
-        label="Select subcategories"
-        multiple
-      ></v-select> -->
 
       <v-combobox
         v-model="subcategory"
@@ -223,7 +199,8 @@ export default {
       focus: false,
       windowHeight: 0,
       deleteDialog: false,
-      firsttime: false
+      firsttime: false,
+      position: 0
     }
   },
   computed: {
@@ -239,23 +216,23 @@ export default {
     }
   },
   watch: {
-    price: function(val, oldval) {
-      const valy = val.replace(/,/g, '')
-      // set comma to price
-      if (
-        valy.length === 4 ||
-        valy.length === 5 ||
-        valy.length === 6 ||
-        valy.length === 7 ||
-        valy.length === 8 ||
-        valy.length === 9 ||
-        valy.length === 10 ||
-        valy.length === 11 ||
-        valy.length === 12
-      ) {
-        this.price = valy.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      }
-    },
+    // price: function(val, oldval) {
+    //   const valy = val.replace(/,/g, '')
+    //   // set comma to price
+    //   if (
+    //     valy.length === 4 ||
+    //     valy.length === 5 ||
+    //     valy.length === 6 ||
+    //     valy.length === 7 ||
+    //     valy.length === 8 ||
+    //     valy.length === 9 ||
+    //     valy.length === 10 ||
+    //     valy.length === 11 ||
+    //     valy.length === 12
+    //   ) {
+    //     this.price = valy.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    //   }
+    // },
     category: function(val, oldval) {
       if (!this.firsttime) {
         // first time editproduct loads
@@ -380,26 +357,32 @@ export default {
         case 1:
           this.productimages.splice(1, 1, image)
           this.$refs.image1.src = image
+          this.position = 0
           break
         case 2:
           this.productimages.splice(2, 1, image)
           this.$refs.image2.src = image
+          this.position = 1
           break
         case 3:
           this.productimages.splice(3, 1, image)
           this.$refs.image3.src = image
+          this.position = 2
           break
         case 4:
           this.productimages.splice(4, 1, image)
           this.$refs.image4.src = image
+          this.position = 3
           break
         case 5:
           this.productimages.splice(5, 1, image)
           this.$refs.image5.src = image
+          this.position = 4
           break
         case 6:
           this.productimages.splice(6, 1, image)
           this.$refs.image6.src = image
+          this.position = 5
           break
         default:
           break
@@ -482,7 +465,8 @@ export default {
               .getDownloadURL()
               .then(downloadURL => {
                 if (downloadURL) {
-                  this.imageUrls.push(downloadURL)
+                  // this.imageUrls.push(downloadURL)
+                  this.setImageAfterUpload(downloadURL)
                   this.overlay = false
                 }
               })
@@ -490,6 +474,30 @@ export default {
         )
         resolve()
       })
+    },
+    setImageAfterUpload(image) {
+      switch (this.position) {
+        case 0:
+          this.productimages.splice(1, 1, image)
+          break
+        case 1:
+          this.productimages.splice(2, 1, image)
+          break
+        case 2:
+          this.productimages.splice(3, 1, image)
+          break
+        case 3:
+          this.productimages.splice(4, 1, image)
+          break
+        case 4:
+          this.productimages.splice(5, 1, image)
+          break
+        case 5:
+          this.productimages.splice(6, 1, image)
+          break
+        default:
+          break
+      }
     },
     addImage(n) {
       this.$refs.opengallery.click()

@@ -4,7 +4,7 @@
       clear
     </v-icon>
     <v-avatar size="30">
-      <img src="https://emersetest.netlify.com/icon.jpg" alt="icon" />
+      <img src="https://myshop.e-merse.com/icon.jpg" alt="icon" />
     </v-avatar>
     Add E-merse as an app
     <template v-slot:actions>

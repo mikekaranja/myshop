@@ -116,17 +116,17 @@
               style="margin-bottom:25px;font-size:15px!important;font-weight: 500;"
               class="subtitle-1"
             >
-              Create a category for your catalogue
+              Tap add to create a category for your catalogue
             </div>
             <div style="display: grid;">
               <img
                 style="margin: auto;"
-                src="https://emersetest.netlify.com/upload.png"
+                src="https://myshop.e-merse.com/upload.png"
                 alt="upload"
               />
               <img
                 style="margin: auto;height:110px;"
-                src="https://emersetest.netlify.com/arrow.png"
+                src="https://myshop.e-merse.com/arrow.png"
                 alt="upload"
               />
             </div>
@@ -139,7 +139,7 @@
               style="margin-bottom:25px;font-size: 15px !important;font-weight: 500;"
               class="subtitle-1"
             >
-              Select this category to upload products
+              Tap the category to upload products
             </div>
             <div class="subtitle-2">All Categories</div>
             <onboarding-category-card
@@ -156,7 +156,7 @@
             style="margin-bottom:6px;text-align: center;font-size: 15px !important;font-weight: 500;"
             class="subtitle-1"
           >
-            Create a product for this category
+            Tap add to create a product for this category
           </div>
           <div class="subtitle-2">
             <span style="color: gray;">All Categories ></span>
@@ -165,12 +165,12 @@
           <div style="display: grid;">
             <img
               style="margin: auto;"
-              src="https://emersetest.netlify.com/upload.png"
+              src="https://myshop.e-merse.com/upload.png"
               alt="upload"
             />
             <img
               style="margin: auto;height:110px;"
-              src="https://emersetest.netlify.com/arrow.png"
+              src="https://myshop.e-merse.com/arrow.png"
               alt="upload"
             />
           </div>
@@ -431,6 +431,20 @@ export default {
         this.addCategoryDialog = false
         this.e1 = 4
         this.addCategoryToDb(this.uploadcategory)
+        // step 3 complete
+        const shopName = this.name.trim().replace(
+          // eslint-disable-next-line no-useless-escape
+          /[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi,
+          ''
+        )
+        const shopId = shopName.replace(/ /g, '-').toLowerCase()
+        return db
+          .ref(`pwa/onboardingstats/onboarding-step3${shopId}`)
+          .set({
+            step: 'complete',
+            shopid: shopId
+          })
+          .then(snap => {})
       } else {
         this.alert = true
       }
@@ -473,6 +487,20 @@ export default {
         this.saveNewShop()
         this.$store.commit('setOnboardingCategory', this.uploadcategory)
         this.$router.push('/createproductonboarding')
+        // step 5 complete
+        const shopName = this.name.trim().replace(
+          // eslint-disable-next-line no-useless-escape
+          /[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi,
+          ''
+        )
+        const shopId = shopName.replace(/ /g, '-').toLowerCase()
+        return db
+          .ref(`pwa/onboardingstats/onboarding-step5${shopId}`)
+          .set({
+            step: 'complete',
+            shopid: shopId
+          })
+          .then(snap => {})
       }
     },
     saveNewShop() {
@@ -524,6 +552,20 @@ export default {
     goTo5(category) {
       this.uploadcategory = category
       this.e1 = 5
+      // step 4 complete
+      const shopName = this.name.trim().replace(
+        // eslint-disable-next-line no-useless-escape
+        /[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi,
+        ''
+      )
+      const shopId = shopName.replace(/ /g, '-').toLowerCase()
+      return db
+        .ref(`pwa/onboardingstats/onboarding-step4${shopId}`)
+        .set({
+          step: 'complete',
+          shopid: shopId
+        })
+        .then(snap => {})
     },
     validate() {
       if (this.$refs.form.validate()) {
@@ -548,6 +590,14 @@ export default {
             this.snackbar = !this.snackbar
           } else {
             this.e1 = 2
+            // step 1 complete
+            return db
+              .ref(`pwa/onboardingstats/onboarding-step1${shopId}`)
+              .set({
+                step: 'complete',
+                shopid: shopId
+              })
+              .then(snap => {})
           }
         })
     },
@@ -565,6 +615,20 @@ export default {
       } else {
         this.e1 = 3
         this.addBannerToDB()
+        // step 2 complete
+        const shopName = this.name.trim().replace(
+          // eslint-disable-next-line no-useless-escape
+          /[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi,
+          ''
+        )
+        const shopId = shopName.replace(/ /g, '-').toLowerCase()
+        return db
+          .ref(`pwa/onboardingstats/onboarding-step2${shopId}`)
+          .set({
+            step: 'complete',
+            shopid: shopId
+          })
+          .then(snap => {})
       }
     },
     addBannerToDB() {
@@ -599,7 +663,7 @@ export default {
 }
 .banners-img {
   width: 100%;
-  height: 79px;
+  height: 100px;
   object-fit: cover;
   border: red;
   border-style: solid;

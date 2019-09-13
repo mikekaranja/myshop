@@ -57,13 +57,14 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    { src: '~/plugins/ga.js', ssr: false },
-    '~plugins/croppa.js',
-    '~plugins/vuetify.js',
+    { src: '~/plugins/ga', ssr: false },
+    '~plugins/croppa',
+    '~plugins/vuetify',
     '~/plugins/bus',
     '~/plugins/firebase',
-    { src: '~/plugins/localStorage.js', ssr: false },
-    { src: '~plugins/quill.js', mode: 'client' }
+    { src: '~/plugins/vue-cropper', mode: 'client' },
+    { src: '~/plugins/localStorage', ssr: false },
+    { src: '~plugins/quill', mode: 'client' }
   ],
   /*
    ** Nuxt.js modules
@@ -77,11 +78,12 @@ export default {
   ],
   // manifest
   manifest: {
-    name: 'MyShop-E-merse',
+    name: 'E-merse',
     short_name: 'MyShop',
-    start_url: '.',
+    start_url: '/',
     display: 'standalone',
     background_color: '#fff',
+    theme_color: '#fff',
     description: 'Launch your WhatsApp connected shop on E-merse.'
   },
   /*

@@ -11,10 +11,10 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title">
-            Plan: {{ user.payment_plan ? user.payment_plan.split('$')[0] : '' }}
+            Plan: {{ paymentplan ? paymentplan.split('$')[0] : '' }}
           </v-list-item-title>
           <v-list-item-subtitle>
-            ${{ user.payment_plan ? user.payment_plan.split('$')[1] : '' }}
+            ${{ paymentplan ? paymentplan.split('$')[1] : '' }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -619,35 +619,33 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <input
+      ref="opengallery"
+      style="display: none;"
+      type="file"
+      accept="image/*"
+      @change="setImage($event)"
+    />
     <!-- Crop Logo dialog -->
-    <v-dialog v-model="cropLogoDialog" max-width="350">
-      <v-card class="rounded-card" color="black">
-        <v-card-text style="padding: 0 15px 20px;">
-          <div id="crop-title" class="subtitle-1">CROP LOGO IMAGE</div>
-          <!-- <div class="tap-upload" @click="opengallery">
-            <p>Tap to upload</p>
-          </div> -->
-          <croppa
-            v-model="myLogo"
-            :width="230"
-            :height="100"
-            style="text-align: center;"
-            placeholder="Tap to upload image"
-            :placeholder-font-size="16"
-            placeholder-color="#FFF"
-            :canvas-color="canvascolor"
-            remove-button-color="white"
-            initial-size="contain"
-            :show-loading="true"
-            :disable-click-to-choose="false"
-            @new-image="myLogoFile"
-            @image-remove="myLogoFileRemove"
-            @click="uploadLogo"
-          ></croppa>
-          <div style="color:white;margin-left:8px;" class="subtitle-2">
+    <v-dialog v-model="cropLogoDialog" fullscreen>
+      <v-card class="rounded-card">
+        <v-card-text
+          style="padding-top:70px;padding-right:0px;padding-left:0px;"
+        >
+          <div id="crop-title" class="subtitle-1">
+            Drag to position your logo
+          </div>
+          <vue-cropper
+            ref="cropper"
+            :zoomable="true"
+            :min-crop-box-width="200"
+            :min-crop-box-height="100"
+            :src="img"
+          ></vue-cropper>
+          <div style="color:black;margin-left:8px;" class="subtitle-2">
             * Select logo with white background
           </div>
-          <div>
+          <div style="padding-left: 30px;padding-right:30px;margin-top: 90px;">
             <v-alert
               :value="alertsuccess8"
               style="width:95%;margin: auto;margin-top:12px;"
@@ -677,66 +675,7 @@
               block
               large
               @click="cropLogoDialog = !cropLogoDialog"
-              >Close</v-btn
-            >
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <!-- Crop Banner dialog -->
-    <v-dialog v-model="cropBannerDialog" max-width="350">
-      <v-card class="rounded-card" color="black">
-        <v-card-text>
-          <div id="crop-title" class="subtitle-1">CROP BANNER IMAGE</div>
-          <croppa
-            v-model="myBanner"
-            :width="230"
-            :height="100"
-            :quality="4.8"
-            style="text-align: center;"
-            placeholder="Tap to upload image"
-            :placeholder-font-size="16"
-            placeholder-color="#FFF"
-            canvas-color="#000"
-            remove-button-color="white"
-            :show-loading="true"
-            :prevent-white-space="true"
-            @new-image="myBannerFile"
-          ></croppa>
-          <div style="color:white;margin-left:8px;" class="subtitle-2">
-            * banner size width: 1200px
-          </div>
-          <div>
-            <v-alert
-              :value="alertsuccess9"
-              style="width:95%;margin: auto;margin-top:12px;"
-              dense
-              type="success"
-            >
-              <strong>Banner uploaded successfully.</strong>
-            </v-alert>
-            <v-btn
-              :loading="loading"
-              style="margin-top:40px;font-weight:700;text-transform:none;"
-              color="primary"
-              rounded
-              depressed
-              block
-              large
-              @click="uploadBanner"
-              >Done</v-btn
-            >
-            <v-btn
-              :disabled="loading"
-              style="margin-top:10px;font-weight:700;text-transform:none;"
-              color="primary"
-              text
-              rounded
-              depressed
-              block
-              large
-              @click="cropBannerDialog = !cropBannerDialog"
-              >Close</v-btn
+              >Cancel</v-btn
             >
           </div>
         </v-card-text>
@@ -953,6 +892,7 @@ export default {
   },
   data() {
     return {
+      img: '',
       canvascolor: '',
       myBanner: {},
       myLogo: {},
@@ -1067,7 +1007,8 @@ export default {
       disabledplan1: false,
       disabledplan2: false,
       disabledplan3: false,
-      paymentsuccessful: false
+      paymentsuccessful: false,
+      paymentplan: ''
     }
   },
   computed: {
@@ -1105,6 +1046,17 @@ export default {
         const today = new Date()
         this.setPaymentMessage(today, expirydate, signupdate)
       }
+      if (to.path === '/inventory' && from.path === '/login') {
+        // set account details
+        this.phonenumber = this.$store.state.user.phonenumber
+        this.shopname = this.$store.state.user.shopname
+        this.email = this.$store.state.user.email
+        this.paymentplan = this.$store.state.user.payment_plan
+        const expirydate = new Date(this.$store.state.user.expiry_date)
+        const signupdate = new Date(this.$store.state.user.sign_up_date)
+        const today = new Date()
+        this.setPaymentMessage(today, expirydate, signupdate)
+      }
       if (to.path === '/catalogue') {
         this.topbar = false
         this.bottombar = true
@@ -1132,6 +1084,10 @@ export default {
         this.topbar = false
         this.bottombar = false
         this.cataloguescreen = '0px'
+      } else if (to.path === '/selectbanner') {
+        this.topbar = false
+        this.bottombar = false
+        this.cataloguescreen = '0px'
       }
     }
   },
@@ -1145,6 +1101,7 @@ export default {
       this.phonenumber = this.$store.state.user.phonenumber
       this.shopname = this.$store.state.user.shopname
       this.email = this.$store.state.user.email
+      this.paymentplan = this.$store.state.user.payment_plan
       // show banner
       if (this.$store.state.addtohomescreen === 'newshop') {
         this.hiddenbanner = 'block'
@@ -1152,6 +1109,13 @@ export default {
     }, 1000)
   },
   created() {
+    this.$bus.$on('showpaymentplan', value => {
+      // set account details
+      this.phonenumber = this.$store.state.user.phonenumber
+      this.shopname = this.$store.state.user.shopname
+      this.email = this.$store.state.user.email
+      this.paymentplan = this.$store.state.user.payment_plan
+    })
     this.$bus.$on('showbottomandtop', value => {
       this.topbar = true
       this.bottombar = true
@@ -1176,8 +1140,7 @@ export default {
       this.shareSubcategoryBottomSheet = true
     })
     this.$bus.$on('shareProduct', value => {
-      console.log('sdhu')
-      this.shareid = value
+      this.shareid = value.id
       this.shareProductBottomSheet = true
     })
   },
@@ -1383,7 +1346,7 @@ export default {
       // eslint-disable-next-line no-console
       if (this.$vuetify.breakpoint.mdAndUp) {
         window.open(
-          `https://wa.me/?text=Have a look! https://shop.e-merse.com/?${this.$store.state.user.shopid}&category=${this.sharecategoryname}&subcategory=${this.sharecategoryname}`,
+          `https://wa.me/?text=Have a look! https://shop.e-merse.com/?${this.$store.state.user.shopid}&category=${this.sharecategoryname}&subcategory=${this.sharesubcategoryname}`,
           '_blank'
         )
       } else if (
@@ -1397,7 +1360,7 @@ export default {
             title: this.sharename,
             // change the text of your share as you may like; to e.g desc of your pwa
             text: '',
-            url: `https://shop.e-merse.com/?${this.$store.state.user.shopid}&category=${this.sharecategoryname}&subcategory=${this.sharecategoryname}`
+            url: `https://shop.e-merse.com/?${this.$store.state.user.shopid}&category=${this.sharecategoryname}&subcategory=${this.sharesubcategoryname}`
           })
           .then(() => {
             // eslint-disable-next-line no-console
@@ -1454,45 +1417,32 @@ export default {
     },
     uploadLogo() {
       this.loader = 'loading'
-      if (!this.myLogo.hasImage()) {
-        alert('No image to upload')
-      } else {
-        this.myLogo.generateBlob(
-          blob => {
-            this.uploadLogoAsPromise(blob)
-          },
-          'image/jpeg',
-          0.8
-        )
-      }
+      this.$refs.cropper
+        .getCroppedCanvas({
+          width: 200,
+          height: 100
+        })
+        .toBlob(blob => {
+          console.log(blob)
+          this.uploadLogoAsPromise(blob)
+        })
+      // if (!this.myLogo.hasImage()) {
+      //   alert('No image to upload')
+      // } else {
+      //   this.myLogo.generateBlob(
+      //     blob => {
+      //       this.uploadLogoAsPromise(blob)
+      //     },
+      //     'image/jpeg',
+      //     0.8
+      //   )
+      // }
     },
     myLogoFile() {
       this.canvascolor = 'white'
     },
     myLogoFileRemove() {
       this.canvascolor = ''
-    },
-    myBannerFile() {
-      if (this.myBanner.naturalWidth < 1200) {
-        setTimeout(() => {
-          this.myBanner.remove()
-          alert('You can only upload a banner with a width of over 1200px')
-        }, 1500)
-      }
-    },
-    uploadBanner() {
-      this.loader = 'loading'
-      if (!this.myBanner.hasImage()) {
-        alert('No image to upload')
-      } else {
-        this.myBanner.generateBlob(
-          blob => {
-            this.uploadBannerAsPromise(blob)
-          },
-          'image/jpeg',
-          0.8
-        )
-      }
     },
     // Handle waiting to upload each file using promise
     uploadLogoAsPromise(imageFile) {
@@ -1537,51 +1487,6 @@ export default {
           setTimeout(() => {
             this.alertsuccess8 = false
             this.myLogo = {}
-          }, 4000)
-        })
-    },
-    // Handle waiting to upload each file using promise
-    uploadBannerAsPromise(imageFile) {
-      return new Promise((resolve, reject) => {
-        const randomnumber = Math.floor(Math.random() * 100000) + 1
-        const name = `image-${randomnumber}`
-        const uploadTask = storage.ref(`/pwa/${name}`).put(imageFile)
-        uploadTask.on(
-          'state_changed',
-          function(snapshot) {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            console.log('Upload is ' + progress + '% done')
-          },
-          function(error) {
-            console.log(error)
-          },
-          function() {
-            storage
-              .ref(`/pwa/${name}`)
-              .getDownloadURL()
-              .then(downloadURL => {
-                if (downloadURL) {
-                  this.addBannerToDB(downloadURL)
-                }
-              })
-          }.bind(this)
-        )
-        resolve()
-      })
-    },
-    addBannerToDB(url) {
-      return db
-        .ref(`pwa/products/banner-${this.$store.state.user.shopid}`)
-        .set({
-          banner: url,
-          shopid: this.$store.state.user.shopid
-        })
-        .then(snap => {
-          this.alertsuccess9 = true
-          setTimeout(() => {
-            this.alertsuccess9 = false
-            this.myBanner = {}
           }, 4000)
         })
     },
@@ -1644,7 +1549,7 @@ export default {
           } else {
             this.alertsuccess6 = true
             setTimeout(() => {
-              window.location.href = 'https://emersetest.netlify.com/inventory'
+              window.location.href = 'https://myshop.e-merse.com/inventory'
             }, 1800)
           }
         })
@@ -1667,7 +1572,7 @@ export default {
       } else {
         this.alertsuccess6 = true
         setTimeout(() => {
-          window.location.href = 'https://emersetest.netlify.com/inventory'
+          window.location.href = 'https://myshop.e-merse.com/inventory'
         }, 1800)
       }
     },
@@ -1683,7 +1588,7 @@ export default {
           console.log('updated')
           this.alertsuccess6 = true
           setTimeout(() => {
-            window.location.href = 'https://emersetest.netlify.com/inventory'
+            window.location.href = 'https://myshop.e-merse.com/inventory'
           }, 1800)
         })
     },
@@ -1730,7 +1635,7 @@ export default {
         .then(snap => {
           this.alertsuccess = true
           setTimeout(() => {
-            window.location.href = 'https://emersetest.netlify.com/inventory'
+            window.location.href = 'https://myshop.e-merse.com/inventory'
           }, 1800)
         })
     },
@@ -1784,7 +1689,7 @@ export default {
       } else {
         this.alertsuccess2 = true
         setTimeout(() => {
-          window.location.href = 'https://emersetest.netlify.com/inventory'
+          window.location.href = 'https://myshop.e-merse.com/inventory'
         }, 1800)
       }
     },
@@ -1797,7 +1702,7 @@ export default {
         .then(snap => {
           this.alertsuccess2 = true
           setTimeout(() => {
-            window.location.href = 'https://emersetest.netlify.com/inventory'
+            window.location.href = 'https://myshop.e-merse.com/inventory'
           }, 1800)
         })
     },
@@ -1858,7 +1763,7 @@ export default {
           this.alertsuccess1 = true
           // refresh inventory page
           setTimeout(() => {
-            window.location.href = 'https://emersetest.netlify.com/inventory'
+            window.location.href = 'https://myshop.e-merse.com/inventory'
           }, 1800)
         })
     },
@@ -1922,7 +1827,7 @@ export default {
       } else {
         this.alertsuccess3 = true
         setTimeout(() => {
-          window.location.href = 'https://emersetest.netlify.com/inventory'
+          window.location.href = 'https://myshop.e-merse.com/inventory'
         }, 1800)
       }
     },
@@ -1935,7 +1840,7 @@ export default {
         .then(snap => {
           this.alertsuccess3 = true
           setTimeout(() => {
-            window.location.href = 'https://emersetest.netlify.com/inventory'
+            window.location.href = 'https://myshop.e-merse.com/inventory'
           }, 1800)
         })
     },
@@ -1976,7 +1881,7 @@ export default {
       } else {
         this.alertsuccess4 = true
         setTimeout(() => {
-          window.location.href = 'https://emersetest.netlify.com/inventory'
+          window.location.href = 'https://myshop.e-merse.com/inventory'
         }, 1800)
       }
     },
@@ -1989,7 +1894,7 @@ export default {
         .then(snap => {
           this.alertsuccess4 = true
           setTimeout(() => {
-            window.location.href = 'https://emersetest.netlify.com/inventory'
+            window.location.href = 'https://myshop.e-merse.com/inventory'
           }, 1800)
         })
     },
@@ -2043,7 +1948,7 @@ export default {
       } else {
         this.alertsuccess5 = true
         setTimeout(() => {
-          window.location.href = 'https://emersetest.netlify.com/inventory'
+          window.location.href = 'https://myshop.e-merse.com/inventory'
         }, 1800)
       }
     },
@@ -2056,7 +1961,7 @@ export default {
         .then(snap => {
           this.alertsuccess5 = true
           setTimeout(() => {
-            window.location.href = 'https://emersetest.netlify.com/inventory'
+            window.location.href = 'https://myshop.e-merse.com/inventory'
           }, 1800)
         })
     },
@@ -2080,7 +1985,7 @@ export default {
             () => {
               this.$store.commit('authUser', false)
               this.$store.commit('clearUser', false)
-              window.location.href = 'https://emersetest.netlify.com/'
+              window.location.href = 'https://myshop.e-merse.com/'
             },
             error => {
               // eslint-disable-next-line no-console
@@ -2131,13 +2036,22 @@ export default {
           this.addSubcategoryDialog = true
           break
         case 'Upload/Change your Logo':
-          this.cropLogoDialog = true
+          // this.cropLogoDialog = true
+          this.$refs.opengallery.click()
           break
         case 'Upload/Change your Banner':
-          this.cropBannerDialog = true
+          this.$router.push('/selectbanner')
           break
         default:
           break
+      }
+    },
+    setImage(e) {
+      console.log(e)
+      if (e) {
+        const image = URL.createObjectURL(e.target.files[0])
+        this.img = image
+        this.cropLogoDialog = true
       }
     }
   }
@@ -2180,11 +2094,12 @@ export default {
 }
 .croppa-container canvas {
   border-style: dashed;
-  border-color: white;
+  border-color: gray;
 }
 #crop-title {
+  font-weight: 700;
   padding: 20px;
-  color: white;
+  color: black;
   text-align: center;
 }
 .v-banner--single-line .v-banner__text {

@@ -27,7 +27,7 @@ export default {
     setTimeout(() => {
       // change name in store
       this.$store.commit('changeExpiryDate', this.addDays(30).toString())
-      window.location.href = 'https://emersetest.netlify.com/inventory'
+      window.location.href = 'https://myshop.e-merse.com/inventory'
     }, 6000)
   },
 
@@ -38,7 +38,7 @@ export default {
       return date
     },
     refresh() {
-      window.location.href = 'https://emersetest.netlify.com/inventory'
+      window.location.href = 'https://myshop.e-merse.com/inventory'
     }
   }
 }

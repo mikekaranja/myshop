@@ -55,6 +55,7 @@ export default {
   },
   mounted() {
     this.items[1].text = this.$router.history.current.query.category
+    console.log(this.items[1].text)
     if (this.items[1].text !== 'All') {
       // fill subcategories
       const sub = this.$store.state.categories.filter(

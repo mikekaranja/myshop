@@ -2,7 +2,7 @@
   <div class="text-center">
     <img
       class="top-logo"
-      src="https://emersetest.netlify.com/icon.jpg"
+      src="https://myshop.e-merse.com/icon.jpg"
       alt=""
     />
     <p>We're <span style="font-weight:500;">pumped</span> to see you!</p>
