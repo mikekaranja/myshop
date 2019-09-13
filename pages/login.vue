@@ -1,10 +1,6 @@
 <template>
   <div class="text-center">
-    <img
-      class="top-logo"
-      src="https://myshop.e-merse.com/icon.jpg"
-      alt=""
-    />
+    <img class="top-logo" src="https://myshop.e-merse.com/icon.jpg" alt="" />
     <p>We're <span style="font-weight:500;">pumped</span> to see you!</p>
     <firebase-ui></firebase-ui>
   </div>

@@ -76,7 +76,7 @@
           <div style="color:black;margin-left:8px;" class="subtitle-2">
             * banner size width: over 1500px
           </div>
-          <div style="padding-left: 30px;padding-right:30px;margin-top: 90px;">
+          <div style="padding-left: 30px;padding-right:30px;margin-top: 70px;">
             <v-alert
               :value="alertsuccess9"
               style="width:95%;margin: auto;margin-top:12px;"
@@ -103,7 +103,7 @@
               rounded
               depressed
               block
-              @click="cropBannerDialog = !cropBannerDialog"
+              @click="cancel"
               >Cancel</v-btn
             >
           </div>
@@ -162,6 +162,10 @@ export default {
     this.asyncData()
   },
   methods: {
+    cancel() {
+      this.cropBannerDialog = !this.cropBannerDialog
+      this.$refs.cropper.destroy()
+    },
     openBannerDialog() {
       this.$refs.opengallery.click()
     },
@@ -170,6 +174,8 @@ export default {
         const image = URL.createObjectURL(e.target.files[0])
         this.img = image
         this.cropBannerDialog = true
+      } else {
+        this.$refs.cropper.destroy()
       }
     },
     myBannerFile() {
@@ -246,7 +252,7 @@ export default {
           this.alertsuccess9 = true
           setTimeout(() => {
             this.$router.push('/inventory')
-          }, 4000)
+          }, 3000)
         })
     },
     asyncData() {
@@ -288,6 +294,9 @@ export default {
         .then(snap => {
           this.snackbartext = 'Banner uploaded successfully'
           this.snackbar = true
+          setTimeout(() => {
+            this.$router.push('/inventory')
+          }, 3000)
         })
     },
     backBtn() {

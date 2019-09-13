@@ -3,7 +3,7 @@
   <div id="congrats-div" class="text-center">
     <sweet-alert class="sweet-alert"></sweet-alert>
     <div class="headline">Product Updated Successfully</div>
-    <v-btn color="primary" rounded block class="congrats-btn" to="/inventory"
+    <v-btn color="primary" rounded block class="congrats-btn" to="/catalogue"
       >View your catalogue</v-btn
     >
   </div>

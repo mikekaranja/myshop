@@ -4,7 +4,7 @@
     <sweet-alert class="sweet-alert"></sweet-alert>
     <div class="headline">Product Deleted Successfully</div>
     <v-btn color="primary" rounded block class="congrats-btn" to="/inventory"
-      >View your catalogue</v-btn
+      >View your inventory</v-btn
     >
   </div>
 </template>

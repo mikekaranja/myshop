@@ -630,7 +630,7 @@
     <v-dialog v-model="cropLogoDialog" fullscreen>
       <v-card class="rounded-card">
         <v-card-text
-          style="padding-top:70px;padding-right:0px;padding-left:0px;"
+          style="padding-top:40px;padding-right:0px;padding-left:0px;"
         >
           <div id="crop-title" class="subtitle-1">
             Drag to position your logo
@@ -642,10 +642,13 @@
             :min-crop-box-height="100"
             :src="img"
           ></vue-cropper>
-          <div style="color:black;margin-left:8px;" class="subtitle-2">
+          <div
+            style="color:black;margin-left:8px;text-align: center;"
+            class="subtitle-2"
+          >
             * Select logo with white background
           </div>
-          <div style="padding-left: 30px;padding-right:30px;margin-top: 90px;">
+          <div style="padding-left: 30px;padding-right:30px;margin-top: 70px;">
             <v-alert
               :value="alertsuccess8"
               style="width:95%;margin: auto;margin-top:12px;"
@@ -692,10 +695,7 @@
           <div>
             <div>
               Kindly pay your monthly subscription fee <br />
-              to continue using E-merse. <br /><br />
-              Your catalogue will be deactivated in 24 hours if payment isn't
-              made. <br /><br />
-              Your support is greatly appreciated.<br /><br />
+              to continue using E-merse. <br />
             </div>
             <v-btn
               style="text-transform:none;"
@@ -718,10 +718,7 @@
         >
         <v-card-text style="text-align: center;">
           <div>
-            <div>
-              Kindly pay your monthly subscription. <br /><br />
-              Your support is greatly appreciated. <br /><br />
-            </div>
+            <div>Kindly pay your monthly subscription. <br /><br /></div>
             <v-btn
               style="text-transform:none;"
               rounded
@@ -999,11 +996,11 @@ export default {
       plans: [
         '1 - 50 products - $8/month',
         '51 - 300 products - $24/month',
-        '301 - 1000 products - $48/month'
+        '301 - 2000 products - $48/month'
       ],
       plan1: '1 - 50 products - $8/month',
       plan2: '51 - 300 products - $24/month',
-      plan3: '301 - 1000 products - $48/month',
+      plan3: '301 - 2000 products - $48/month',
       disabledplan1: false,
       disabledplan2: false,
       disabledplan3: false,
@@ -1151,7 +1148,7 @@ export default {
       this.snackbar = true
       const user = this.$store.state.user
       user.reason = this.radioReason
-      return db.ref('pwa/cancelledsubscriptions').push({ user })
+      return db.ref('pwa/cancelledsubscriptions').push(user)
     },
     setPaymentMessage(today, expirydate, signupdate) {
       const hours = this.date_signup_diff_hours(signupdate, today)
@@ -1487,7 +1484,10 @@ export default {
           setTimeout(() => {
             this.alertsuccess8 = false
             this.myLogo = {}
-          }, 4000)
+            this.cropLogoDialog = false
+            this.img = ''
+            this.$refs.cropper.destroy()
+          }, 2500)
         })
     },
     submitCustomDomain() {
