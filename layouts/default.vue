@@ -640,6 +640,7 @@
             :zoomable="true"
             :min-crop-box-width="200"
             :min-crop-box-height="100"
+            :crop-box-resizable="false"
             :src="img"
           ></vue-cropper>
           <div
@@ -1486,7 +1487,7 @@ export default {
             this.myLogo = {}
             this.cropLogoDialog = false
             this.img = ''
-            this.$refs.cropper.destroy()
+            this.$refs.cropper.reset()
           }, 2500)
         })
     },
@@ -2047,7 +2048,6 @@ export default {
       }
     },
     setImage(e) {
-      console.log(e)
       if (e) {
         const image = URL.createObjectURL(e.target.files[0])
         this.img = image

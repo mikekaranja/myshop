@@ -21,7 +21,7 @@
       </v-row>
       <div v-show="filteredList.length === 0" class="no-products">
         <img class="img-empty" src="empty.jpg" alt="empty" />
-        <div class="subtitle-1">No result matching</div>
+        <div class="subtitle-1">No matching result</div>
       </div>
     </div>
   </div>

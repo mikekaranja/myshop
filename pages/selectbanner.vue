@@ -164,7 +164,7 @@ export default {
   methods: {
     cancel() {
       this.cropBannerDialog = !this.cropBannerDialog
-      this.$refs.cropper.destroy()
+      this.$refs.cropper.reset()
     },
     openBannerDialog() {
       this.$refs.opengallery.click()
@@ -309,7 +309,7 @@ export default {
           this.banner = element
           document.getElementById(`img${i}`).style.borderWidth = 'thick'
         } else {
-          document.getElementById(`img${i}`).style.borderWidth = 'inherit'
+          document.getElementById(`img${i}`).style.borderWidth = '0px'
         }
       }
     }
@@ -334,7 +334,7 @@ export default {
   border: red;
   border-style: solid;
   border-radius: 16px;
-  border-width: inherit;
+  border-width: 0px;
 }
 .fixed-btm {
   padding: 20px;
