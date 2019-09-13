@@ -57,12 +57,6 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    [
-      '@nuxtjs/google-analytics',
-      {
-        id: 'UA-121366089-30'
-      }
-    ],
     '~plugins/croppa',
     '~plugins/vuetify',
     '~/plugins/bus',
@@ -75,6 +69,12 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
+    [
+      '@nuxtjs/google-analytics',
+      {
+        id: 'UA-121366089-30'
+      }
+    ],
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
