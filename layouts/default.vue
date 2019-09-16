@@ -1634,6 +1634,33 @@ export default {
         )
         .toLowerCase()
       const shopId = shopName.replace(/ /g, '-').toLowerCase()
+      if (shopName !== this.$store.state.user.shopname) {
+        // update store
+        const shop = {
+          shopid: shopId,
+          shopname: shopName,
+          email: this.email,
+          phonenumber: this.phonenumber
+        }
+        this.$store.commit('changeShopName', shop)
+        this.updateDb2(shopId, shopName)
+        this.updateAllProducts(shopId, shopName)
+      } else {
+        this.updateDb(shopId, shopName)
+      }
+    },
+    updateDb2(shopId, shopName) {
+      return db
+        .ref(`pwa/users/${this.$store.state.user.id}`)
+        .update({
+          email: this.email,
+          phonenumber: this.phonenumber,
+          shopname: shopName,
+          shopid: shopId
+        })
+        .then(snap => {})
+    },
+    updateDb(shopId, shopName) {
       return db
         .ref(`pwa/users/${this.$store.state.user.id}`)
         .update({
@@ -1643,22 +1670,10 @@ export default {
           shopid: shopId
         })
         .then(snap => {
-          const shop = {
-            shopid: shopId,
-            shopname: shopName,
-            email: this.email,
-            phonenumber: this.phonenumber
-          }
-          // change name in store
-          this.$store.commit('changeShopName', shop)
-          if (this.shopname !== this.$store.state.user.shopname) {
-            this.updateAllProducts(shopId, shopName)
-          } else {
-            this.alertsuccess6 = true
-            setTimeout(() => {
-              window.location.href = 'https://myshop.e-merse.com/inventory'
-            }, 1800)
-          }
+          this.alertsuccess6 = true
+          setTimeout(() => {
+            window.location.href = 'https://myshop.e-merse.com/inventory'
+          }, 1800)
         })
     },
     updateAllProducts(shopId, shopName) {
@@ -2215,8 +2230,8 @@ export default {
 
 <style>
 .clipper-fixed .cover .area {
-  height: 35% !important;
-  width: 86% !important;
+  height: 33% !important;
+  width: 95% !important;
 }
 .navbar-alert {
   font-weight: 500;
