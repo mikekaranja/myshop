@@ -53,7 +53,7 @@ export default {
     // ga analytics
     this.$ga.event({
       eventCategory: 'Add to home screen button',
-      eventAction: 'Add to home screen click',
+      eventAction: 'Add to home screen banner click',
       eventLabel: this.$store.state.user.shopname,
       eventValue: 23
     })

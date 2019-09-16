@@ -60,19 +60,17 @@
     <v-dialog v-model="cropBannerDialog" fullscreen>
       <v-card class="rounded-card">
         <v-card-text
-          style="padding-top:70px;padding-right:0px;padding-left:0px;"
+          style="padding-top:20px;padding-right:0px;padding-left:0px;"
         >
           <div id="crop-title" class="subtitle-1">
             Drag to position your banner
           </div>
-          <vue-cropper
-            ref="cropper"
-            :zoomable="false"
-            :min-crop-box-width="290"
-            :min-crop-box-height="100"
-            :crop-box-resizable="false"
-            :src="img"
-          ></vue-cropper>
+          <clipper-fixed
+            ref="clipper"
+            :ratio="0.98"
+            :src="imgSrc"
+            preview="fixed-preview"
+          />
           <div style="color:black;margin-left:8px;" class="subtitle-2">
             * banner size width: over 1500px
           </div>
@@ -87,7 +85,7 @@
             </v-alert>
             <v-btn
               :loading="loading"
-              style="margin-top:30px;font-weight:700;text-transform:none;"
+              style="margin-top:10px;font-weight:700;text-transform:none;"
               color="primary"
               rounded
               block
@@ -107,6 +105,12 @@
               >Cancel</v-btn
             >
           </div>
+          <img
+            style="width:100%;opacity:0;"
+            class="result"
+            :src="resultURL"
+            alt=""
+          />
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -122,8 +126,9 @@ import { db, storage } from '~/plugins/firebase'
 export default {
   data() {
     return {
+      resultURL: '',
       img: '',
-      imag: '',
+      imgSrc: '',
       cropped: null,
       alertsuccess9: false,
       myBanner: {},
@@ -153,7 +158,7 @@ export default {
       const l = this.loader
       this[l] = !this[l]
 
-      setTimeout(() => (this[l] = false), 3000)
+      setTimeout(() => (this[l] = false), 5000)
 
       this.loader = null
     }
@@ -164,16 +169,16 @@ export default {
   methods: {
     cancel() {
       this.cropBannerDialog = !this.cropBannerDialog
-      this.$refs.cropper.reset()
+      // this.$refs.cropper.reset()
     },
     openBannerDialog() {
       this.$refs.opengallery.click()
     },
     setImage(e) {
       if (e) {
-        const image = URL.createObjectURL(e.target.files[0])
-        this.img = image
         this.cropBannerDialog = true
+        const image = URL.createObjectURL(e.target.files[0])
+        this.imgSrc = image
       } else {
         this.$refs.cropper.destroy()
       }
@@ -188,27 +193,20 @@ export default {
     },
     uploadBanner() {
       this.loader = 'loading'
-      this.$refs.cropper
-        .getCroppedCanvas({
-          width: 1500,
-          height: 400
-        })
-        .toBlob(blob => {
-          console.log(blob)
-          this.uploadBannerAsPromise(blob)
-        })
-      // this.loader = 'loading'
-      // if (!this.myBanner.hasImage()) {
-      //   alert('No image to upload')
-      // } else {
-      //   this.myBanner.generateBlob(
-      //     blob => {
-      //       this.uploadBannerAsPromise(blob)
-      //     },
-      //     'image/jpeg',
-      //     0.8
-      //   )
-      // }
+      const canvas = this.$refs.clipper.clip({ wPixel: 1500 })
+      this.resultURL = canvas.toDataURL('image/jpeg', 1)
+      this.uploadBannerAsPromise(this.dataURLtoBlob(this.resultURL))
+    },
+    dataURLtoBlob(dataurl) {
+      const arr = dataurl.split(',')
+      const mime = arr[0].match(/:(.*?);/)[1]
+      const bstr = atob(arr[1])
+      let n = bstr.length
+      const u8arr = new Uint8Array(n)
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n)
+      }
+      return new Blob([u8arr], { type: mime })
     },
     // Handle waiting to upload each file using promise
     uploadBannerAsPromise(imageFile) {

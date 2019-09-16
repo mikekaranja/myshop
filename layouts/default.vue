@@ -630,19 +630,27 @@
     <v-dialog v-model="cropLogoDialog" fullscreen>
       <v-card class="rounded-card">
         <v-card-text
-          style="padding-top:40px;padding-right:0px;padding-left:0px;"
+          style="padding-top:20px;padding-right:0px;padding-left:0px;"
         >
           <div id="crop-title" class="subtitle-1">
             Drag to position your logo
           </div>
-          <vue-cropper
+          <!-- <vue-cropper
             ref="cropper"
             :zoomable="false"
             :min-crop-box-width="200"
             :min-crop-box-height="100"
             :crop-box-resizable="false"
             :src="img"
-          ></vue-cropper>
+          ></vue-cropper> -->
+          <clipper-fixed
+            ref="clipper"
+            :src="imgSrc"
+            preview="fixed-preview"
+            :ratio="16 / 9"
+            :wrap-ratio="1"
+            @load="imgLoad"
+          />
           <div
             style="color:black;margin-left:8px;text-align: center;"
             class="subtitle-2"
@@ -660,7 +668,7 @@
             </v-alert>
             <v-btn
               :loading="loading"
-              style="margin-top:40px;font-weight:700;text-transform:none;"
+              style="margin-top:10px;font-weight:700;text-transform:none;"
               color="primary"
               rounded
               depressed
@@ -681,6 +689,12 @@
               @click="cropLogoDialog = !cropLogoDialog"
               >Cancel</v-btn
             >
+            <img
+              style="width:100%;opacity:0;"
+              class="result"
+              :src="resultURL"
+              alt=""
+            />
           </div>
         </v-card-text>
       </v-card>
@@ -890,7 +904,8 @@ export default {
   },
   data() {
     return {
-      img: '',
+      resultURL: '',
+      imgSrc: '',
       canvascolor: '',
       myBanner: {},
       myLogo: {},
@@ -1121,6 +1136,8 @@ export default {
       if (this.$store.state.addtohomescreen === 'newshop') {
         this.hiddenbanner = 'block'
       }
+      // check subscription
+      this.checkSubscription()
     }, 1000)
   },
   created() {
@@ -1160,6 +1177,37 @@ export default {
     })
   },
   methods: {
+    checkSubscription() {
+      return db
+        .ref('pwa/users')
+        .orderByChild('uid')
+        .equalTo(this.$store.state.user.uid)
+        .on('value', snapshot => {
+          // check if user has signed up
+          if (snapshot.exists()) {
+            const values = Object.values(snapshot.val())
+            const key = Object.keys(snapshot.val())
+            // set cookie user data
+            const shopdata = {
+              id: key[0],
+              uid: values[0].uid,
+              name: values[0].name,
+              email: values[0].email,
+              phonenumber: values[0].phonenumber,
+              shopid: values[0].shopid,
+              shopname: values[0].shopname,
+              expiry_date: values[0].expiry_date,
+              sign_up_date: values[0].sign_up_date,
+              payment_plan: values[0].payment_plan
+            }
+            this.$store.commit('setUserData', shopdata)
+            return false
+          }
+        })
+    },
+    imgLoad() {
+      this.$refs.clipper.setWH$.next({ width: 80, height: 0 })
+    },
     cancelSubscription() {
       this.cancelSubscriptionDialog = false
       this.snackbartext = 'Subscription cancelled successfully'
@@ -1444,15 +1492,18 @@ export default {
     },
     uploadLogo() {
       this.loader = 'loading'
-      this.$refs.cropper
-        .getCroppedCanvas({
-          width: 200,
-          height: 100
-        })
-        .toBlob(blob => {
-          console.log(blob)
-          this.uploadLogoAsPromise(blob)
-        })
+      const canvas = this.$refs.clipper.clip() // call component's clip method
+      this.resultURL = canvas.toDataURL('image/jpeg', 1) // canvas->image
+      this.uploadLogoAsPromise(this.dataURLtoBlob(this.resultURL))
+      // this.$refs.cropper
+      //   .getCroppedCanvas({
+      //     width: 200,
+      //     height: 100
+      //   })
+      //   .toBlob(blob => {
+      //     console.log(blob)
+      //     this.uploadLogoAsPromise(blob)
+      //   })
       // if (!this.myLogo.hasImage()) {
       //   alert('No image to upload')
       // } else {
@@ -1464,6 +1515,17 @@ export default {
       //     0.8
       //   )
       // }
+    },
+    dataURLtoBlob(dataurl) {
+      const arr = dataurl.split(',')
+      const mime = arr[0].match(/:(.*?);/)[1]
+      const bstr = atob(arr[1])
+      let n = bstr.length
+      const u8arr = new Uint8Array(n)
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n)
+      }
+      return new Blob([u8arr], { type: mime })
     },
     myLogoFile() {
       this.canvascolor = 'white'
@@ -2131,7 +2193,6 @@ export default {
           this.addSubcategoryDialog = true
           break
         case 'Upload/Change your Logo':
-          // this.cropLogoDialog = true
           this.$refs.opengallery.click()
           break
         case 'Upload/Change your Banner':
@@ -2144,7 +2205,7 @@ export default {
     setImage(e) {
       if (e) {
         const image = URL.createObjectURL(e.target.files[0])
-        this.img = image
+        this.imgSrc = image
         this.cropLogoDialog = true
       }
     }
@@ -2153,6 +2214,10 @@ export default {
 </script>
 
 <style>
+.clipper-fixed .cover .area {
+  height: 35% !important;
+  width: 86% !important;
+}
 .navbar-alert {
   font-weight: 500;
   font-size: 12px;

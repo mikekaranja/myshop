@@ -28,9 +28,18 @@ export default {
       {
         rel: 'stylesheet',
         href: '/progressiveimg.css'
+      },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.5/cropper.min.css'
       }
     ],
     script: [
+      {
+        src:
+          'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.5/cropper.min.js'
+      },
       {
         src:
           'https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js'
@@ -57,6 +66,8 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
+    '~plugins/vue-clipper',
+    '~plugins/vue-rx',
     '~plugins/croppa',
     '~plugins/vuetify',
     '~/plugins/bus',
