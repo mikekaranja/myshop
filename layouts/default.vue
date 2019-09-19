@@ -60,13 +60,22 @@
         background: 'white'
       }"
     >
-      <div v-show="before24hours" class="navbar-alert">
-        {{ paymentalert }}
+      <div :style="{ display: hiddenbanner }" class="navbar-alert-before-24">
+        <v-btn
+          style="padding-right: 5px;"
+          text
+          icon
+          color="white"
+          @click="closeBeforePaymentDialog"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+        Your free trial will end in 24hrs.
         <span
           class="open-dialog"
           @click="kindlyPayBeforeDialog = !kindlyPayBeforeDialog"
         >
-          Click here.</span
+          Click here to pay.</span
         >
       </div>
       <div v-show="after24hours" class="navbar-alert">
@@ -82,11 +91,11 @@
         <nuxt />
       </v-container>
     </v-content>
-    <banner-install
+    <!-- <banner-install
       v-show="addtohomescreen === 'newshop'"
       :style="{ display: hiddenbanner }"
       class="banner-install"
-    ></banner-install>
+    ></banner-install> -->
     <v-footer v-show="bottombar" color="white" padless :fixed="fixed" app>
       <v-bottom-navigation v-model="bottomNav" grow>
         <v-btn value="inventory" @click="openInventory">
@@ -709,8 +718,8 @@
         <v-card-text style="text-align: center;">
           <div>
             <div>
-              Kindly pay your monthly subscription fee <br />
-              to continue using E-merse. <br />
+              Kindly pay your monthly subscription fee to continue using
+              E-merse. <br /><br />
             </div>
             <v-btn
               style="text-transform:none;"
@@ -719,6 +728,15 @@
               color="primary"
               @click="openPaymentDialog"
               >Pay Monthly Subscription</v-btn
+            >
+            <v-btn
+              style="text-transform:none;margin-top:10px;"
+              rounded
+              text
+              block
+              color="primary"
+              @click="closeBeforePaymentDialog"
+              >Cancel</v-btn
             >
           </div>
         </v-card-text>
@@ -897,11 +915,11 @@
 <script>
 import { mapState } from 'vuex'
 import { db, auth, storage } from '~/plugins/firebase'
-import BannerInstall from '~/components/BannerInstall'
+// import BannerInstall from '~/components/BannerInstall'
 export default {
-  components: {
-    BannerInstall
-  },
+  // components: {
+  //   BannerInstall
+  // },
   data() {
     return {
       resultURL: '',
@@ -1087,6 +1105,11 @@ export default {
         const today = new Date()
         this.setPaymentMessage(today, expirydate, signupdate)
       }
+      if (to.path === '/catalogue' && from.path === '/onboardingcomplete') {
+        if (this.$store.state.addtohomescreen === 'newshop') {
+          this.hiddenbanner = 'block'
+        }
+      }
       if (to.path === '/catalogue') {
         this.topbar = false
         this.bottombar = true
@@ -1132,12 +1155,18 @@ export default {
       this.shopname = this.$store.state.user.shopname
       this.email = this.$store.state.user.email
       this.paymentplan = this.$store.state.user.payment_plan
+      if (this.$store.state.user.shopname) {
+        // set userId
+        this.$ga.set('userId', this.$store.state.user.shopname)
+      }
       // show banner
       if (this.$store.state.addtohomescreen === 'newshop') {
         this.hiddenbanner = 'block'
       }
       // check subscription
-      this.checkSubscription()
+      if (this.$store.state.user.uid) {
+        this.checkSubscription()
+      }
     }, 1000)
   },
   created() {
@@ -1177,6 +1206,10 @@ export default {
     })
   },
   methods: {
+    closeBeforePaymentDialog() {
+      this.hiddenbanner = 'none'
+      this.$store.commit('addToHomeScreen', '')
+    },
     checkSubscription() {
       return db
         .ref('pwa/users')
@@ -1228,7 +1261,7 @@ export default {
       // Before 24 hours
       if (hours <= 24 && expirydate > today && hours2 <= 24) {
         // show payment snackbar at the top
-        this.paymentalert = 'Your catalogue will be deactivated in 24hrs.'
+        this.paymentalert = 'Your free trial will end in 24hrs.'
         this.before24hours = true
       } else if (hours > 24 && expirydate < today) {
         // after 24 hours
@@ -1366,6 +1399,13 @@ export default {
       if (title === 'WhatsApp') {
         this.shareCategoryDialog()
       } else {
+        // ga analytics
+        this.$ga.event({
+          eventCategory: 'Share button',
+          eventAction: 'Share category on Facebook',
+          eventLabel: this.$store.state.user.shopname,
+          eventValue: 34
+        })
         window.open(
           'https://www.facebook.com/sharer/sharer.php?u=' +
             `https://shop.e-merse.com/?${this.$store.state.user.shopid}&category=${this.sharecategoryname}`,
@@ -1375,6 +1415,13 @@ export default {
       }
     },
     shareCategoryDialog() {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'Share button',
+        eventAction: 'Share category on WhatsApp',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 35
+      })
       // check if share API is supported or not
       if (this.$vuetify.breakpoint.mdAndUp) {
         window.open(
@@ -1408,6 +1455,13 @@ export default {
       if (title === 'WhatsApp') {
         this.shareSubcategoryDialog()
       } else {
+        // ga analytics
+        this.$ga.event({
+          eventCategory: 'Share button',
+          eventAction: 'Share Subcategory on Facebook',
+          eventLabel: this.$store.state.user.shopname,
+          eventValue: 34
+        })
         window.open(
           'https://www.facebook.com/sharer/sharer.php?u=' +
             `https://shop.e-merse.com/?${this.$store.state.user.shopid}&category=${this.sharecategoryname}&subcategory=${this.sharesubcategoryname}`,
@@ -1417,6 +1471,13 @@ export default {
       }
     },
     shareSubcategoryDialog() {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'Share button',
+        eventAction: 'Share Subcategory on WhatsApp',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 33
+      })
       // check if share API is supported or not
       // eslint-disable-next-line no-console
       if (this.$vuetify.breakpoint.mdAndUp) {
@@ -1451,6 +1512,13 @@ export default {
       if (title === 'WhatsApp') {
         this.shareProductDialog()
       } else {
+        // ga analytics
+        this.$ga.event({
+          eventCategory: 'Share button',
+          eventAction: 'Share Product on Facebook',
+          eventLabel: this.$store.state.user.shopname,
+          eventValue: 32
+        })
         window.open(
           'https://www.facebook.com/sharer/sharer.php?u=' +
             `https://e-merse.com/viewlink?text=${this.shareid}`,
@@ -1460,6 +1528,13 @@ export default {
       }
     },
     shareProductDialog() {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'Share button',
+        eventAction: 'Share Product on WhatsApp',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 31
+      })
       // check if share API is supported or not
       // eslint-disable-next-line no-console
       if (this.$vuetify.breakpoint.mdAndUp) {
@@ -2240,6 +2315,21 @@ export default {
   text-align: center;
   padding: 12px;
   background: #92302f;
+  border-radius: 4px;
+  color: white;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.navbar-alert-before-24 {
+  font-weight: 500;
+  font-size: 12px;
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  padding-left: 2px;
+  background: #2196f3;
   border-radius: 4px;
   color: white;
   position: -webkit-sticky;

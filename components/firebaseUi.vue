@@ -18,9 +18,9 @@ export default {
           authProviders.Facebook,
           authProviders.Email
         ],
-        signInSuccessUrl: '/',
-        tosUrl: '/',
-        privacyPolicyUrl: '/',
+        signInSuccessUrl: '/inventory',
+        tosUrl: '/terms',
+        privacyPolicyUrl: '/terms',
         callbacks: {
           signInSuccessWithAuthResult: function(authResult) {
             const uid = authResult.user.providerData[0].uid
@@ -74,6 +74,8 @@ export default {
               eventLabel: values[0].shopname,
               eventValue: 1
             })
+            // set userId
+            this.$ga.set('userId', values[0].shopname)
             return false
           } else {
             this.$store.commit('setOnboardingUid', uid)

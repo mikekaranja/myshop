@@ -54,7 +54,7 @@ export default {
       // Before 24 hours
       if (hours <= 24 && expirydate > today) {
         // before 24 hours
-        this.top = '43px'
+        // this.top = '43px'
       } else if (hours > 24 && expirydate < today) {
         // after 24 hours
         this.top = '43px'

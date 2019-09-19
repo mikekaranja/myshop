@@ -50,7 +50,7 @@ export default {
   mounted() {
     // ga analytics
     this.$ga.event({
-      eventCategory: 'Save button',
+      eventCategory: 'Search icon button',
       eventAction: 'Search icon click',
       eventLabel: this.$store.state.user.shopname,
       eventValue: 13

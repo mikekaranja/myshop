@@ -285,14 +285,22 @@ export default {
   data() {
     return {
       banners: [
+        'buy 2 get 1 free banner-min.jpg',
         'Banner1-min.jpg',
+        'Electronics cable blue best prices-min.jpg',
         'Banner2-min.jpg',
+        'Electronics purple simple banner-min.jpg',
         'Banner3-min.jpg',
+        'Fashion House floral blue!-min.jpg',
         'Banner4-min.jpg',
+        'genuine imported electronics plain blue-min.jpg',
         'Banner5-min.jpg',
+        'Ladies Collection slick purple banner-min.jpg',
         'Banner6-min.jpg',
-        'Banner7-min.jpg',
+        'Plug In with icons of electronics-min.jpg',
+        'sketch dresses any occasion banner-min.jpg',
         'Banner8-min.jpg',
+        'trends pink-min.jpg',
         'Banner9-min.jpg',
         'Banner10-min.jpg'
       ],
@@ -508,6 +516,8 @@ export default {
           eventLabel: shopName,
           eventValue: 8
         })
+        // set userId
+        this.$ga.set('userId', shopName)
         const shopId = shopName.replace(/ /g, '-').toLowerCase()
         return db
           .ref(`pwa/onboardingstats/onboarding-step5${shopId}`)

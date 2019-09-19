@@ -374,9 +374,6 @@ export default {
         if (!this.$refs.image1.src) {
           this.snackbartext = 'Please add the first image to continue'
           this.snackbar = true
-        } else if (this.description.length === 0) {
-          this.snackbartext = 'Kindly add a brief description'
-          this.snackbar = true
         } else {
           this.saveProduct()
         }
@@ -387,7 +384,7 @@ export default {
     saveProduct() {
       // ga analytics
       this.$ga.event({
-        eventCategory: 'Save button',
+        eventCategory: 'Create button',
         eventAction: 'Added Product',
         eventLabel: this.$store.state.user.shopname,
         eventValue: 10

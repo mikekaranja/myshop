@@ -1,7 +1,8 @@
 <template>
   <div class="text-center">
     <img class="top-logo" src="https://myshop.e-merse.com/icon.jpg" alt="" />
-    <p>We're <span style="font-weight:500;">pumped</span> to see you!</p>
+    <!-- <p>We're <span style="font-weight:500;">pumped</span> to see you!</p> -->
+    <p>Start your 24 hr free trial</p>
     <firebase-ui></firebase-ui>
   </div>
 </template>

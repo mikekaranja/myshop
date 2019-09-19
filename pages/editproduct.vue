@@ -338,7 +338,7 @@ export default {
     deleteProductForSure() {
       // ga analytics
       this.$ga.event({
-        eventCategory: 'Save button',
+        eventCategory: 'Delete button',
         eventAction: 'Deleted a Product',
         eventLabel: this.$store.state.user.shopname,
         eventValue: 12
@@ -515,9 +515,6 @@ export default {
         if (this.productimages[1].length === 0) {
           this.snackbartext = 'Please add the first image to continue'
           this.snackbar = true
-        } else if (this.item.description.length === 0) {
-          this.snackbartext = 'Kindly add a brief description'
-          this.snackbar = true
         } else {
           this.saveProduct()
         }
@@ -528,7 +525,7 @@ export default {
     saveProduct() {
       // ga analytics
       this.$ga.event({
-        eventCategory: 'Save button',
+        eventCategory: 'Save edited product button',
         eventAction: 'Edited a Product',
         eventLabel: this.$store.state.user.shopname,
         eventValue: 11
