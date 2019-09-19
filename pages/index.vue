@@ -42,7 +42,7 @@
             </div>
           </v-col>
           <v-col class="second-column">
-            <img width="290" :src="image" alt="phone" />
+            <img :src="image" alt="phone" />
           </v-col>
         </v-row>
       </v-container>
@@ -63,6 +63,7 @@ export default {
     setTimeout(() => {
       if (this.$vuetify.breakpoint.mdAndUp) {
         this.desktop = true
+        this.$bus.$emit('desktop', '0px')
       } else if (this.$vuetify.breakpoint.smAndDown) {
         if (this.$store.state.authenticated) {
           this.$router.push('/inventory')
@@ -96,11 +97,9 @@ export default {
   margin-left: 20px;
   text-transform: none;
 }
-.layout {
-  margin: -12px;
-}
 .container {
   padding: 0px;
+  max-width: 2000px;
 }
 .text-center {
   width: 100%;
@@ -113,9 +112,9 @@ export default {
   min-height: 75vh;
 }
 .text-column {
-  margin-top: 150px;
+  margin-top: 140px;
   text-align: left;
-  padding-left: 50px;
+  padding-left: 70px;
 }
 .buttons {
   margin-top: 30px;
@@ -124,7 +123,7 @@ export default {
   font-weight: 200;
 }
 .second-column {
-  padding-bottom: 160px;
+  padding-bottom: 50px;
   background: #ebebeb;
 }
 </style>

@@ -1123,6 +1123,7 @@ export default {
         this.bottombar = false
         this.cataloguescreen = '0px'
       } else if (to.path === '/') {
+        this.cataloguescreen = '0px'
         this.topbar = false
         this.bottombar = false
       } else if (to.path === '/inventory') {
@@ -1170,6 +1171,9 @@ export default {
     }, 1000)
   },
   created() {
+    this.$bus.$on('desktop', value => {
+      this.cataloguescreen = '0px'
+    })
     this.$bus.$on('showpaymentplan', value => {
       // set account details
       this.phonenumber = this.$store.state.user.phonenumber
@@ -2400,6 +2404,7 @@ export default {
 }
 .container {
   padding: 12px;
+  max-width: 2000px;
 }
 .headline {
   text-align: center;
