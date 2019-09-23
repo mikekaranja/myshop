@@ -20,7 +20,7 @@ export default {
         ],
         signInSuccessUrl: '/inventory',
         tosUrl: '/terms',
-        privacyPolicyUrl: '/terms',
+        privacyPolicyUrl: '/privacy',
         callbacks: {
           signInSuccessWithAuthResult: function(authResult) {
             const uid = authResult.user.providerData[0].uid
