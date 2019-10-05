@@ -7,11 +7,11 @@
     >
       <img class="top-logo" src="https://myshop.e-merse.com/icon.jpg" alt="" />
       <!-- <p>We're <span style="font-weight:500;">pumped</span> to see you!</p> -->
-      <div class="title bold">Welcome Back!</div>
+      <div class="title bold">Your online presence begins today</div>
       <p style="margin-top: 15px;">
-        Keep updating your stock and sharing your products with customers
+        Start your 24hr trial by creating an account
       </p>
-      <mobilefirebase-ui></mobilefirebase-ui>
+      <mobilefirebase-ui style="display:none;"></mobilefirebase-ui>
     </div>
     <div v-show="$vuetify.breakpoint.mdAndUp" class="text-center">
       <v-container style="padding: 0px;">
@@ -78,8 +78,8 @@ export default {
     return {
       mobile: '',
       desktop: '',
-      signin: true,
-      headline: 'Welcome Back!',
+      signin: false,
+      headline: 'Get more sales by showcasing your products online',
       subtitle:
         'Keep updating your stock and sharing your products with customers'
     }

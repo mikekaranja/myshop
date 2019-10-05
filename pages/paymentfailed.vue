@@ -8,7 +8,6 @@
       style="text-transform:none;"
       color="primary"
       rounded
-      block
       class="congrats-btn"
       @click="refresh"
       >Try Again</v-btn

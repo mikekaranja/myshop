@@ -3,18 +3,17 @@
     <v-navigation-drawer
       v-model="leftDrawer"
       style="z-index: 15;"
-      left
-      temporary
+      bottom
       :fixed="fixed"
       app
     >
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="title">
-            Plan: {{ paymentplan ? paymentplan.split('$')[0] : '' }}
+          <v-list-item-title class="title" style="text-transform:capitalize;">
+            {{ shopname }}
           </v-list-item-title>
           <v-list-item-subtitle>
-            ${{ paymentplan ? paymentplan.split('$')[1] : '' }}
+            Plan: {{ paymentplan ? paymentplan.split('$')[0] : '' }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -22,6 +21,15 @@
       <v-divider></v-divider>
 
       <v-list dense nav>
+        <v-list-item link to="/inventory">
+          <v-list-item-icon>
+            <v-icon>mdi-view-dashboard</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Categories</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item
           v-for="item in draweritems"
           :key="item.title"
@@ -37,6 +45,15 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+      <template v-slot:append>
+        <div class="logo-bottom">
+          <v-avatar :size="81">
+            <img src="icon.png" alt="icon" />
+          </v-avatar>
+          <div id="version" class="subtitle-2 font-weight-light">v1.1.0</div>
+        </div>
+      </template>
     </v-navigation-drawer>
     <v-app-bar
       v-show="topbar"
@@ -49,9 +66,53 @@
       <v-btn icon @click.stop="leftDrawer = !leftDrawer">
         <v-icon>menu</v-icon>
       </v-btn>
+      <v-menu origin="center center" transition="scale-transition" bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            v-show="$vuetify.breakpoint.mdAndUp"
+            id="add-btn"
+            large
+            rounded
+            color="primary"
+            v-on="on"
+          >
+            <v-icon left dark>mdi-plus</v-icon>
+            Add
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item-group color="primary">
+            <v-list-item
+              v-for="(item, i) in tiles"
+              :key="i"
+              @click="desktopAddOptionClicked(item.title)"
+            >
+              <v-list-item-icon>
+                <v-icon v-text="item.icon"></v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-menu>
       <v-spacer />
       <v-btn to="/search" icon>
         <v-icon>search</v-icon>
+      </v-btn>
+      <v-btn
+        v-show="$vuetify.breakpoint.mdAndUp"
+        id="view-catalog"
+        outlined
+        large
+        rounded
+        color="primary"
+        @click="openCatalogue"
+      >
+        <v-icon left dark>mdi-eye-outline</v-icon>
+        View your Shop
       </v-btn>
     </v-app-bar>
     <v-content
@@ -96,7 +157,14 @@
       :style="{ display: hiddenbanner }"
       class="banner-install"
     ></banner-install> -->
-    <v-footer v-show="bottombar" color="white" padless :fixed="fixed" app>
+    <v-footer
+      v-if="$vuetify.breakpoint.smAndDown"
+      v-show="bottombar"
+      color="white"
+      padless
+      :fixed="fixed"
+      app
+    >
       <v-bottom-navigation v-model="bottomNav" grow>
         <v-btn value="inventory" @click="openInventory">
           <span>Categories</span>
@@ -109,7 +177,7 @@
         </v-btn>
 
         <v-btn value="catalogue" to="/catalogue">
-          <span>Catalogue</span>
+          <span>My shop</span>
           <v-icon>mdi-eye-outline</v-icon>
         </v-btn>
       </v-bottom-navigation>
@@ -209,7 +277,7 @@
     </v-bottom-sheet>
     <!-- dialogs -->
     <!-- add category dialog -->
-    <v-dialog v-model="addCategoryDialog" max-width="320">
+    <v-dialog v-model="addCategoryDialog" max-width="400">
       <v-card>
         <v-card-title class="headline">Add a category</v-card-title>
 
@@ -243,6 +311,7 @@
 
           <v-btn
             :loading="loading2"
+            style="margin-top:10px;font-weight:700;text-transform:capitalize;"
             block
             rounded
             color="#92302F"
@@ -265,7 +334,7 @@
       </v-card>
     </v-dialog>
     <!-- edit category dialog -->
-    <v-dialog v-model="editCategoryDialog" max-width="320">
+    <v-dialog v-model="editCategoryDialog" max-width="400">
       <v-card>
         <v-card-title class="headline">Edit category</v-card-title>
 
@@ -299,6 +368,7 @@
 
           <v-btn
             :loading="loading2"
+            style="margin-top:12px;text-transform:capitalize;"
             block
             rounded
             color="#92302F"
@@ -321,7 +391,7 @@
       </v-card>
     </v-dialog>
     <!-- add subcategory dialog -->
-    <v-dialog v-model="addSubcategoryDialog" max-width="320">
+    <v-dialog v-model="addSubcategoryDialog" max-width="400">
       <v-card>
         <v-card-title class="headline">Add a subcategory</v-card-title>
 
@@ -359,6 +429,7 @@
           </v-alert>
 
           <v-btn
+            style="margin-top:10px;font-weight:700;text-transform:capitalize;"
             :loading="loading2"
             block
             rounded
@@ -382,7 +453,7 @@
       </v-card>
     </v-dialog>
     <!-- edit subcategory dialog -->
-    <v-dialog v-model="editSubcategoryDialog" max-width="320">
+    <v-dialog v-model="editSubcategoryDialog" max-width="400">
       <v-card>
         <v-card-title class="headline">Edit Subcategory</v-card-title>
 
@@ -438,7 +509,7 @@
       </v-card>
     </v-dialog>
     <!-- Delete category dialog -->
-    <v-dialog v-model="DeleteCategoryDialog" max-width="350">
+    <v-dialog v-model="DeleteCategoryDialog" max-width="400">
       <v-card class="rounded-card">
         <v-card-title class="subtitle-1"
           >Are you sure you want to delete this category?
@@ -480,7 +551,7 @@
       </v-card>
     </v-dialog>
     <!-- Delete subcategory dialog -->
-    <v-dialog v-model="DeleteSubcategoryDialog" max-width="350">
+    <v-dialog v-model="DeleteSubcategoryDialog" max-width="400">
       <v-card class="rounded-card">
         <v-card-title class="subtitle-1"
           >Are you sure you want to delete this subcategory?
@@ -522,7 +593,7 @@
       </v-card>
     </v-dialog>
     <!-- Edit Account Details dialog -->
-    <v-dialog v-model="editAccountDialog" max-width="350">
+    <v-dialog v-model="editAccountDialog" max-width="400">
       <v-card class="rounded-card">
         <v-card-title class="subtitle-1">Edit Account Details </v-card-title>
         <v-card-text>
@@ -578,7 +649,7 @@
       </v-card>
     </v-dialog>
     <!-- Request Custom Domain dialog -->
-    <v-dialog v-model="customDomainDialog" max-width="350">
+    <v-dialog v-model="customDomainDialog" max-width="400">
       <v-card class="rounded-card">
         <v-card-title class="subtitle-1">Request Custom Domain</v-card-title>
         <v-card-text>
@@ -1001,7 +1072,7 @@ export default {
       subcategory: '',
       categoryid: '',
       bottombar: false,
-      cataloguescreen: '12px',
+      cataloguescreen: '0px',
       hiddenbanner: 'none',
       topbar: false,
       phonenumber: '',
@@ -1071,6 +1142,16 @@ export default {
       this.loader2 = null
     },
     $route(to, from) {
+      if (to.path === '/inventory' && from.path === '/onboardingcomplete') {
+        if (this.$vuetify.breakpoint.mdAndUp) {
+          this.leftDrawer = true
+        }
+      }
+      if (to.path === '/inventory' && from.path === '/login') {
+        if (this.$vuetify.breakpoint.mdAndUp) {
+          this.leftDrawer = true
+        }
+      }
       if (to.path === '/catalogue' && from.path === '/onboardingcomplete') {
         const expirydate = new Date(this.$store.state.user.expiry_date)
         const signupdate = new Date(this.$store.state.user.sign_up_date)
@@ -1147,6 +1228,9 @@ export default {
   },
   mounted() {
     setTimeout(() => {
+      if (this.$vuetify.breakpoint.mdAndUp && this.$store.state.authenticated) {
+        this.leftDrawer = true
+      }
       const expirydate = new Date(this.$store.state.user.expiry_date)
       const signupdate = new Date(this.$store.state.user.sign_up_date)
       const today = new Date()
@@ -1210,6 +1294,12 @@ export default {
     })
   },
   methods: {
+    openCatalogue() {
+      window.open(
+        `https://shop.e-merse.com/?${this.$store.state.user.shopid}`,
+        '_blank'
+      )
+    },
     closeBeforePaymentDialog() {
       this.hiddenbanner = 'none'
       this.$store.commit('addToHomeScreen', '')
@@ -2195,8 +2285,27 @@ export default {
           }, 1800)
         })
     },
+    desktopAddOptionClicked(title) {
+      switch (title) {
+        case 'Product':
+          this.$router.push('/createproduct')
+          break
+        case 'Category':
+          this.addCategoryDialog = true
+          break
+        case 'Subcategory':
+          this.addSubcategoryDialog = true
+          break
+        case 'Upload/Change your Logo':
+          break
+        case 'Upload/Change your Banner':
+          break
+        default:
+          break
+      }
+    },
     navDrawerClick(title) {
-      this.leftDrawer = false
+      // this.leftDrawer = false
       switch (title) {
         case 'Edit Account Details':
           this.editAccountDialog = true
@@ -2308,13 +2417,28 @@ export default {
 </script>
 
 <style>
+#view-catalog {
+  text-transform: capitalize;
+}
+#add-btn {
+  width: 18%;
+  text-transform: capitalize;
+}
+.logo-bottom {
+  display: flex;
+  text-align: center;
+  margin-left: 22%;
+}
+#version {
+  padding-top: 15%;
+}
 .clipper-fixed .cover .area {
   height: 33% !important;
   width: 95% !important;
 }
 .navbar-alert {
   font-weight: 500;
-  font-size: 12px;
+  font-size: 14px;
   width: 100%;
   text-align: center;
   padding: 12px;
@@ -2328,7 +2452,7 @@ export default {
 }
 .navbar-alert-before-24 {
   font-weight: 500;
-  font-size: 12px;
+  font-size: 14px;
   width: 100%;
   text-align: center;
   padding: 12px;
@@ -2469,6 +2593,15 @@ export default {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .navbar-alert {
+    font-size: 12px;
+  }
+  .navbar-alert-before-24 {
+    font-size: 12px;
   }
 }
 </style>

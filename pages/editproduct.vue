@@ -1,31 +1,181 @@
 <template>
   <div>
-    <div class="headline">
-      Edit product
-    </div>
-    <div class="scrolling-wrapper">
-      <input
-        ref="opengallery"
-        style="display: none;"
-        type="file"
-        accept="image/*"
-        @change="setImage($event)"
-      />
-      <!-- product images aligned -->
-      <div v-for="n in 6" :key="n" class="product-images">
-        <div
-          v-show="productimages[n].length === 0"
-          class="image-placeholder"
-          @click.native="addImage(n)"
-        >
-          <v-btn text icon color="black" @click.native="addImage(n)">
-            <v-icon large>mdi-plus-circle-outline</v-icon>
-          </v-btn>
-          <div class="add-image" @click.native="addImage(n)">
-            Add Image
+    <v-container
+      v-show="$vuetify.breakpoint.mdAndUp"
+      class="white"
+      style="padding:20px;"
+    >
+      <div id="addproduct-header" class="display-1 font-weight-bold">
+        Edit product
+      </div>
+      <v-row no-gutters>
+        <v-col :cols="6">
+          <input
+            ref="opengallery"
+            style="display: none;"
+            type="file"
+            accept="image/*"
+            @change="setImage($event)"
+          />
+          <!-- product images aligned -->
+          <v-row class="mb-6" style="padding-top: 35px;">
+            <v-col v-for="n in 6" :key="n" cols="6" style="margin-bottom:10px;">
+              <div
+                v-show="productimages[n].length === 0"
+                class="image-placeholder"
+                @click.native="addImage(n)"
+              >
+                <v-btn text icon color="black" @click.native="addImage(n)">
+                  <v-icon large>mdi-plus-circle-outline</v-icon>
+                </v-btn>
+                <div class="add-image" @click.native="addImage(n)">
+                  Add Image
+                </div>
+              </div>
+              <div
+                v-show="productimages[n].length > 0"
+                style="text-align:center;"
+              >
+                <img
+                  v-show="productimages[n].length > 0"
+                  :ref="`image${n}`"
+                  class="product-image"
+                  :src="productimages[n]"
+                  alt=""
+                />
+                <v-btn text icon color="black" @click.native="addImage(n)">
+                  <v-icon>autorenew</v-icon>
+                </v-btn>
+                <v-btn text icon color="black" @click.native="deleteImage(n)">
+                  <v-icon>delete</v-icon>
+                </v-btn>
+              </div>
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col :cols="6">
+          <div class="subtitle-2">Product details</div>
+          <v-form
+            ref="formdesktop"
+            v-model="valid"
+            style="text-align:center;"
+            lazy-validation
+          >
+            <v-text-field
+              v-model="name"
+              :counter="100"
+              :rules="nameRules"
+              label="Name"
+              :placeholder="item ? name : ''"
+              required
+            ></v-text-field>
+
+            <v-text-field
+              v-model="price"
+              :rules="priceRules"
+              label="Price"
+              type="number"
+              :placeholder="item ? price : ''"
+              required
+            ></v-text-field>
+
+            <v-select
+              v-model="category"
+              :items="categories"
+              attach
+              chips
+              label="Select categories"
+              multiple
+            ></v-select>
+
+            <v-combobox
+              v-model="subcategory"
+              :items="subcategories"
+              label="Select subcategories"
+              multiple
+              chips
+            ></v-combobox>
+
+            <vue-editor
+              v-model="description"
+              style="margin-top:10px;margin-bottom: 40px;"
+              placeholder="Enter product description"
+              :editor-toolbar="customToolbar"
+            ></vue-editor>
+
+            <div style="display: inline-grid;width: 100%;">
+              <v-btn class="save-btn" color="primary" rounded @click="validate"
+                >Save</v-btn
+              >
+
+              <v-btn
+                color="primary"
+                text
+                rounded
+                class="delete-btn"
+                @click="openDeleteProductDialog"
+              >
+                <v-icon left dark>delete</v-icon>
+                Delete product</v-btn
+              >
+            </div>
+          </v-form>
+        </v-col>
+      </v-row>
+      <!-- snackbar to show too many items to be uploaded at a time -->
+      <v-snackbar v-model="snackbar">
+        {{ snackbartext }}
+      </v-snackbar>
+      <!-- show upload overlay -->
+      <v-overlay :value="overlay" light>
+        <v-progress-circular
+          :size="50"
+          :width="7"
+          indeterminate
+          color="white"
+        ></v-progress-circular>
+      </v-overlay>
+      <!-- compress images at the bottom of the screen -->
+      <div class="compress-below" :style="{ display: imageuploaddone }">
+        <!-- compress image holder -->
+        <img ref="imgSrc" style="width:100%;opacity:0;" />
+        <!-- compressed image result -->
+        <img
+          id="imgResult"
+          ref="imgResult"
+          style="width:200px;margin-top:10px;opacity:0;"
+        />
+      </div>
+    </v-container>
+    <div v-show="$vuetify.breakpoint.smAndDown">
+      <!-- <v-btn class="back-btn" text icon color="black" to="/onboarding">
+      <v-icon>arrow_back_ios</v-icon>
+    </v-btn> -->
+      <div class="headline">
+        Edit product
+      </div>
+      <div class="scrolling-wrapper">
+        <input
+          ref="opengallery"
+          style="display: none;"
+          type="file"
+          accept="image/*"
+          @change="setImage($event)"
+        />
+        <!-- product images aligned -->
+        <div v-for="n in 6" :key="n" class="product-images">
+          <div
+            v-show="productimages[n].length === 0"
+            class="image-placeholder"
+            @click.native="addImage(n)"
+          >
+            <v-btn text icon color="black" @click.native="addImage(n)">
+              <v-icon large>mdi-plus-circle-outline</v-icon>
+            </v-btn>
+            <div class="add-image" @click.native="addImage(n)">
+              Add Image
+            </div>
           </div>
-        </div>
-        <div v-show="productimages[n].length > 0" style="text-align:center;">
           <img
             v-show="productimages[n].length > 0"
             :ref="`image${n}`"
@@ -33,80 +183,93 @@
             :src="productimages[n]"
             alt=""
           />
-          <v-btn text icon color="black" @click.native="addImage(n)">
-            <v-icon>autorenew</v-icon>
-          </v-btn>
-          <v-btn text icon color="black" @click.native="deleteImage(n)">
-            <v-icon>delete</v-icon>
-          </v-btn>
         </div>
       </div>
+      <v-form
+        ref="form"
+        v-model="valid"
+        style="margin-top:15px;"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="name"
+          :counter="50"
+          :rules="nameRules"
+          label="Name"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          v-model="price"
+          :rules="priceRules"
+          label="Price"
+          type="number"
+          required
+        ></v-text-field>
+
+        <v-select
+          v-model="category"
+          :items="categories"
+          attach
+          chips
+          label="Select categories"
+          multiple
+        ></v-select>
+
+        <v-select
+          v-model="subcategory"
+          :items="subcategories"
+          attach
+          chips
+          label="Select subcategories"
+          multiple
+        ></v-select>
+
+        <div class="subtitle-2">Product description</div>
+        <vue-editor
+          v-model="description"
+          style="margin-top:10px;"
+          :editor-toolbar="customToolbar"
+        ></vue-editor>
+
+        <v-btn
+          v-show="!focus"
+          :disabled="!valid"
+          color="primary"
+          large
+          class="create-btn"
+          @click="validate"
+        >
+          Add product
+        </v-btn>
+      </v-form>
+      <!-- snackbar to show too many items to be uploaded at a time -->
+      <v-snackbar v-model="snackbar">
+        {{ snackbartext }}
+      </v-snackbar>
+      <!-- show upload overlay -->
+      <v-overlay :value="overlay" light>
+        <v-progress-circular
+          :size="50"
+          :width="7"
+          indeterminate
+          color="white"
+        ></v-progress-circular>
+      </v-overlay>
+      <!-- compress images at the bottom of the screen -->
+      <div class="compress-below" :style="{ display: imageuploaddone }">
+        <!-- compress image holder -->
+        <img ref="imgSrc" style="width:100%;opacity:0;" />
+        <!-- compressed image result -->
+        <img
+          id="imgResult"
+          ref="imgResult"
+          style="width:200px;margin-top:10px;opacity:0;"
+        />
+      </div>
     </div>
-    <v-form ref="form" v-model="valid" style="margin-top:40px;" lazy-validation>
-      <v-text-field
-        v-model="name"
-        :counter="100"
-        :rules="nameRules"
-        label="Name"
-        :placeholder="item ? name : ''"
-        required
-      ></v-text-field>
-
-      <v-text-field
-        v-model="price"
-        :rules="priceRules"
-        label="Price"
-        type="number"
-        :placeholder="item ? price : ''"
-        required
-      ></v-text-field>
-
-      <v-select
-        v-model="category"
-        :items="categories"
-        attach
-        chips
-        label="Select categories"
-        multiple
-      ></v-select>
-
-      <v-combobox
-        v-model="subcategory"
-        :items="subcategories"
-        label="Select subcategories"
-        multiple
-        chips
-      ></v-combobox>
-      <div class="subtitle-2">Product description</div>
-      <vue-editor
-        v-model="description"
-        style="margin-top:10px;margin-bottom: 40px;"
-        :editor-toolbar="customToolbar"
-      ></vue-editor>
-
-      <v-btn
-        style="font-size: 18px;text-transform:none;margin-top:10px;font-weight:700;"
-        color="primary"
-        rounded
-        block
-        @click="validate"
-        >Save</v-btn
-      >
-
-      <v-btn
-        color="primary"
-        text
-        block
-        rounded
-        style="font-size: 18px;margin-top:20px;text-transform:none;font-weight:700;"
-        @click="openDeleteProductDialog"
-      >
-        <v-icon left dark>delete</v-icon>
-        Delete product</v-btn
-      >
-    </v-form>
     <!-- delete dialog product -->
-    <v-dialog v-model="deleteDialog" max-width="350">
+    <v-dialog v-model="deleteDialog" max-width="400">
       <v-card class="rounded-card">
         <v-card-title class="subtitle-1"
           >Are you sure you want to delete this product?</v-card-title
@@ -141,7 +304,7 @@
       {{ snackbartext }}
     </v-snackbar>
     <!-- show upload overlay -->
-    <v-overlay :value="overlay" light>
+    <v-overlay style="z-index: 20;" :value="overlay" light>
       <v-progress-circular
         v-show="!uploaddone"
         :size="50"
@@ -568,6 +731,20 @@ export default {
 </script>
 
 <style scoped>
+.save-btn {
+  width: 55%;
+  text-transform: none;
+  margin: auto;
+  margin-top: 10px;
+  font-weight: 700;
+}
+.delete-btn {
+  width: 55%;
+  margin: auto;
+  text-transform: none;
+  margin-top: 20px;
+  font-weight: 700;
+}
 .headline {
   font-family: 'Open Sans', sans-serif !important;
   margin-bottom: 30px;

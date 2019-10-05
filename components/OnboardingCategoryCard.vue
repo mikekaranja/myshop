@@ -33,14 +33,6 @@ export default {
     return {
       auto: 'auto'
     }
-  },
-  methods: {
-    edit() {
-      this.$bus.$emit('editCategoryDialog', true)
-    },
-    share() {
-      this.$bus.$emit('shareCategory', true)
-    }
   }
 }
 </script>

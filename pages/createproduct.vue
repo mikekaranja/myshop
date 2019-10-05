@@ -1,31 +1,173 @@
 <template>
   <div>
-    <div class="headline">
-      Create a product
-    </div>
-    <div class="scrolling-wrapper">
-      <input
-        ref="opengallery"
-        style="display: none;"
-        type="file"
-        accept="image/*"
-        @change="setImage($event)"
-      />
-      <!-- product images aligned -->
-      <div v-for="n in 6" :key="n" class="product-images">
-        <div
-          v-show="productimages[n].length === 0"
-          class="image-placeholder"
-          @click.native="addImage(n)"
-        >
-          <v-btn text icon color="black" @click.native="addImage(n)">
-            <v-icon large>mdi-plus-circle-outline</v-icon>
-          </v-btn>
-          <div class="add-image" @click.native="addImage(n)">
-            Add Image
+    <v-container
+      v-show="$vuetify.breakpoint.mdAndUp"
+      class="white"
+      style="padding:20px;"
+    >
+      <div id="addproduct-header" class="display-1 font-weight-bold">
+        Add a product
+      </div>
+      <v-row no-gutters>
+        <v-col :cols="6">
+          <input
+            ref="opengallery"
+            style="display: none;"
+            type="file"
+            accept="image/*"
+            @change="setImage($event)"
+          />
+          <!-- product images aligned -->
+          <v-row class="mb-6" style="padding-top: 35px;">
+            <v-col v-for="n in 6" :key="n" cols="6" style="margin-bottom:10px;">
+              <div
+                v-show="productimages[n].length === 0"
+                class="image-placeholder"
+                @click.native="addImage(n)"
+              >
+                <v-btn text icon color="black" @click.native="addImage(n)">
+                  <v-icon large>mdi-plus-circle-outline</v-icon>
+                </v-btn>
+                <div class="add-image" @click.native="addImage(n)">
+                  Add Image
+                </div>
+              </div>
+              <div
+                v-show="productimages[n].length > 0"
+                style="text-align:center;"
+              >
+                <img
+                  v-show="productimages[n].length > 0"
+                  :ref="`image${n}`"
+                  class="product-image"
+                  :src="productimages[n]"
+                  alt=""
+                />
+                <v-btn text icon color="black" @click.native="addImage(n)">
+                  <v-icon>autorenew</v-icon>
+                </v-btn>
+                <v-btn text icon color="black" @click.native="deleteImage(n)">
+                  <v-icon>delete</v-icon>
+                </v-btn>
+              </div>
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col :cols="6">
+          <div class="subtitle-2">Product details</div>
+          <v-form
+            ref="formdesktop"
+            v-model="valid"
+            style="text-align:center;"
+            lazy-validation
+          >
+            <v-text-field
+              v-model="name"
+              :counter="100"
+              :rules="nameRules"
+              label="Name"
+              required
+            ></v-text-field>
+
+            <v-text-field
+              v-model="price"
+              :rules="priceRules"
+              type="number"
+              label="Price"
+              required
+              @keypress="isNumber"
+            ></v-text-field>
+
+            <v-select
+              v-model="category"
+              :items="categories"
+              attach
+              chips
+              label="Select categories"
+              multiple
+            ></v-select>
+
+            <v-select
+              v-model="subcategory"
+              :items="subcategories"
+              attach
+              chips
+              label="Select subcategories"
+              multiple
+            ></v-select>
+
+            <vue-editor
+              v-model="description"
+              style="margin-top:10px;margin-bottom: 40px;"
+              placeholder="Enter product description"
+              :editor-toolbar="customToolbar"
+            ></vue-editor>
+
+            <v-btn
+              class="add-product-btn"
+              color="primary"
+              rounded
+              depressed
+              @click="validateDesktop"
+              >Add Product</v-btn
+            >
+          </v-form>
+        </v-col>
+      </v-row>
+      <!-- snackbar to show too many items to be uploaded at a time -->
+      <v-snackbar v-model="snackbar">
+        {{ snackbartext }}
+      </v-snackbar>
+      <!-- show upload overlay -->
+      <v-overlay style="z-index: 20;" :value="overlay" light>
+        <v-progress-circular
+          :size="50"
+          :width="7"
+          indeterminate
+          color="white"
+        ></v-progress-circular>
+      </v-overlay>
+      <!-- compress images at the bottom of the screen -->
+      <div class="compress-below" :style="{ display: imageuploaddone }">
+        <!-- compress image holder -->
+        <img ref="imgSrc" style="width:100%;opacity:0;" />
+        <!-- compressed image result -->
+        <img
+          id="imgResult"
+          ref="imgResult"
+          style="width:200px;margin-top:10px;opacity:0;"
+        />
+      </div>
+    </v-container>
+    <div v-show="$vuetify.breakpoint.smAndDown">
+      <!-- <v-btn class="back-btn" text icon color="black" to="/onboarding">
+      <v-icon>arrow_back_ios</v-icon>
+    </v-btn> -->
+      <div class="headline">
+        Add a product
+      </div>
+      <div class="scrolling-wrapper">
+        <input
+          ref="opengallery"
+          style="display: none;"
+          type="file"
+          accept="image/*"
+          @change="setImage($event)"
+        />
+        <!-- product images aligned -->
+        <div v-for="n in 6" :key="n" class="product-images">
+          <div
+            v-show="productimages[n].length === 0"
+            class="image-placeholder"
+            @click.native="addImage(n)"
+          >
+            <v-btn text icon color="black" @click.native="addImage(n)">
+              <v-icon large>mdi-plus-circle-outline</v-icon>
+            </v-btn>
+            <div class="add-image" @click.native="addImage(n)">
+              Add Image
+            </div>
           </div>
-        </div>
-        <div v-show="productimages[n].length > 0" style="text-align:center;">
           <img
             v-show="productimages[n].length > 0"
             :ref="`image${n}`"
@@ -33,92 +175,90 @@
             :src="productimages[n]"
             alt=""
           />
-          <v-btn text icon color="black" @click.native="addImage(n)">
-            <v-icon>autorenew</v-icon>
-          </v-btn>
-          <v-btn text icon color="black" @click.native="deleteImage(n)">
-            <v-icon>delete</v-icon>
-          </v-btn>
         </div>
       </div>
-    </div>
-    <v-form ref="form" v-model="valid" style="margin-top:40px;" lazy-validation>
-      <v-text-field
-        v-model="name"
-        :counter="100"
-        :rules="nameRules"
-        label="Name"
-        required
-      ></v-text-field>
-
-      <v-text-field
-        v-model="price"
-        :rules="priceRules"
-        type="number"
-        label="Price"
-        required
-        @keypress="isNumber"
-      ></v-text-field>
-
-      <v-select
-        v-model="category"
-        :items="categories"
-        attach
-        chips
-        label="Select categories"
-        multiple
-      ></v-select>
-
-      <v-select
-        v-model="subcategory"
-        :items="subcategories"
-        attach
-        chips
-        label="Select subcategories"
-        multiple
-      ></v-select>
-
-      <div class="subtitle-2">Product description</div>
-      <vue-editor
-        v-model="description"
-        style="margin-top:10px;margin-bottom: 40px;"
-        :editor-toolbar="customToolbar"
-      ></vue-editor>
-
-      <v-btn
-        class="create-product-btn"
-        color="primary"
-        rounded
-        depressed
-        block
-        @click="validate"
-        >Create Product</v-btn
+      <v-form
+        ref="form"
+        v-model="valid"
+        style="margin-top:15px;"
+        lazy-validation
       >
-    </v-form>
-    <!-- snackbar to show too many items to be uploaded at a time -->
-    <v-snackbar v-model="snackbar">
-      {{ snackbartext }}
-    </v-snackbar>
-    <!-- show upload overlay -->
-    <v-overlay :value="overlay" light>
-      <v-progress-circular
-        v-show="!uploaddone"
-        :size="50"
-        :width="7"
-        indeterminate
-        color="white"
-      ></v-progress-circular>
-    </v-overlay>
-    <!-- compress images at the bottom of the screen -->
-    <div class="compress-below" :style="{ display: imageuploaddone }">
-      <!-- compress image holder -->
-      <img ref="imgSrc" style="width:100%;opacity:0;" />
-      <!-- compressed image result -->
-      <img
-        id="imgResult"
-        ref="imgResult"
-        style="width:200px;margin-top:10px;opacity:0;"
-      />
+        <v-text-field
+          v-model="name"
+          :counter="50"
+          :rules="nameRules"
+          label="Name"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          v-model="price"
+          :rules="priceRules"
+          label="Price"
+          type="number"
+          required
+        ></v-text-field>
+
+        <v-select
+          v-model="category"
+          :items="categories"
+          attach
+          chips
+          label="Select categories"
+          multiple
+        ></v-select>
+
+        <v-select
+          v-model="subcategory"
+          :items="subcategories"
+          attach
+          chips
+          label="Select subcategories"
+          multiple
+        ></v-select>
+
+        <div class="subtitle-2">Product description</div>
+        <vue-editor
+          v-model="description"
+          style="margin-top:10px;"
+          :editor-toolbar="customToolbar"
+        ></vue-editor>
+
+        <v-btn
+          v-show="!focus"
+          :disabled="!valid"
+          color="primary"
+          large
+          class="create-btn"
+          @click="validate"
+        >
+          Add product
+        </v-btn>
+      </v-form>
+      <!-- snackbar to show too many items to be uploaded at a time -->
+      <v-snackbar v-model="snackbar">
+        {{ snackbartext }}
+      </v-snackbar>
+      <!-- show upload overlay -->
+      <v-overlay :value="overlay" light>
+        <v-progress-circular
+          :size="50"
+          :width="7"
+          indeterminate
+          color="white"
+        ></v-progress-circular>
+      </v-overlay>
+      <!-- compress images at the bottom of the screen -->
+      <div class="compress-below" :style="{ display: imageuploaddone }">
+        <!-- compress image holder -->
+        <img ref="imgSrc" style="width:100%;opacity:0;" />
+        <!-- compressed image result -->
+        <img
+          id="imgResult"
+          ref="imgResult"
+          style="width:200px;margin-top:10px;opacity:0;"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -198,27 +338,29 @@ export default {
           this.subcategories = newArray
         }
       }
-    },
-    price: function(val, oldval) {
-      // const valy = val.replace(/,/g, '')
-      // // set comma to price
-      // if (
-      //   valy.length === 4 ||
-      //   valy.length === 5 ||
-      //   valy.length === 6 ||
-      //   valy.length === 7 ||
-      //   valy.length === 8 ||
-      //   valy.length === 9 ||
-      //   valy.length === 10 ||
-      //   valy.length === 11 ||
-      //   valy.length === 12
-      // ) {
-      //   this.price = valy.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      // }
     }
+    // price: function(val, oldval) {
+    //   const valy = val.replace(/,/g, '')
+    //   // set comma to price
+    //   if (
+    //     valy.length === 4 ||
+    //     valy.length === 5 ||
+    //     valy.length === 6 ||
+    //     valy.length === 7 ||
+    //     valy.length === 8 ||
+    //     valy.length === 9 ||
+    //     valy.length === 10 ||
+    //     valy.length === 11 ||
+    //     valy.length === 12
+    //   ) {
+    //     this.price = valy.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    //   }
+    // }
   },
   mounted() {
     this.windowHeight = window.innerHeight
+    this.category = this.$store.state.category
+    this.categories.push(this.$store.state.category)
   },
   methods: {
     isNumber(evt) {
@@ -235,13 +377,6 @@ export default {
         return true
       }
       return true
-    },
-    addImage(n) {
-      this.$refs.opengallery.click()
-      this.imageselected = n
-    },
-    deleteImage(n) {
-      return this.productimages.splice(n, 1, '')
     },
     onResize() {
       if (this.windowHeight > window.innerHeight) {
@@ -338,16 +473,9 @@ export default {
         const imagename = `image-${randomnumber}`
         const uploadTask = storage.ref(`pwa/${imagename}`).put(imageFile)
 
-        // Register three observers:
-        // 1. 'state_changed' observer, called any time the state changes
-        // 2. Error observer, called on failure
-        // 3. Completion observer, called on successful completion
         uploadTask.on(
           'state_changed',
-          function(snapshot) {
-            // Observe state change events such as progress, pause, and resume
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          },
+          function(snapshot) {},
           function(error) {
             // Handle unsuccessful uploads
             // eslint-disable-next-line no-console
@@ -358,6 +486,8 @@ export default {
               .ref(`pwa/${imagename}`)
               .getDownloadURL()
               .then(downloadURL => {
+                // eslint-disable-next-line no-console
+                // console.log('File available at', downloadURL)
                 if (downloadURL) {
                   this.imageUrls.push(downloadURL)
                   this.overlay = false
@@ -368,6 +498,10 @@ export default {
         )
         resolve()
       })
+    },
+    addImage(n) {
+      this.$refs.opengallery.click()
+      this.imageselected = n
     },
     validate() {
       if (this.$refs.form.validate()) {
@@ -381,13 +515,25 @@ export default {
         window.scroll(0, 0)
       }
     },
+    validateDesktop() {
+      if (this.$refs.formdesktop.validate()) {
+        if (!this.$refs.image1.src) {
+          this.snackbartext = 'Please add the first image to continue'
+          this.snackbar = true
+        } else {
+          this.saveProduct()
+        }
+      } else {
+        window.scroll(0, 0)
+      }
+    },
     saveProduct() {
       // ga analytics
       this.$ga.event({
-        eventCategory: 'Create button',
+        eventCategory: 'Add Product button',
         eventAction: 'Added Product',
         eventLabel: this.$store.state.user.shopname,
-        eventValue: 10
+        eventValue: 101
       })
       // start overlay loader
       this.overlay = true
@@ -400,12 +546,12 @@ export default {
         shopname: shopname,
         item: 'product',
         name: this.name,
-        price: parseInt(this.price.replace(',', '')),
+        price: this.price,
         currency: 'Ksh',
         description: this.description,
         imageUrls: this.imageUrls,
-        category: this.category,
-        subcategory: this.subcategory,
+        category: [this.category],
+        subcategory: '',
         date_created: new Date().toString()
       }
       const newPostKey = db
@@ -430,54 +576,6 @@ export default {
 </script>
 
 <style scoped>
-.croppa-container {
-  border-style: dashed;
-  border-color: gray;
-  border-width: thick;
-}
-#crop-title-2 {
-  font-weight: 600;
-  padding: 20px;
-  color: gray;
-  text-align: center;
-}
-.headline {
-  font-family: 'Open Sans', sans-serif !important;
-  margin-bottom: 30px;
-  margin-left: 5px;
-  font-weight: 700;
-  text-align: left;
-}
-.display-3 {
-  font-family: 'Open Sans', sans-serif !important;
-  padding: 50px;
-  font-weight: 700;
-}
-.back-btn {
-  position: absolute;
-  top: 18px;
-}
-.create-btn {
-  font-size: large;
-  text-transform: capitalize;
-  font-weight: 500;
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  z-index: 5;
-  left: 0;
-}
-.scrolling-wrapper {
-  margin-top: 10px;
-  display: -webkit-box;
-  width: 100%;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
-}
 .add-image {
   margin-top: 10px;
   color: black;
@@ -490,6 +588,7 @@ export default {
   text-align: center;
   padding: 40px;
   border-radius: 4px;
+  margin: auto;
   background: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -503,6 +602,7 @@ export default {
   object-fit: cover;
   width: 200px;
   margin: 5px;
+  margin: auto;
   height: 200px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -511,10 +611,89 @@ export default {
   width: 100%;
   margin-top: 50px;
 }
-.create-product-btn {
-  font-size: 18px;
+.add-product-btn {
+  width: 50%;
   text-transform: capitalize;
   margin-bottom: 70px;
   font-weight: 700;
+}
+#addproduct-header {
+  margin-left: 5px;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .headline {
+    margin-top: 10px;
+    font-family: 'Open Sans', sans-serif !important;
+    margin-bottom: 20px;
+    margin-left: 5px;
+    font-weight: 900;
+    text-align: left;
+  }
+  .display-3 {
+    font-family: 'Open Sans', sans-serif !important;
+    padding: 50px;
+    font-weight: 700;
+  }
+  .back-btn {
+    position: absolute;
+    top: 18px;
+  }
+  .create-btn {
+    border-radius: 0px;
+    font-size: large;
+    text-transform: capitalize;
+    font-weight: 500;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 5;
+    left: 0;
+  }
+  .scrolling-wrapper {
+    margin-top: 10px;
+    display: -webkit-box;
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .add-image {
+    margin-top: 10px;
+    color: black;
+    font-weight: 500;
+  }
+  .image-placeholder {
+    margin: 5px;
+    height: 200px;
+    width: 200px;
+    text-align: center;
+    padding: 40px;
+    border-radius: 4px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .image-placeholder button {
+    margin-top: 25%;
+  }
+  .product-image {
+    display: block;
+    border-radius: 4px;
+    object-fit: cover;
+    width: 200px;
+    margin: 5px;
+    height: 200px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .compress-below {
+    width: 100%;
+    margin-top: 50px;
+  }
 }
 </style>

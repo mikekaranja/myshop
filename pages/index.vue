@@ -1,6 +1,6 @@
 <template>
   <v-layout class="layout" wrap justify-center align-center>
-    <div v-show="!desktop" class="text-center">
+    <div class="text-center">
       <v-progress-circular
         class="spinner"
         :size="70"
@@ -9,80 +9,24 @@
         indeterminate
       ></v-progress-circular>
     </div>
-    <div v-show="desktop" class="text-center">
-      <v-container>
-        <v-row :class="mb - 6" no-gutters>
-          <v-col class="first-column">
-            <div class="text-column">
-              <img width="100" src="icon.png" alt="icon" />
-              <div class="display-2">
-                Download E-merse from <br />
-                your mobile phone
-              </div>
-              <div class="buttons">
-                <v-btn
-                  class="btn-1"
-                  rounded
-                  :outlined="!iphone"
-                  color="primary"
-                  dark
-                  @click="btnClick(1)"
-                  >iOS</v-btn
-                >
-                <v-btn
-                  class="btn-2"
-                  rounded
-                  :outlined="iphone"
-                  color="primary"
-                  dark
-                  @click="btnClick(2)"
-                  >Android</v-btn
-                >
-              </div>
-            </div>
-          </v-col>
-          <v-col class="second-column">
-            <img :src="image" alt="phone" />
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
   </v-layout>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      desktop: false,
-      image: 'iphone.png',
-      iphone: true
-    }
-  },
   created() {
     setTimeout(() => {
-      if (this.$vuetify.breakpoint.mdAndUp) {
-        this.desktop = true
-        this.$bus.$emit('desktop', '0px')
-      } else if (this.$vuetify.breakpoint.smAndDown) {
-        if (this.$store.state.authenticated) {
-          this.$router.push('/inventory')
+      const query = this.$router.history.current.query
+      if (this.$store.state.authenticated) {
+        this.$router.push('/inventory')
+      } else if (!this.$store.state.authenticated) {
+        if (Object.keys(query)[0] === 'login') {
+          this.$router.push('/login')
         } else {
           this.$router.push('/login')
         }
       }
-    }, 80)
-  },
-  methods: {
-    btnClick(num) {
-      if (num === 1) {
-        this.image = 'iphone.png'
-        this.iphone = true
-      } else {
-        this.image = 'android.png'
-        this.iphone = false
-      }
-    }
+    }, 100)
   }
 }
 </script>

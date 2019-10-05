@@ -1,116 +1,246 @@
 <template>
   <div>
-    <!-- <v-btn class="back-btn" text icon color="black" to="/onboarding">
+    <v-container
+      v-show="$vuetify.breakpoint.mdAndUp"
+      class="white"
+      style="padding:20px;"
+    >
+      <div id="addproduct-header" class="display-1 font-weight-bold">
+        Add a product
+      </div>
+      <v-row no-gutters>
+        <v-col :cols="6">
+          <input
+            ref="opengallery"
+            style="display: none;"
+            type="file"
+            accept="image/*"
+            @change="setImage($event)"
+          />
+          <!-- product images aligned -->
+          <v-row class="mb-6" style="padding-top: 20px;">
+            <v-col v-for="n in 6" :key="n" cols="6" style="margin-bottom:10px;">
+              <div
+                v-show="productimages[n].length === 0"
+                class="image-placeholder"
+                @click.native="addImage(n)"
+              >
+                <v-btn text icon color="black" @click.native="addImage(n)">
+                  <v-icon large>mdi-plus-circle-outline</v-icon>
+                </v-btn>
+                <div class="add-image" @click.native="addImage(n)">
+                  Add Image
+                </div>
+              </div>
+              <div
+                v-show="productimages[n].length > 0"
+                style="text-align:center;"
+              >
+                <img
+                  v-show="productimages[n].length > 0"
+                  :ref="`image${n}`"
+                  class="product-image"
+                  :src="productimages[n]"
+                  alt=""
+                />
+                <v-btn text icon color="black" @click.native="addImage(n)">
+                  <v-icon>autorenew</v-icon>
+                </v-btn>
+                <v-btn text icon color="black" @click.native="deleteImage(n)">
+                  <v-icon>delete</v-icon>
+                </v-btn>
+              </div>
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col :cols="6">
+          <div class="subtitle-2">Product details</div>
+          <v-form
+            ref="formdesktop"
+            v-model="valid"
+            style="text-align:center;"
+            lazy-validation
+          >
+            <v-text-field
+              v-model="name"
+              :counter="100"
+              :rules="nameRules"
+              label="Name"
+              required
+            ></v-text-field>
+
+            <v-text-field
+              v-model="price"
+              :rules="priceRules"
+              type="number"
+              label="Price"
+              required
+              @keypress="isNumber"
+            ></v-text-field>
+
+            <v-select
+              v-model="category"
+              :items="categories"
+              attach
+              chips
+              label="Select categories"
+              multiple
+            ></v-select>
+
+            <vue-editor
+              v-model="description"
+              style="margin-top:10px;margin-bottom: 40px;"
+              placeholder="Enter product description"
+              :editor-toolbar="customToolbar"
+            ></vue-editor>
+
+            <v-btn
+              class="add-product-btn"
+              color="primary"
+              rounded
+              depressed
+              @click="validateDesktop"
+              >Add Product</v-btn
+            >
+          </v-form>
+        </v-col>
+      </v-row>
+      <!-- snackbar to show too many items to be uploaded at a time -->
+      <v-snackbar v-model="snackbar">
+        {{ snackbartext }}
+      </v-snackbar>
+      <!-- show upload overlay -->
+      <v-overlay :value="overlay" light>
+        <v-progress-circular
+          :size="50"
+          :width="7"
+          indeterminate
+          color="white"
+        ></v-progress-circular>
+      </v-overlay>
+      <!-- compress images at the bottom of the screen -->
+      <div class="compress-below" :style="{ display: imageuploaddone }">
+        <!-- compress image holder -->
+        <img ref="imgSrc" style="width:100%;opacity:0;" />
+        <!-- compressed image result -->
+        <img
+          id="imgResult"
+          ref="imgResult"
+          style="width:200px;margin-top:10px;opacity:0;"
+        />
+      </div>
+    </v-container>
+    <div v-show="$vuetify.breakpoint.smAndDown">
+      <!-- <v-btn class="back-btn" text icon color="black" to="/onboarding">
       <v-icon>arrow_back_ios</v-icon>
     </v-btn> -->
-    <div class="headline">
-      Create a product
-    </div>
-    <div class="scrolling-wrapper">
-      <input
-        ref="opengallery"
-        style="display: none;"
-        type="file"
-        accept="image/*"
-        @change="setImage($event)"
-      />
-      <!-- product images aligned -->
-      <div v-for="n in 6" :key="n" class="product-images">
-        <div
-          v-show="productimages[n].length === 0"
-          class="image-placeholder"
-          @click.native="addImage(n)"
-        >
-          <v-btn text icon color="black" @click.native="addImage(n)">
-            <v-icon large>mdi-plus-circle-outline</v-icon>
-          </v-btn>
-          <div class="add-image" @click.native="addImage(n)">
-            Add Image
+      <div class="headline">
+        Add a product
+      </div>
+      <div class="scrolling-wrapper">
+        <input
+          ref="opengallery"
+          style="display: none;"
+          type="file"
+          accept="image/*"
+          @change="setImage($event)"
+        />
+        <!-- product images aligned -->
+        <div v-for="n in 6" :key="n" class="product-images">
+          <div
+            v-show="productimages[n].length === 0"
+            class="image-placeholder"
+            @click.native="addImage(n)"
+          >
+            <v-btn text icon color="black" @click.native="addImage(n)">
+              <v-icon large>mdi-plus-circle-outline</v-icon>
+            </v-btn>
+            <div class="add-image" @click.native="addImage(n)">
+              Add Image
+            </div>
           </div>
+          <img
+            v-show="productimages[n].length > 0"
+            :ref="`image${n}`"
+            class="product-image"
+            :src="productimages[n]"
+            alt=""
+          />
         </div>
+      </div>
+      <v-form
+        ref="form"
+        v-model="valid"
+        style="margin-top:15px;"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="name"
+          :counter="50"
+          :rules="nameRules"
+          label="Name"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          v-model="price"
+          :rules="priceRules"
+          label="Price"
+          type="number"
+          required
+        ></v-text-field>
+
+        <v-select
+          v-model="category"
+          :items="categories"
+          :rules="[v => !!v || 'Category is required']"
+          label="Category"
+          required
+        ></v-select>
+
+        <div class="subtitle-2">Product description</div>
+        <vue-editor
+          v-model="description"
+          style="margin-top:10px;"
+          :editor-toolbar="customToolbar"
+        ></vue-editor>
+
+        <v-btn
+          v-show="!focus"
+          :disabled="!valid"
+          color="primary"
+          large
+          class="create-btn"
+          @click="validate"
+        >
+          Add product
+        </v-btn>
+      </v-form>
+      <!-- snackbar to show too many items to be uploaded at a time -->
+      <v-snackbar v-model="snackbar">
+        {{ snackbartext }}
+      </v-snackbar>
+      <!-- show upload overlay -->
+      <v-overlay :value="overlay" light>
+        <v-progress-circular
+          :size="50"
+          :width="7"
+          indeterminate
+          color="white"
+        ></v-progress-circular>
+      </v-overlay>
+      <!-- compress images at the bottom of the screen -->
+      <div class="compress-below" :style="{ display: imageuploaddone }">
+        <!-- compress image holder -->
+        <img ref="imgSrc" style="width:100%;opacity:0;" />
+        <!-- compressed image result -->
         <img
-          v-show="productimages[n].length > 0"
-          :ref="`image${n}`"
-          class="product-image"
-          :src="productimages[n]"
-          alt=""
+          id="imgResult"
+          ref="imgResult"
+          style="width:200px;margin-top:10px;opacity:0;"
         />
       </div>
     </div>
-    <v-form ref="form" v-model="valid" style="margin-top:15px;" lazy-validation>
-      <v-text-field
-        v-model="name"
-        :counter="50"
-        :rules="nameRules"
-        label="Name"
-        required
-      ></v-text-field>
-
-      <v-text-field
-        v-model="price"
-        :rules="priceRules"
-        label="Price"
-        type="number"
-        required
-      ></v-text-field>
-
-      <v-select
-        v-model="category"
-        :items="categories"
-        :rules="[v => !!v || 'Category is required']"
-        label="Category"
-        required
-      ></v-select>
-
-      <div class="subtitle-2">Product description</div>
-      <vue-editor
-        v-model="description"
-        style="margin-top:10px;"
-        :editor-toolbar="customToolbar"
-      ></vue-editor>
-
-      <v-btn
-        v-show="!focus"
-        :disabled="!valid"
-        color="primary"
-        large
-        class="create-btn"
-        @click="validate"
-      >
-        create product
-      </v-btn>
-    </v-form>
-    <!-- snackbar to show too many items to be uploaded at a time -->
-    <v-snackbar v-model="snackbar">
-      {{ snackbartext }}
-    </v-snackbar>
-    <!-- show upload overlay -->
-    <v-overlay :value="overlay" light>
-      <v-progress-circular
-        :size="50"
-        :width="7"
-        indeterminate
-        color="white"
-      ></v-progress-circular>
-    </v-overlay>
-    <!-- compress images at the bottom of the screen -->
-    <div class="compress-below" :style="{ display: imageuploaddone }">
-      <!-- compress image holder -->
-      <img ref="imgSrc" style="width:100%;opacity:0;" />
-      <!-- compressed image result -->
-      <img
-        id="imgResult"
-        ref="imgResult"
-        style="width:200px;margin-top:10px;opacity:0;"
-      />
-    </div>
-    <!-- <nuxt-link
-      ref="nextpage"
-      style="visibility:hidden;"
-      to="/onboardingcomplete"
-      >done</nuxt-link
-    > -->
-    <!-- <v-btn ref="nextpage" @click="opennew"></v-btn> -->
   </div>
 </template>
 
@@ -325,7 +455,26 @@ export default {
         window.scroll(0, 0)
       }
     },
+    validateDesktop() {
+      if (this.$refs.formdesktop.validate()) {
+        if (!this.$refs.image1.src) {
+          this.snackbartext = 'Please add the first image to continue'
+          this.snackbar = true
+        } else {
+          this.saveProduct()
+        }
+      } else {
+        window.scroll(0, 0)
+      }
+    },
     saveProduct() {
+      // ga analytics
+      this.$ga.event({
+        eventCategory: 'Add Product button',
+        eventAction: 'Added Product',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 101
+      })
       // start overlay loader
       this.overlay = true
       const randomnumber = Math.floor(Math.random() * 1000000) + 1
@@ -374,45 +523,6 @@ export default {
 </script>
 
 <style scoped>
-.headline {
-  margin-top: 10px;
-  font-family: 'Open Sans', sans-serif !important;
-  margin-bottom: 20px;
-  margin-left: 5px;
-  font-weight: 900;
-  text-align: left;
-}
-.display-3 {
-  font-family: 'Open Sans', sans-serif !important;
-  padding: 50px;
-  font-weight: 700;
-}
-.back-btn {
-  position: absolute;
-  top: 18px;
-}
-.create-btn {
-  border-radius: 0px;
-  font-size: large;
-  text-transform: capitalize;
-  font-weight: 500;
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  z-index: 5;
-  left: 0;
-}
-.scrolling-wrapper {
-  margin-top: 10px;
-  display: -webkit-box;
-  width: 100%;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
-}
 .add-image {
   margin-top: 10px;
   color: black;
@@ -425,6 +535,7 @@ export default {
   text-align: center;
   padding: 40px;
   border-radius: 4px;
+  margin: auto;
   background: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -438,6 +549,7 @@ export default {
   object-fit: cover;
   width: 200px;
   margin: 5px;
+  margin: auto;
   height: 200px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -445,5 +557,90 @@ export default {
 .compress-below {
   width: 100%;
   margin-top: 50px;
+}
+.add-product-btn {
+  width: 50%;
+  text-transform: capitalize;
+  margin-bottom: 70px;
+  font-weight: 700;
+}
+#addproduct-header {
+  margin-left: 5px;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .headline {
+    margin-top: 10px;
+    font-family: 'Open Sans', sans-serif !important;
+    margin-bottom: 20px;
+    margin-left: 5px;
+    font-weight: 900;
+    text-align: left;
+  }
+  .display-3 {
+    font-family: 'Open Sans', sans-serif !important;
+    padding: 50px;
+    font-weight: 700;
+  }
+  .back-btn {
+    position: absolute;
+    top: 18px;
+  }
+  .create-btn {
+    border-radius: 0px;
+    font-size: large;
+    text-transform: capitalize;
+    font-weight: 500;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 5;
+    left: 0;
+  }
+  .scrolling-wrapper {
+    margin-top: 10px;
+    display: -webkit-box;
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .add-image {
+    margin-top: 10px;
+    color: black;
+    font-weight: 500;
+  }
+  .image-placeholder {
+    margin: 5px;
+    height: 200px;
+    width: 200px;
+    text-align: center;
+    padding: 40px;
+    border-radius: 4px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .image-placeholder button {
+    margin-top: 25%;
+  }
+  .product-image {
+    display: block;
+    border-radius: 4px;
+    object-fit: cover;
+    width: 200px;
+    margin: 5px;
+    height: 200px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .compress-below {
+    width: 100%;
+    margin-top: 50px;
+  }
 }
 </style>

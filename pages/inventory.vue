@@ -1,20 +1,41 @@
 <template>
-  <v-layout style="margin-bottom: 65px;" wrap justify-center align-center>
-    <div class="display-1">Categories</div>
-    <category-card item="All"></category-card>
-    <category-card
-      v-for="(category, index) in categories"
-      :key="index"
-      :item="category"
-    ></category-card>
+  <v-layout style="margin-top: 10px;" class="text-center" wrap>
+    <div v-show="$vuetify.breakpoint.mdAndUp" class="desktop-div">
+      <div id="categories-header-desktop" class="display-2 font-weight-bold">
+        Categories
+      </div>
+      <v-row class="mb-6" style="padding-left: 23px;">
+        <v-col
+          v-for="(category, index) in categories"
+          :key="index"
+          cols="6"
+          md="2"
+        >
+          <desktop-category-card :item="category"></desktop-category-card>
+        </v-col>
+      </v-row>
+    </div>
+    <div v-show="$vuetify.breakpoint.smAndDown">
+      <div class="display-1 font-weight-bold">
+        Categories
+      </div>
+      <category-card item="All"></category-card>
+      <category-card
+        v-for="(category, index) in categories"
+        :key="index"
+        :item="category"
+      ></category-card>
+    </div>
   </v-layout>
 </template>
 
 <script>
 import CategoryCard from '~/components/CategoryCard'
+import DesktopCategoryCard from '~/components/DesktopCategoryCard'
 export default {
   components: {
-    CategoryCard
+    CategoryCard,
+    DesktopCategoryCard
   },
   data() {
     return {
@@ -24,7 +45,7 @@ export default {
   computed: {
     categories() {
       // eslint-disable-next-line prefer-const
-      let categoriesarray = []
+      let categoriesarray = ['All']
       this.$store.state.categories.map(item =>
         categoriesarray.push(item.categoryname)
       )
@@ -70,6 +91,16 @@ export default {
 }
 </script>
 <style scoped>
+.desktop-div {
+  width: 100%;
+  margin-left: 26px;
+}
+#categories-header-desktop {
+  text-align: left;
+  margin-left: 25px;
+  margin-bottom: 20px;
+  margin-top: 30px;
+}
 .display-1 {
   font-family: 'Open Sans', sans-serif !important;
   font-weight: 700;

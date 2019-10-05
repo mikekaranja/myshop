@@ -5,7 +5,12 @@
         <v-icon>chevron_right</v-icon>
       </template>
     </v-breadcrumbs>
-    <v-row v-show="products.length > 0" class="mb-6">
+    <v-row
+      v-show="products.length > 0"
+      id="product-images-holder"
+      class="mb-6"
+      style="text-align: center;"
+    >
       <v-col v-for="(item, index) in products" :key="index" cols="6" md="4">
         <product-item :item="item"></product-item>
       </v-col>
@@ -106,6 +111,16 @@ export default {
   width: 100%;
   padding-left: 1px;
   padding-top: 1px;
-  margin-left: 6px;
+  margin-left: 40px;
+  margin-top: 30px;
+}
+#product-images-holder {
+  margin-left: 12px !important;
+}
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .bread-crumb {
+    margin-left: 6px;
+  }
 }
 </style>

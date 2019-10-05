@@ -39,7 +39,12 @@
             >
               Enter your shop details
             </div>
-            <v-form ref="form" v-model="valid" lazy-validation>
+            <v-form
+              ref="form"
+              v-model="valid"
+              class="first-form"
+              lazy-validation
+            >
               <v-text-field
                 v-model="number"
                 :rules="numberRules"
@@ -129,6 +134,17 @@
                 src="https://myshop.e-merse.com/arrow.png"
                 alt="upload"
               />
+              <v-btn
+                id="add-btn"
+                large
+                color="primary"
+                rounded
+                class="ma-2 white--text"
+                @click="addCategoryDialog = true"
+              >
+                <v-icon left dark>mdi-plus</v-icon>
+                Add
+              </v-btn>
             </div>
           </div>
         </v-stepper-content>
@@ -144,10 +160,18 @@
             <div class="subtitle-2">All Categories</div>
             <onboarding-category-card
               v-for="(category, index) in categories"
+              v-show="$vuetify.breakpoint.smAndDown"
               :key="index"
               :item="category"
               @click.native="goTo5(category)"
             ></onboarding-category-card>
+            <desktop-category-card
+              v-for="(category, index) in categories"
+              v-show="$vuetify.breakpoint.mdAndUp"
+              :key="index"
+              :item="category"
+              @click.native="goTo5(category)"
+            ></desktop-category-card>
           </div>
         </v-stepper-content>
 
@@ -173,20 +197,30 @@
               src="https://myshop.e-merse.com/arrow.png"
               alt="upload"
             />
+            <v-btn
+              id="add-btn"
+              large
+              color="primary"
+              rounded
+              class="ma-2 white--text"
+              @click="addOptionClicked('product')"
+            >
+              <v-icon left dark>mdi-plus</v-icon>
+              Add Product
+            </v-btn>
           </div>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
     <div
       v-show="!focus"
-      :style="{ padding: `${e1 < 3 ? '40px' : ''}` }"
+      :style="{ padding: `${e1 < 3 ? '20px' : ''}` }"
       class="fixed-btm"
     >
       <v-btn
         v-show="e1 === 1"
         :loading="loading"
-        style="text-transform:capitalize;font-size: inherit;"
-        block
+        class="next-btn"
         rounded
         color="primary"
         @click="nextBtn"
@@ -195,15 +229,18 @@
       </v-btn>
       <v-btn
         v-show="e1 === 2"
-        style="text-transform:capitalize;font-size: inherit;"
-        block
+        class="next-btn"
         rounded
         color="primary"
         @click="nextBtn2"
       >
         Next
       </v-btn>
-      <v-bottom-navigation v-show="e1 > 2" grow>
+      <v-bottom-navigation
+        v-if="$vuetify.breakpoint.smAndDown"
+        v-show="e1 > 2"
+        grow
+      >
         <v-btn value="home" disabled>
           <span>Home</span>
           <v-icon>mdi-package-variant-closed</v-icon>
@@ -262,7 +299,13 @@
             Please add a valid category name
           </v-alert>
 
-          <v-btn block rounded color="#92302F" dark @click="addCategory"
+          <v-btn
+            id="btn"
+            block
+            rounded
+            color="#92302F"
+            dark
+            @click="addCategory"
             >add</v-btn
           >
         </v-card-text>
@@ -278,9 +321,11 @@
 <script>
 import { db } from '~/plugins/firebase'
 import OnboardingCategoryCard from '~/components/OnboardingCategoryCard'
+import DesktopCategoryCard from '~/components/DesktopCategoryCard'
 export default {
   components: {
-    OnboardingCategoryCard
+    OnboardingCategoryCard,
+    DesktopCategoryCard
   },
   data() {
     return {
@@ -712,7 +757,7 @@ export default {
 }
 .banners-img {
   width: 100%;
-  height: 100px;
+  height: 235px;
   object-fit: cover;
   border: red;
   border-style: solid;
@@ -763,10 +808,44 @@ export default {
   position: absolute;
   top: 18px;
 }
-
 .custom-loader {
   animation: loader 1s infinite;
   display: flex;
+}
+.first-form {
+  width: 40%;
+  margin: auto;
+}
+.next-btn {
+  text-transform: capitalize;
+  font-size: inherit;
+  width: 30%;
+}
+#add-btn {
+  display: block;
+  margin: auto !important;
+  margin-top: 35px !important;
+  width: 18%;
+  text-transform: capitalize;
+}
+#btn {
+  text-transform: capitalize;
+}
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .first-form {
+    width: 100%;
+    margin: auto;
+  }
+  .next-btn {
+    width: 100%;
+  }
+  .banners-img {
+    height: 110px;
+  }
+  #add-btn {
+    display: none;
+  }
 }
 @-moz-keyframes loader {
   from {

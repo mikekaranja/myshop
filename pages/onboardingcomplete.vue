@@ -6,12 +6,7 @@
       Congrats! You have uploaded your first item. <br />
       <p role="image" aria-label="party">🥳</p>
     </div>
-    <v-btn
-      color="primary"
-      rounded
-      block
-      class="congrats-btn"
-      @click="continueNext"
+    <v-btn color="primary" rounded class="congrats-btn" @click="continueNext"
       >View your catalogue</v-btn
     >
   </div>
@@ -27,7 +22,11 @@ export default {
     continueNext() {
       this.$store.commit('authUser', true)
       this.$store.commit('addToHomeScreen', 'newshop')
-      this.$router.push('/catalogue')
+      if (this.$vuetify.breakpoint.mdAndUp) {
+        this.$router.push('/inventory')
+      } else {
+        this.$router.push('/catalogue')
+      }
     }
   }
 }

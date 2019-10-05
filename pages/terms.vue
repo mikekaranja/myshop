@@ -982,10 +982,5 @@
       to the public and/or transacting). Our onboarding services
       (&ldquo;Onboarding Services&rdquo;) include configuration of
     </p>
-    <p>
-      The <a href="https://rubiks-cube-solver.com/">Rubik's Cube solver</a> will
-      fix your scrambled puzzle! All you have to do is set the scrambled colors
-      and let the program calculate the steps needed for the solution.
-    </p>
   </div>
 </template>
