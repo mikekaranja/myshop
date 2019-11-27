@@ -233,5 +233,12 @@ export default {
     margin-top: 15px;
     text-align: left;
   }
+  #overall-ad {
+    width: 100%;
+    margin-top: 18px;
+    margin-right: -2px;
+    margin-left: -2px;
+    margin: auto;
+  }
 }
 </style>
