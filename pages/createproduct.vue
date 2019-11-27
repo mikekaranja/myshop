@@ -18,7 +18,7 @@
             @change="setImage($event)"
           />
           <!-- product images aligned -->
-          <v-row class="mb-6" style="padding-top: 35px;">
+          <v-row class="mb-6" style="padding-top: 35px;padding-left: 14px;">
             <v-col v-for="n in 6" :key="n" cols="6" style="margin-bottom:10px;">
               <div
                 v-show="productimages[n].length === 0"
@@ -359,8 +359,8 @@ export default {
   },
   mounted() {
     this.windowHeight = window.innerHeight
-    this.category = this.$store.state.category
-    this.categories.push(this.$store.state.category)
+    // this.category = this.$store.state.category
+    // this.categories.push(this.$store.state.category)
   },
   methods: {
     isNumber(evt) {
@@ -469,7 +469,7 @@ export default {
     },
     uploadImageAsPromise(imageFile) {
       return new Promise((resolve, reject) => {
-        const randomnumber = Math.floor(Math.random() * 100000) + 1
+        const randomnumber = Math.floor(Math.random() * 1000000)
         const imagename = `image-${randomnumber}`
         const uploadTask = storage.ref(`pwa/${imagename}`).put(imageFile)
 
@@ -537,7 +537,7 @@ export default {
       })
       // start overlay loader
       this.overlay = true
-      const randomnumber = Math.floor(Math.random() * 1000000) + 1
+      const randomnumber = Math.floor(Math.random() * 1000000)
       const shopid = this.$store.state.user.shopid
       const shopname = this.$store.state.user.shopname
       const product = {
@@ -550,8 +550,8 @@ export default {
         currency: 'Ksh',
         description: this.description,
         imageUrls: this.imageUrls,
-        category: [this.category],
-        subcategory: '',
+        category: this.category,
+        subcategory: this.subcategory,
         date_created: new Date().toString()
       }
       const newPostKey = db
@@ -618,7 +618,7 @@ export default {
   font-weight: 700;
 }
 #addproduct-header {
-  margin-left: 5px;
+  margin-left: 32px;
 }
 
 @media only screen and (max-width: 768px) {

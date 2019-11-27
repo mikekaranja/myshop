@@ -4,14 +4,19 @@ const MyShopStore = () => {
   return new Vuex.Store({
     state: {
       authenticated: false,
-      category: '',
+      onboardingcategory: '',
       uid: '',
       email: '',
       useronboarding: {},
       user: {},
       categories: [],
       products: [],
-      addtohomescreen: ''
+      addtohomescreen: '',
+      onboardingshopid: '',
+      onboardingshopname: '',
+      onboardinguser: {},
+      adbanner: true,
+      addata: {}
     },
     getters: {},
     mutations: {
@@ -22,6 +27,9 @@ const MyShopStore = () => {
         state.user = {}
         state.categories = []
         state.products = []
+      },
+      saveUserBeforeAddProduct(state, user) {
+        state.onboardinguser = user
       },
       saveUser(state, user) {
         const newPostKey = db
@@ -55,10 +63,14 @@ const MyShopStore = () => {
         state.email = email
       },
       setOnboardingCategory(state, category) {
-        state.category = category
+        state.onboardingcategory = category
       },
       setUserData(state, shopdata) {
         state.user = shopdata
+      },
+      setOnboardingShopID(state, shopdata) {
+        state.onboardingshopid = shopdata.shopid
+        state.onboardingshopname = shopdata.shopname
       },
       addCategories(state, payload) {
         state.categories = payload
@@ -77,6 +89,12 @@ const MyShopStore = () => {
       },
       changeExpiryDate(state, payload) {
         state.user.expiry_date = payload
+      },
+      AdFormData(state, payload) {
+        state.addata = { ...state.addata, ...payload }
+      },
+      closeAdBanner(state, payload) {
+        state.adbanner = payload
       }
     },
     actions: {}

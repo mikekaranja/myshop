@@ -130,10 +130,7 @@
         />
       </div>
     </v-container>
-    <div v-show="$vuetify.breakpoint.smAndDown">
-      <!-- <v-btn class="back-btn" text icon color="black" to="/onboarding">
-      <v-icon>arrow_back_ios</v-icon>
-    </v-btn> -->
+    <div v-show="$vuetify.breakpoint.smAndDown" style="padding: 12px;">
       <div class="headline">
         Add a product
       </div>
@@ -297,10 +294,16 @@ export default {
     //   }
     // }
   },
+  created() {
+    this.$bus.$on('setCategory', value => {
+      this.category = value
+      this.categories.push(value)
+    })
+  },
   mounted() {
     this.windowHeight = window.innerHeight
-    this.category = this.$store.state.category
-    this.categories.push(this.$store.state.category)
+    this.category = this.$store.state.onboardingcategory
+    this.categories.push(this.$store.state.onboardingcategory)
   },
   methods: {
     isNumber(evt) {
@@ -409,7 +412,7 @@ export default {
     },
     uploadImageAsPromise(imageFile) {
       return new Promise((resolve, reject) => {
-        const randomnumber = Math.floor(Math.random() * 100000) + 1
+        const randomnumber = Math.floor(Math.random() * 1000000)
         const imagename = `image-${randomnumber}`
         const uploadTask = storage.ref(`pwa/${imagename}`).put(imageFile)
 
@@ -477,7 +480,7 @@ export default {
       })
       // start overlay loader
       this.overlay = true
-      const randomnumber = Math.floor(Math.random() * 1000000) + 1
+      const randomnumber = Math.floor(Math.random() * 1000000)
       const shopid = this.$store.state.user.shopid
       const shopname = this.$store.state.user.shopname
       const product = {
@@ -515,7 +518,7 @@ export default {
       // eslint-disable-next-line handle-callback-err
       this.$router.replace({ name: 'onboardingcomplete' }).catch(err => {
         // eslint-disable-next-line no-console
-        console.log('all good')
+        console.log('proceed')
       })
     }
   }

@@ -1,44 +1,46 @@
 <template>
-  <div v-resize="onResize">
-    <v-stepper v-show="!hidestepper" v-model="e1">
-      <v-btn
-        v-show="e1 > 1"
-        class="back-btn"
-        text
-        icon
-        color="black"
-        @click="backBtn"
-      >
-        <v-icon>arrow_back_ios</v-icon>
-      </v-btn>
-      <v-stepper-header>
-        <v-stepper-step :complete="e1 > 1" step="1"></v-stepper-step>
+  <div class="desktop-ui">
+    <div class="step-list-holder">
+      <v-list id="step-list">
+        <v-list-item
+          v-for="(item, n) in items"
+          id="step-item"
+          :key="n"
+          @click="click"
+        >
+          <v-list-item-content>
+            <v-list-item-title
+              :id="`step-title-${n}`"
+              class="step-title"
+              style="font-family: 'Open Sans', sans-serif !important;"
+              v-text="item.title"
+            ></v-list-item-title>
+          </v-list-item-content>
 
-        <v-divider></v-divider>
-
-        <v-stepper-step :complete="e1 > 2" step="2"></v-stepper-step>
-
-        <v-divider></v-divider>
-
-        <v-stepper-step :complete="e1 > 3" step="3"></v-stepper-step>
-
-        <v-divider></v-divider>
-
-        <v-stepper-step :complete="e1 > 4" step="4"></v-stepper-step>
-        <v-divider></v-divider>
-
-        <v-stepper-step :complete="e1 > 5" step="5"></v-stepper-step>
-      </v-stepper-header>
-
-      <v-stepper-items>
-        <v-stepper-content step="1">
-          <div class="text-center">
-            <div
-              style="margin-bottom:25px;font-size:15px!important;font-weight: 500;"
-              class="subtitle-1"
+          <v-list-item-avatar id="step-avatar">
+            <v-btn
+              :id="`step-avatar-${n}`"
+              style="font-family: 'Open Sans', sans-serif !important;font-size:large;font-weight:bold;"
+              fab
             >
-              Enter your shop details
-            </div>
+              {{ item.avatar }}
+              <v-icon :id="`step-avatar-icon-${n}`" style="display: none;"
+                >mdi-check</v-icon
+              >
+            </v-btn>
+          </v-list-item-avatar>
+        </v-list-item>
+      </v-list>
+    </div>
+    <div class="card-holder">
+      <v-card width="800" height="590" class="mx-auto">
+        <v-card-title
+          id="card-title"
+          style="font-family: 'Open Sans', sans-serif !important;"
+          >{{ headertitle }}</v-card-title
+        >
+        <v-card-text id="card-text">
+          <div v-show="e1 === 1">
             <v-form
               ref="form"
               v-model="valid"
@@ -66,7 +68,7 @@
               <v-text-field
                 v-model="website"
                 :rules="websiteRules"
-                label="Choose a website name"
+                label="Preffered website name"
                 :hint="websitehint"
                 required
                 prepend-icon="mdi-web"
@@ -91,227 +93,91 @@
               >
             </v-form>
           </div>
-        </v-stepper-content>
-
-        <v-stepper-content step="2">
-          <div class="text-center" style="padding: 8px;">
-            <div
-              style="margin-bottom:25px;font-size:15px!important;font-weight: 500;"
-              class="subtitle-1"
-            >
-              Select a banner for your catalogue
-            </div>
-            <div class="banners-wrapper">
-              <img
-                v-for="(item, index) in banners"
-                :id="`img${index}`"
-                :key="item"
-                :src="item"
-                alt="banners"
-                class="banners-img"
-                @click="bannerClick(index)"
-              />
-            </div>
-          </div>
-        </v-stepper-content>
-
-        <v-stepper-content step="3">
-          <div class="text-center" style="padding: 8px;">
-            <div
-              style="margin-bottom:25px;font-size:15px!important;font-weight: 500;"
-              class="subtitle-1"
-            >
-              Tap add to create a category for your catalogue
-            </div>
-            <div style="display: grid;">
-              <img
-                style="margin: auto;"
-                src="https://myshop.e-merse.com/upload.png"
-                alt="upload"
-              />
-              <img
-                style="margin: auto;height:110px;"
-                src="https://myshop.e-merse.com/arrow.png"
-                alt="upload"
-              />
-              <v-btn
-                id="add-btn"
-                large
-                color="primary"
-                rounded
-                class="ma-2 white--text"
-                @click="addCategoryDialog = true"
-              >
-                <v-icon left dark>mdi-plus</v-icon>
-                Add
-              </v-btn>
-            </div>
-          </div>
-        </v-stepper-content>
-
-        <v-stepper-content step="4">
-          <div class="text-center" style="padding: 8px;">
-            <div
-              style="margin-bottom:25px;font-size: 15px !important;font-weight: 500;"
-              class="subtitle-1"
-            >
-              Tap the category to upload products
-            </div>
-            <div class="subtitle-2">All Categories</div>
-            <onboarding-category-card
-              v-for="(category, index) in categories"
-              v-show="$vuetify.breakpoint.smAndDown"
-              :key="index"
-              :item="category"
-              @click.native="goTo5(category)"
-            ></onboarding-category-card>
-            <desktop-category-card
-              v-for="(category, index) in categories"
-              v-show="$vuetify.breakpoint.mdAndUp"
-              :key="index"
-              :item="category"
-              @click.native="goTo5(category)"
-            ></desktop-category-card>
-          </div>
-        </v-stepper-content>
-
-        <v-stepper-content step="5">
-          <div
-            style="margin-bottom:6px;text-align: center;font-size: 15px !important;font-weight: 500;"
-            class="subtitle-1"
-          >
-            Tap add to create a product for this category
-          </div>
-          <div class="subtitle-2">
-            <span style="color: gray;">All Categories ></span>
-            {{ uploadcategory }}
-          </div>
-          <div style="display: grid;">
+          <div v-show="e1 === 2" class="banner-wrapper">
             <img
-              style="margin: auto;"
-              src="https://myshop.e-merse.com/upload.png"
-              alt="upload"
+              v-for="(item, index) in banners"
+              :id="`img${index}`"
+              :key="item"
+              :src="item"
+              alt="banners"
+              class="banners-img"
+              @click="bannerClick(index)"
             />
-            <img
-              style="margin: auto;height:110px;"
-              src="https://myshop.e-merse.com/arrow.png"
-              alt="upload"
-            />
-            <v-btn
-              id="add-btn"
-              large
-              color="primary"
-              rounded
-              class="ma-2 white--text"
-              @click="addOptionClicked('product')"
-            >
-              <v-icon left dark>mdi-plus</v-icon>
-              Add Product
-            </v-btn>
           </div>
-        </v-stepper-content>
-      </v-stepper-items>
-    </v-stepper>
-    <div
-      v-show="!focus"
-      :style="{ padding: `${e1 < 3 ? '20px' : ''}` }"
-      class="fixed-btm"
-    >
-      <v-btn
-        v-show="e1 === 1"
-        :loading="loading"
-        class="next-btn"
-        rounded
-        color="primary"
-        @click="nextBtn"
-      >
-        Next
-      </v-btn>
-      <v-btn
-        v-show="e1 === 2"
-        class="next-btn"
-        rounded
-        color="primary"
-        @click="nextBtn2"
-      >
-        Next
-      </v-btn>
-      <v-bottom-navigation
-        v-if="$vuetify.breakpoint.smAndDown"
-        v-show="e1 > 2"
-        grow
-      >
-        <v-btn value="home" disabled>
-          <span>Home</span>
-          <v-icon>mdi-package-variant-closed</v-icon>
-        </v-btn>
-
-        <v-btn value="add" :disabled="addDisabled" @click="openSheet">
-          <span>Add</span>
-          <v-icon>add</v-icon>
-        </v-btn>
-
-        <v-btn value="catalogue" disabled>
-          <span>Catalogue</span>
-          <v-icon>mdi-eye-outline</v-icon>
-        </v-btn>
-      </v-bottom-navigation>
-    </div>
-    <!-- bottom sheets -->
-    <!-- add stuff bottom sheet -->
-    <v-bottom-sheet v-model="sheet">
-      <v-list>
-        <v-list-item
-          v-for="tile in tiles"
-          :key="tile.title"
-          @click="addOptionClicked(tile.title)"
-        >
-          <v-list-item-avatar>
-            <v-avatar size="32px" tile>
-              <v-icon>{{ tile.icon }}</v-icon>
-            </v-avatar>
-          </v-list-item-avatar>
-          <v-list-item-title>{{ tile.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-bottom-sheet>
-    <!-- add category dialog -->
-    <v-dialog v-model="addCategoryDialog" max-width="300">
-      <v-card>
-        <v-card-title class="headline">Add a category</v-card-title>
-
-        <v-card-text>
-          <v-text-field
-            v-model="uploadcategory"
-            label="Category"
-            prepend-icon="create"
-          ></v-text-field>
-
-          <v-alert
-            style="font-size: smaller;text-align: center;"
-            :value="alert"
-            dark
-            transition="scale-transition"
-            dense
-            outlined
-            color="red"
-          >
-            Please add a valid category name
-          </v-alert>
-
-          <v-btn
-            id="btn"
-            block
-            rounded
-            color="#92302F"
-            dark
-            @click="addCategory"
-            >add</v-btn
-          >
+          <div v-show="e1 === 3" class="category-field">
+            <v-text-field
+              v-model="uploadcategory"
+              label="Category"
+              hint="e.g shoes, bags, colognes, perfumes, phones"
+              required
+              prepend-icon="mdi-pencil"
+              persistent-hint
+            ></v-text-field>
+          </div>
+          <div v-show="e1 === 4" class="add-product-wrapper">
+            <add-product></add-product>
+          </div>
+          <div v-show="e1 === 5">
+            <img class="high-five" src="high-five.svg" alt="high" />
+            <div class="headline font-weight-bold">Congratulations!</div>
+            <div class="headline font-weight-bold">
+              Your shop website has been successfully created.
+            </div>
+          </div>
         </v-card-text>
+        <v-card-actions id="card-actions">
+          <div class="flex-grow-1"></div>
+          <v-btn
+            v-if="e1 !== 5"
+            v-show="e1 !== 1"
+            id="prev-btn"
+            color="#B23B00"
+            dark
+            outlined
+            rounded
+            @click="previousBtn(e1)"
+          >
+            <v-icon left dark>mdi-arrow-left</v-icon>
+            Previous</v-btn
+          >
+          <v-btn
+            v-if="e1 !== 5"
+            id="next-btn"
+            color="#B23B00"
+            dark
+            rounded
+            :loading="loading"
+            @click="nextBtn(e1)"
+          >
+            Next
+            <v-icon right dark>mdi-arrow-right</v-icon>
+          </v-btn>
+          <v-btn
+            v-show="e1 === 5"
+            id="upload-more-btn"
+            color="#B23B00"
+            dark
+            outlined
+            rounded
+            large
+            @click="createProduct"
+          >
+            Upload more products</v-btn
+          >
+          <v-btn
+            v-show="e1 === 5"
+            id="view-shop-btn"
+            color="#B23B00"
+            dark
+            rounded
+            large
+            @click="viewShop"
+          >
+            View shop
+          </v-btn>
+        </v-card-actions>
       </v-card>
-    </v-dialog>
-    <!-- snackbar to show too many items to be uploaded at a time -->
+    </div>
     <v-snackbar v-model="snackbar">
       {{ snackbarText }}
     </v-snackbar>
@@ -320,15 +186,37 @@
 
 <script>
 import { db } from '~/plugins/firebase'
-import OnboardingCategoryCard from '~/components/OnboardingCategoryCard'
-import DesktopCategoryCard from '~/components/DesktopCategoryCard'
+import AddProduct from '~/components/AddProduct'
 export default {
   components: {
-    OnboardingCategoryCard,
-    DesktopCategoryCard
+    AddProduct
   },
   data() {
     return {
+      e1: 1,
+      headertitle: 'Enter your shop details',
+      items: [
+        {
+          title: 'Shop Details',
+          avatar: '1'
+        },
+        {
+          title: 'Shop Banner',
+          avatar: '2'
+        },
+        {
+          title: 'Add Category',
+          avatar: '3'
+        },
+        {
+          title: 'Add Product',
+          avatar: '4'
+        },
+        {
+          title: 'Shop is Live!',
+          avatar: '5'
+        }
+      ],
       banners: [
         'buy 2 get 1 free banner-min.jpg',
         'Banner1-min.jpg',
@@ -351,7 +239,6 @@ export default {
       ],
       downloadurls: [],
       imagescompressed: [],
-      e1: 1,
       catalogueready: false,
       hidestepper: false,
       showproductlayout: false,
@@ -403,39 +290,193 @@ export default {
       ipuserdata: {}
     }
   },
-  computed: {
-    addDisabled() {
-      let truth = true
-      if (this.e1 === 3) {
-        truth = false
-      } else if (this.e1 === 5) {
-        truth = false
-      }
-      return truth
-    }
-  },
   watch: {
     name: function name(val, oldval) {
       const web = val.replace(/ /g, '')
       this.websitehint = `e.g www.${web}.co.ke/www.${web}.com`
     },
-    e1: function(val, oldval) {
-      window.scroll(0, 0)
-    },
     loader() {
       const l = this.loader
       this[l] = !this[l]
 
-      setTimeout(() => (this[l] = false), 2000)
+      setTimeout(() => (this[l] = false), 1600)
 
       this.loader = null
+    },
+    e1(val, oldVal) {
+      switch (val) {
+        case 1:
+          this.headertitle = 'Enter your shop details'
+          for (let i = 0; i < 5; i++) {
+            if (i === val) {
+              window.document.getElementById('step-title-0').style.color =
+                '#ffffff'
+              window.document.getElementById('step-avatar-0').style.background =
+                '#945c66'
+              window.document.getElementById('step-avatar-0').style.color =
+                '#ffffff'
+            } else {
+              window.document.getElementById(`step-title-${i}`).style.color =
+                '#9d8689'
+            }
+          }
+          break
+        case 2:
+          this.headertitle = 'Select a header image for your shop'
+          window.document.getElementById('step-avatar-icon-0').style.display =
+            'block'
+          this.items[0].avatar = ''
+          for (let i = 0; i < 5; i++) {
+            if (i === val) {
+              window.document.getElementById('step-title-1').style.color =
+                '#ffffff'
+              window.document.getElementById('step-avatar-1').style.background =
+                '#945c66'
+              window.document.getElementById('step-avatar-1').style.color =
+                '#ffffff'
+            } else {
+              window.document.getElementById(`step-title-${i}`).style.color =
+                '#9d8689'
+            }
+          }
+          break
+        case 3:
+          this.headertitle = 'Add product category'
+          window.document.getElementById('step-avatar-icon-1').style.display =
+            'block'
+          this.items[1].avatar = ''
+          for (let i = 0; i < 5; i++) {
+            if (i === val) {
+              window.document.getElementById('step-title-2').style.color =
+                '#ffffff'
+              window.document.getElementById('step-avatar-2').style.background =
+                '#945c66'
+              window.document.getElementById('step-avatar-2').style.color =
+                '#ffffff'
+            } else {
+              window.document.getElementById(`step-title-${i}`).style.color =
+                '#9d8689'
+            }
+          }
+          break
+        case 4:
+          this.headertitle = 'Add a product'
+          window.document.getElementById('step-avatar-icon-2').style.display =
+            'block'
+          this.items[2].avatar = ''
+          for (let i = 0; i < 5; i++) {
+            if (i === val) {
+              window.document.getElementById('step-title-3').style.color =
+                '#ffffff'
+              window.document.getElementById('step-avatar-3').style.background =
+                '#945c66'
+              window.document.getElementById('step-avatar-3').style.color =
+                '#ffffff'
+            } else {
+              window.document.getElementById(`step-title-${i}`).style.color =
+                '#9d8689'
+            }
+          }
+          break
+        case 5:
+          this.headertitle = ''
+          window.document.getElementById('step-avatar-icon-3').style.display =
+            'block'
+          this.items[3].avatar = ''
+          for (let i = 0; i <= 5; i++) {
+            if (i === val) {
+              window.document.getElementById('step-title-4').style.color =
+                '#ffffff'
+              window.document.getElementById('step-avatar-4').style.background =
+                '#945c66'
+              window.document.getElementById('step-avatar-4').style.color =
+                '#ffffff'
+            } else {
+              window.document.getElementById(`step-title-${i}`).style.color =
+                '#9d8689'
+            }
+          }
+          break
+
+        default:
+          break
+      }
     }
   },
   mounted() {
-    this.ipdata()
-    this.windowHeight = window.innerHeight
+    // set first step UI
+    window.document.getElementById('step-title-0').style.color = '#ffffff'
+    window.document.getElementById('step-avatar-0').style.background = '#945c66'
+    window.document.getElementById('step-avatar-0').style.color = '#ffffff'
+  },
+  created() {
+    this.$bus.$on('moveStep5', value => {
+      this.e1 = 5
+    })
   },
   methods: {
+    createProduct() {
+      this.$store.commit('authUser', true)
+      this.$store.commit('addToHomeScreen', 'newshop')
+      this.$store.commit('saveUser', this.$store.state.onboardinguser)
+      this.$router.push('/inventory')
+    },
+    viewShop() {
+      this.$store.commit('authUser', true)
+      this.$store.commit('addToHomeScreen', 'newshop')
+      this.$router.push('/inventory')
+      window.open(
+        `https://shop.e-merse.com/?${this.$store.state.onboardinguser.shopid}`,
+        '_blank'
+      )
+      this.$store.commit('saveUser', this.$store.state.onboardinguser)
+    },
+    nextBtn(e1) {
+      switch (e1) {
+        case 1:
+          if (this.$refs.form.validate()) {
+            this.loader = 'loading'
+            this.checkShopname()
+          } else {
+            this.$refs.validatestep1.click()
+          }
+          break
+        case 2:
+          // this.e1 = 3
+          this.nextBtn2()
+          break
+        case 3:
+          this.addCategory()
+          break
+        case 4:
+          this.$bus.$emit('validateAddProduct', true)
+          // this.e1 = 5
+          break
+        case 5:
+          break
+
+        default:
+          break
+      }
+    },
+    previousBtn(e1) {
+      switch (e1) {
+        case 2:
+          this.e1 = 1
+          break
+        case 3:
+          this.e1 = 2
+          break
+        case 4:
+          this.e1 = 3
+          break
+        case 5:
+          break
+
+        default:
+          break
+      }
+    },
     bannerClick(index) {
       for (let i = 0; i < this.banners.length; i++) {
         const element = this.banners[i]
@@ -451,7 +492,6 @@ export default {
       const data = await this.$axios.$get(
         'https://api.ipdata.co?api-key=371d9162f88bdd60ac87cbb7381fc0cefbe25c087b12040aac8d1d01'
       )
-      console.log(data)
       this.ipuserdata = data
       return data
     },
@@ -480,9 +520,11 @@ export default {
     },
     addCategory() {
       if (this.uploadcategory.length > 2) {
+        // add to store
         this.categories.push(this.uploadcategory)
         this.addCategoryDialog = false
         this.e1 = 4
+        this.$bus.$emit('setCategory', this.uploadcategory)
         this.addCategoryToDb(this.uploadcategory)
         // step 3 complete
         const shopName = this.name.trim().replace(
@@ -507,7 +549,8 @@ export default {
           })
           .then(snap => {})
       } else {
-        this.alert = true
+        this.snackbarText = 'Please provide a valid category name'
+        this.snackbar = !this.snackbar
       }
     },
     addCategoryToDb(newcategory) {
@@ -538,7 +581,10 @@ export default {
       return db
         .ref()
         .update(updates)
-        .then(snap => {})
+        .then(snap => {
+          // add new shop
+          this.saveNewShop()
+        })
     },
     addOptionClicked(title) {
       if (title === 'Category') {
@@ -603,9 +649,7 @@ export default {
         expiry_date: this.addDays(1).toString(),
         ipdata: this.ipuserdata
       }
-      this.snackbarText = ''
-      this.snackbar = !this.snackbar
-      return this.$store.commit('saveUser', user)
+      return this.$store.commit('saveUserBeforeAddProduct', user)
     },
     addDays(days) {
       const date = new Date()
@@ -670,6 +714,12 @@ export default {
           } else {
             this.e1 = 2
             // step 1 complete
+            // set cookie user data
+            const shopdata = {
+              shopid: shopId,
+              shopname: shopName
+            }
+            this.$store.commit('setOnboardingShopID', shopdata)
             this.$ga.event({
               eventCategory: 'Next button',
               eventAction: 'Step 2 complete',
@@ -687,7 +737,7 @@ export default {
           }
         })
     },
-    nextBtn() {
+    nextBtn1() {
       // check which slide the user is on
       if (this.e1 === 1) {
         this.$refs.validatestep1.click()
@@ -752,8 +802,30 @@ export default {
 </script>
 
 <style scoped>
-.banners-wrapper {
-  margin-bottom: 100px;
+.add-product-wrapper {
+  margin-top: 10px;
+  margin-left: 55px;
+  height: 400px;
+  overflow-y: auto;
+}
+.headline {
+  color: black !important;
+}
+.high-five {
+  width: 50%;
+  margin-bottom: 40px;
+}
+.category-field {
+  width: 50%;
+  margin: auto;
+  margin-top: 60px;
+  min-height: 50vh;
+}
+.banner-wrapper {
+  margin-top: 25px;
+  margin-left: 55px;
+  height: 400px;
+  overflow-y: auto;
 }
 .banners-img {
   width: 100%;
@@ -764,119 +836,75 @@ export default {
   border-radius: 16px;
   border-width: 0px;
 }
-.fixed-btm {
-  background: white;
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  z-index: 5;
-  left: 0;
+.first-form {
+  width: 60%;
+  margin: auto;
+  margin-top: 40px;
 }
-.subtitle-2 {
-  font-weight: 600;
-  text-align: center;
-  width: 100%;
-  margin-bottom: 20px;
+#prev-btn {
+  text-transform: capitalize;
+  width: 25%;
+}
+#next-btn {
+  text-transform: capitalize;
+  width: 25%;
+  margin-left: 50px;
+}
+#upload-more-btn {
+  text-transform: capitalize;
+}
+#view-shop-btn {
+  text-transform: capitalize;
+  width: 25%;
+  margin-left: 50px;
+}
+.desktop-ui {
+  display: flex;
 }
 .mx-auto {
-  padding: 10px;
-  width: 100%;
-  margin-top: 12px;
+  position: relative;
   text-align: center;
+  padding: 10px;
+  margin-left: -47px !important;
+  margin-top: 50px;
 }
-.uploading-images-text {
-  font-size: small;
-  margin-top: 10px;
-}
-.body-2 {
-  font-weight: 500;
-  margin-top: 16px;
-}
-#congrats-div {
-  margin-top: 60px;
-}
-.congrats-image {
-  width: 100%;
-}
-.congrats-btn {
-  text-transform: capitalize;
-  margin-top: 20px;
-}
-.back-btn {
-  position: absolute;
-  top: 18px;
-}
-.custom-loader {
-  animation: loader 1s infinite;
-  display: flex;
-}
-.first-form {
-  width: 40%;
+#card-title {
+  font-weight: bold;
   margin: auto;
+  width: fit-content;
 }
-.next-btn {
-  text-transform: capitalize;
-  font-size: inherit;
-  width: 30%;
+#card-actions {
+  padding: 40px;
+  position: absolute;
+  bottom: 0;
+  width: 99%;
 }
-#add-btn {
-  display: block;
-  margin: auto !important;
-  margin-top: 35px !important;
-  width: 18%;
-  text-transform: capitalize;
+.step-list-holder {
+  background: #5f3d42;
+  height: 100vh;
+  width: 35%;
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
 }
-#btn {
-  text-transform: capitalize;
+#step-list {
+  background: #5f3d42;
+  padding-top: 70px;
+  border-top-right-radius: 20px;
 }
-@media only screen and (max-width: 768px) {
-  /* For mobile phones: */
-  .first-form {
-    width: 100%;
-    margin: auto;
-  }
-  .next-btn {
-    width: 100%;
-  }
-  .banners-img {
-    height: 110px;
-  }
-  #add-btn {
-    display: none;
-  }
+#step-item {
+  margin-bottom: 40px;
 }
-@-moz-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.step-title {
+  /* color: #945c66; */
+  color: #9d8689;
+  font-size: x-large;
+  margin-left: 90px;
+  font-weight: 700;
 }
-@-webkit-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@-o-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#step-avatar {
+  height: 60px !important;
+  min-width: 60px !important;
+  width: 60px !important;
+  z-index: 12;
 }
 </style>

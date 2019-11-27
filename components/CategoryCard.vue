@@ -79,7 +79,8 @@ export default {
   cursor: pointer;
 }
 .subtitle-1 {
-  margin-left: 8px;
   font-weight: 500;
+  margin-left: 12px;
+  text-align: left;
 }
 </style>

@@ -60,7 +60,6 @@ export default {
       this.products = validcategory.filter(item =>
         item.category.includes(this.items[1].text)
       )
-      console.log(this.products)
       if (this.products.length === 0) {
         this.noproducts = true
       }
@@ -72,7 +71,6 @@ export default {
         .filter(item => item.category.includes(this.items[1].text))
         .filter(item => item.subcategory.includes(this.items[2].text))
       // eslint-disable-next-line no-console
-      console.log(this.products)
       if (this.products.length === 0) {
         this.noproducts = true
       }
@@ -103,7 +101,7 @@ export default {
 }
 .subtitle-1 {
   font-weight: 600;
-  text-align: left;
+  text-align: center;
   width: 100%;
   margin-bottom: 20px;
 }
@@ -121,6 +119,10 @@ export default {
   /* For mobile phones: */
   .bread-crumb {
     margin-left: 6px;
+    margin-top: 0px;
+  }
+  #product-images-holder {
+    margin-left: -10px !important;
   }
 }
 </style>

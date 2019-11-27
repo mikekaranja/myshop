@@ -16,14 +16,13 @@
 export default {
   created() {
     setTimeout(() => {
-      const query = this.$router.history.current.query
       if (this.$store.state.authenticated) {
         this.$router.push('/inventory')
       } else if (!this.$store.state.authenticated) {
-        if (Object.keys(query)[0] === 'login') {
-          this.$router.push('/login')
+        if (this.$vuetify.breakpoint.mdAndUp) {
+          this.$router.push('/logindesktop')
         } else {
-          this.$router.push('/login')
+          this.$router.push('/loginmobile')
         }
       }
     }, 100)

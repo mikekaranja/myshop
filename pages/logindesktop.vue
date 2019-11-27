@@ -1,18 +1,5 @@
 <template>
   <div>
-    <div
-      v-show="$vuetify.breakpoint.smAndDown"
-      class="text-center"
-      style="padding:5px;"
-    >
-      <img class="top-logo" src="https://myshop.e-merse.com/icon.jpg" alt="" />
-      <!-- <p>We're <span style="font-weight:500;">pumped</span> to see you!</p> -->
-      <div class="title bold">Welcome Back!</div>
-      <p style="margin-top: 15px;">
-        Keep updating your stock and sharing your products with customers
-      </p>
-      <mobilefirebase-ui></mobilefirebase-ui>
-    </div>
     <div v-show="$vuetify.breakpoint.mdAndUp" class="text-center">
       <v-container style="padding: 0px;">
         <v-row :class="mb - 6" no-gutters style="min-height: 100vh;">
@@ -39,14 +26,17 @@
                 src="https://myshop.e-merse.com/icon.jpg"
                 alt=""
               />
-              <div class="subtitle-1 font-weight-bold">
-                Sign into your account
+              <div
+                style="margin-bottom: 20px;"
+                class="subtitle-1 font-weight-bold"
+              >
+                {{ sign }}
               </div>
               <firebase-ui></firebase-ui>
               <div
                 v-if="signin"
                 class="caption font-weight-bold"
-                style="color:gray"
+                style="color:gray; margin-top: 20px;"
               >
                 Don't have an account?
                 <span class="free-trial" @click="changeTitle('signup')"
@@ -69,13 +59,13 @@
 
 <script>
 import firebaseUi from '~/components/FirebaseUi'
-// import mobilefirebaseUi from '~/components/MobileFirebaseUi'
 export default {
   components: {
     firebaseUi
   },
   data() {
     return {
+      sign: 'Login to your account',
       mobile: '',
       desktop: '',
       signin: true,
@@ -101,11 +91,13 @@ export default {
   methods: {
     changeTitle(title) {
       if (title === 'signin') {
+        this.sign = 'Login to your account'
         this.signin = true
         this.headline = 'Welcome Back!'
         this.subtitle =
           'Keep updating your stock and sharing your products with customers'
       } else if (title === 'signup') {
+        this.sign = 'Sign up to create an account'
         this.signin = false
         this.headline = 'Get more sales by showcasing your products online'
         this.subtitle = 'Start your 24 hr free trial by creating an account'
@@ -118,10 +110,10 @@ export default {
 <style>
 .desktop-logo {
   width: 30%;
-  margin-top: 10px;
+  margin-top: 70px;
 }
 .first-column {
-  background: #5f3a41;
+  background: #5f3d42;
 }
 #wording {
   position: relative;

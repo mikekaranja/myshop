@@ -9,7 +9,11 @@
       ></v-text-field>
     </div>
     <div class="product-wrapper">
-      <v-row v-show="filteredList.length > 0" class="mb-6">
+      <v-row
+        v-show="filteredList.length > 0"
+        style="text-align: center;"
+        class="mb-6"
+      >
         <v-col
           v-for="item in filteredList.slice(0, 8)"
           :key="item.id"
@@ -62,6 +66,8 @@ export default {
 <style scoped>
 .search-wrapper {
   padding: 6px;
+  width: 97%;
+  margin: auto;
 }
 .no-products {
   text-align: center;

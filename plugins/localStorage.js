@@ -9,7 +9,8 @@ export default ({ store }) => {
         'addtohomescreen',
         'user',
         'categories',
-        'products'
+        'products',
+        'adbanner'
       ]
     })(store)
   })

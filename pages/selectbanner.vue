@@ -13,6 +13,7 @@
       </template>
     </v-toolbar>
     <input
+      id="uploadCaptureInputFile"
       ref="opengallery"
       style="display: none;"
       type="file"
@@ -53,7 +54,7 @@
         color="primary"
         @click="openBannerDialog"
       >
-        Upload
+        Upload your own banner
       </v-btn>
     </div>
     <!-- Crop Banner dialog -->
@@ -187,6 +188,7 @@ export default {
         this.cropBannerDialog = true
         const image = URL.createObjectURL(e.target.files[0])
         this.imgSrc = image
+        window.document.getElementById('uploadCaptureInputFile').value = null
       } else {
         this.$refs.cropper.destroy()
       }
@@ -219,7 +221,7 @@ export default {
     // Handle waiting to upload each file using promise
     uploadBannerAsPromise(imageFile) {
       return new Promise((resolve, reject) => {
-        const randomnumber = Math.floor(Math.random() * 100000) + 1
+        const randomnumber = Math.floor(Math.random() * 1000000)
         const name = `image-${randomnumber}`
         const uploadTask = storage.ref(`/pwa/${name}`).put(imageFile)
         uploadTask.on(

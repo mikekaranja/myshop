@@ -3,7 +3,6 @@
     <v-navigation-drawer
       v-model="leftDrawer"
       style="z-index: 15;"
-      bottom
       :fixed="fixed"
       app
     >
@@ -21,7 +20,7 @@
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <v-list-item link to="/inventory">
+        <!-- <v-list-item link to="/inventory">
           <v-list-item-icon>
             <v-icon>mdi-view-dashboard</v-icon>
           </v-list-item-icon>
@@ -29,7 +28,7 @@
           <v-list-item-content>
             <v-list-item-title>Categories</v-list-item-title>
           </v-list-item-content>
-        </v-list-item>
+        </v-list-item> -->
         <v-list-item
           v-for="item in draweritems"
           :key="item.title"
@@ -37,7 +36,17 @@
           @click="navDrawerClick(item.title)"
         >
           <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
+            <!-- <v-icon>{{ item.icon }}</v-icon> -->
+            <v-avatar v-if="item.icon !== 'online.svg'" size="32px" tile>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-avatar>
+            <v-avatar
+              v-if="item.icon === 'online.svg'"
+              style="width:31px;min-width:30px;height: 30px;"
+              tile
+            >
+              <img style="width:24px;" src="/online.svg" alt="svg" />
+            </v-avatar>
           </v-list-item-icon>
 
           <v-list-item-content>
@@ -49,7 +58,7 @@
       <template v-slot:append>
         <div class="logo-bottom">
           <v-avatar :size="81">
-            <img src="icon.png" alt="icon" />
+            <img src="https://myshop.e-merse.com/icon.png" alt="icon" />
           </v-avatar>
           <div id="version" class="subtitle-2 font-weight-light">v1.1.0</div>
         </div>
@@ -66,7 +75,12 @@
       <v-btn icon @click.stop="leftDrawer = !leftDrawer">
         <v-icon>menu</v-icon>
       </v-btn>
-      <v-menu origin="center center" transition="scale-transition" bottom>
+      <v-menu
+        style="z-index: 12;"
+        origin="center center"
+        transition="scale-transition"
+        bottom
+      >
         <template v-slot:activator="{ on }">
           <v-btn
             v-show="$vuetify.breakpoint.mdAndUp"
@@ -89,7 +103,17 @@
               @click="desktopAddOptionClicked(item.title)"
             >
               <v-list-item-icon>
-                <v-icon v-text="item.icon"></v-icon>
+                <!-- <v-icon v-text="item.icon"></v-icon> -->
+                <v-avatar v-if="item.icon !== 'online.svg'" size="32px" tile>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-avatar>
+                <v-avatar
+                  v-if="item.icon === 'online.svg'"
+                  style="width:31px;min-width:30px;height: 30px;"
+                  tile
+                >
+                  <img style="width:24px;" src="/online.svg" alt="svg" />
+                </v-avatar>
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title v-text="item.title"></v-list-item-title>
@@ -131,7 +155,7 @@
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        Your free trial will end in 24hrs.
+        Your free trial will end in 7 days.
         <span
           class="open-dialog"
           @click="kindlyPayBeforeDialog = !kindlyPayBeforeDialog"
@@ -157,30 +181,35 @@
       :style="{ display: hiddenbanner }"
       class="banner-install"
     ></banner-install> -->
-    <v-footer
-      v-if="$vuetify.breakpoint.smAndDown"
-      v-show="bottombar"
-      color="white"
-      padless
-      :fixed="fixed"
-      app
-    >
+    <v-footer v-show="bottombar" color="white" padless :fixed="fixed" app>
       <v-bottom-navigation v-model="bottomNav" grow>
         <v-btn value="inventory" @click="openInventory">
-          <span>Categories</span>
-          <v-icon>mdi-package-variant-closed</v-icon>
+          <span>Products</span>
+          <v-icon>$vuetify.icons.inventory</v-icon>
         </v-btn>
 
-        <v-btn value="add" @click="sheet = true">
-          <span>Add</span>
-          <v-icon>add</v-icon>
+        <v-btn value="advertise" to="/checkads">
+          <span>Advertise</span>
+          <v-icon>$vuetify.icons.advertise</v-icon>
         </v-btn>
 
         <v-btn value="catalogue" to="/catalogue">
           <span>My shop</span>
-          <v-icon>mdi-eye-outline</v-icon>
+          <v-icon>$vuetify.icons.myshop</v-icon>
         </v-btn>
       </v-bottom-navigation>
+      <!-- add button -->
+      <v-btn
+        v-show="fabadd"
+        id="fab-btn"
+        class="mx-2"
+        fab
+        dark
+        color="primary"
+        @click="sheet = true"
+      >
+        <v-icon dark>mdi-plus</v-icon>
+      </v-btn>
     </v-footer>
     <!-- bottom sheets -->
     <!-- add stuff bottom sheet -->
@@ -192,8 +221,11 @@
           @click="addOptionClicked(tile.title)"
         >
           <v-list-item-avatar>
-            <v-avatar size="32px" tile>
+            <v-avatar v-if="tile.icon !== 'online.svg'" size="32px" tile>
               <v-icon>{{ tile.icon }}</v-icon>
+            </v-avatar>
+            <v-avatar v-if="tile.icon === 'online.svg'" tile>
+              <img style="width:24px;" src="/online.svg" alt="svg" />
             </v-avatar>
           </v-list-item-avatar>
           <v-list-item-title>{{ tile.title }}</v-list-item-title>
@@ -600,7 +632,7 @@
           <v-text-field
             v-model="phonenumber"
             label="Whatsapp number"
-            type="number"
+            type="tel"
             prepend-icon="mdi-whatsapp"
           ></v-text-field>
           <v-text-field
@@ -699,13 +731,6 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <input
-      ref="opengallery"
-      style="display: none;"
-      type="file"
-      accept="image/*"
-      @change="setImage($event)"
-    />
     <!-- Crop Logo dialog -->
     <v-dialog v-model="cropLogoDialog" fullscreen>
       <v-card class="rounded-card">
@@ -967,6 +992,88 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <!-- upload logo -->
+    <v-dialog v-model="dialogLogo" width="600">
+      <v-card>
+        <v-card-title class="justify-center" primary-title>
+          Upload/Edit Logo
+        </v-card-title>
+
+        <v-card-text class="text-center">
+          <div id="crop-title" class="subtitle-1">
+            Drag to position your logo
+          </div>
+          <clipper-basic
+            ref="clipper"
+            style="height: 400px;"
+            :src="logoSrc"
+            :wrap-ratio="1"
+          />
+          <div
+            style="color:black;margin-left:8px;text-align: center;"
+            class="subtitle-2"
+          >
+            * Select logo with white background
+          </div>
+          <v-alert
+            :value="alertsuccess8"
+            style="margin: auto;margin-top:10px;"
+            dense
+            type="success"
+          >
+            <strong>Logo uploaded successfully.</strong>
+          </v-alert>
+        </v-card-text>
+
+        <v-card-actions style="padding: 26px;">
+          <div class="flex-grow-1"></div>
+          <v-btn
+            style="text-transform: capitalize;"
+            class="done-btn"
+            color="primary"
+            text
+            rounded
+            depressed
+            outlined
+            large
+            @click="dialogLogo = !dialogLogo"
+            >Cancel</v-btn
+          >
+          <v-btn
+            :loading="loading"
+            style="text-transform: capitalize;"
+            class="done-btn"
+            color="primary"
+            large
+            rounded
+            @click="uploadLogo"
+          >
+            Done
+          </v-btn>
+        </v-card-actions>
+        <img
+          style="width:100%;opacity:0;"
+          class="result"
+          :src="resultURL"
+          alt=""
+        />
+      </v-card>
+    </v-dialog>
+    <!-- upload logo input file -->
+    <input
+      ref="opengallery"
+      style="display: none;"
+      type="file"
+      accept="image/*"
+      @change="setImage($event)"
+    />
+    <input
+      ref="opengallerydesktop"
+      style="display: none;"
+      type="file"
+      accept="image/*"
+      @change="setCropLogo($event)"
+    />
     <!-- snackbar -->
     <v-snackbar v-model="snackbar">
       {{ snackbartext }}
@@ -993,6 +1100,9 @@ export default {
   // },
   data() {
     return {
+      fabadd: true,
+      logoSrc: '',
+      dialogLogo: false,
       resultURL: '',
       imgSrc: '',
       canvascolor: '',
@@ -1014,6 +1124,8 @@ export default {
         }
       ],
       draweritems: [
+        { title: 'Products', icon: 'mdi-view-dashboard' },
+        { title: 'Manage Ads', icon: 'online.svg' },
         { title: 'Edit Account Details', icon: 'mdi-account-circle-outline' },
         // { title: 'Use a Custom Domain', icon: 'mdi-web' },
         // { title: 'Pay Monthly Subscription', icon: 'mdi-credit-card-plus' },
@@ -1022,6 +1134,7 @@ export default {
       ],
       sheet: false,
       tiles: [
+        { icon: 'online.svg', title: 'Create an ad' },
         { icon: 'mdi-tag-outline', title: 'Product' },
         { icon: 'mdi-folder-outline', title: 'Category' },
         { icon: 'mdi-folder-multiple-outline', title: 'Subcategory' },
@@ -1137,11 +1250,69 @@ export default {
       const l = this.loader2
       this[l] = !this[l]
 
-      setTimeout(() => (this[l] = false), 15000)
+      setTimeout(() => (this[l] = false), 3000)
 
       this.loader2 = null
     },
     $route(to, from) {
+      if (to.path === '/inventory') {
+        if (this.$vuetify.breakpoint.smAndDown) {
+          this.fabadd = true
+        }
+      }
+      if (to.path === '/createproduct') {
+        this.fabadd = false
+        this.bottombar = false
+      }
+      // ad buying
+      if (to.path === '/adbuying') {
+        this.cataloguescreen = '12px'
+        this.fabadd = false
+        this.bottombar = false
+        this.topbar = false
+      }
+      if (to.path === '/adcomplete') {
+        this.fabadd = false
+        this.bottombar = false
+        this.topbar = false
+      }
+      if (to.path === '/addashboard') {
+        if (this.$vuetify.breakpoint.smAndDown) {
+          this.bottombar = true
+        }
+        this.fabadd = true
+        this.cataloguescreen = '0px'
+        this.topbar = true
+      }
+      if (to.path === '/adempty') {
+        this.cataloguescreen = '0px'
+      }
+      if (to.path === '/inventory' && from.path === '/onboardingdesktop') {
+        if (this.$vuetify.breakpoint.mdAndUp) {
+          this.leftDrawer = true
+        }
+        const expirydate = new Date(this.$store.state.user.expiry_date)
+        const signupdate = new Date(this.$store.state.user.sign_up_date)
+        const today = new Date()
+        this.setPaymentMessage(today, expirydate, signupdate)
+        // step 6 complete
+        // ga analytics
+        this.$ga.event({
+          eventCategory: 'Upload more button',
+          eventAction: 'Onboarding complete',
+          eventLabel: this.$store.state.user.shopname,
+          eventValue: 9
+        })
+        db.ref(
+          `pwa/onboardingstats/onboarding-step6${this.$store.state.user.shopId}`
+        )
+          .set({
+            step: 'Final',
+            shopid: this.$store.state.user.shopid,
+            phonenumber: this.$store.state.user.phonenumber
+          })
+          .then(snap => {})
+      }
       if (to.path === '/inventory' && from.path === '/onboardingcomplete') {
         if (this.$vuetify.breakpoint.mdAndUp) {
           this.leftDrawer = true
@@ -1193,7 +1364,9 @@ export default {
       }
       if (to.path === '/catalogue') {
         this.topbar = false
-        this.bottombar = true
+        if (this.$vuetify.breakpoint.smAndDown) {
+          this.bottombar = true
+        }
         this.cataloguescreen = '0px'
       } else if (to.path === '/addtohomescreen') {
         this.topbar = false
@@ -1209,7 +1382,9 @@ export default {
         this.bottombar = false
       } else if (to.path === '/inventory') {
         this.topbar = true
-        this.bottombar = true
+        if (this.$vuetify.breakpoint.smAndDown) {
+          this.bottombar = true
+        }
         this.cataloguescreen = '12px'
       } else if (to.path === '/onboarding') {
         this.topbar = false
@@ -1255,6 +1430,12 @@ export default {
     }, 1000)
   },
   created() {
+    this.$bus.$on('OpenBottomNav', value => {
+      this.sheet = true
+    })
+    this.$bus.$on('bottomNav', value => {
+      this.cataloguescreen = '0px'
+    })
     this.$bus.$on('desktop', value => {
       this.cataloguescreen = '0px'
     })
@@ -1267,7 +1448,9 @@ export default {
     })
     this.$bus.$on('showbottomandtop', value => {
       this.topbar = true
-      this.bottombar = true
+      if (this.$vuetify.breakpoint.smAndDown) {
+        this.bottombar = true
+      }
     })
     this.$bus.$on('editCategoryDialog', value => {
       this.editCategoryDialog = true
@@ -1351,11 +1534,10 @@ export default {
     setPaymentMessage(today, expirydate, signupdate) {
       const hours = this.date_signup_diff_hours(signupdate, today)
       const hours2 = this.date_expiry_diff_hours(expirydate, today)
-      console.log(hours2)
       // Before 24 hours
       if (hours <= 24 && expirydate > today && hours2 <= 24) {
         // show payment snackbar at the top
-        this.paymentalert = 'Your free trial will end in 24hrs.'
+        this.paymentalert = 'Your free trial will end in 7 days.'
         this.before24hours = true
       } else if (hours > 24 && expirydate < today) {
         // after 24 hours
@@ -1428,7 +1610,7 @@ export default {
       this.kindlyPayAfterDialog = false
       this.paymentPlanDialog = false
       const APIpublicKey = 'FLWPUBK-a8b16c0c6eb5a608387f36e733325495-X'
-      const randomnumber = Math.floor(Math.random() * 100000) + 1
+      const randomnumber = Math.floor(Math.random() * 1000000)
       // get customer shop data
       const shopid = this.$store.state.user.shopid
       const email = this.$store.state.user.email
@@ -1456,12 +1638,6 @@ export default {
           this.showCloseNotification()
         }.bind(this),
         callback: function(response) {
-          const txref = response.tx.txRef
-          console.log(
-            'This is the response returned after a charge',
-            txref,
-            response
-          )
           if (
             response.tx.chargeResponseCode === '00' ||
             response.tx.chargeResponseCode === '0'
@@ -1664,26 +1840,6 @@ export default {
       const canvas = this.$refs.clipper.clip() // call component's clip method
       this.resultURL = canvas.toDataURL('image/jpeg', 1) // canvas->image
       this.uploadLogoAsPromise(this.dataURLtoBlob(this.resultURL))
-      // this.$refs.cropper
-      //   .getCroppedCanvas({
-      //     width: 200,
-      //     height: 100
-      //   })
-      //   .toBlob(blob => {
-      //     console.log(blob)
-      //     this.uploadLogoAsPromise(blob)
-      //   })
-      // if (!this.myLogo.hasImage()) {
-      //   alert('No image to upload')
-      // } else {
-      //   this.myLogo.generateBlob(
-      //     blob => {
-      //       this.uploadLogoAsPromise(blob)
-      //     },
-      //     'image/jpeg',
-      //     0.8
-      //   )
-      // }
     },
     dataURLtoBlob(dataurl) {
       const arr = dataurl.split(',')
@@ -1705,7 +1861,7 @@ export default {
     // Handle waiting to upload each file using promise
     uploadLogoAsPromise(imageFile) {
       return new Promise((resolve, reject) => {
-        const randomnumber = Math.floor(Math.random() * 100000) + 1
+        const randomnumber = Math.floor(Math.random() * 1000000)
         const name = `image-${randomnumber}`
         const uploadTask = storage.ref(`/pwa/${name}`).put(imageFile)
         uploadTask.on(
@@ -1724,7 +1880,6 @@ export default {
               .getDownloadURL()
               .then(downloadURL => {
                 if (downloadURL) {
-                  console.log(downloadURL)
                   this.addLogoToDB(downloadURL)
                 }
               })
@@ -1811,12 +1966,44 @@ export default {
           email: this.email,
           phonenumber: this.phonenumber
         }
+        this.updateBanner(shopId, this.$store.state.user.shopid)
+        this.updateLogo(shopId, this.$store.state.user.shopid)
         this.$store.commit('changeShopName', shop)
         this.updateDb2(shopId, shopName)
         this.updateAllProducts(shopId, shopName)
       } else {
         this.updateDb(shopId, shopName)
       }
+    },
+    updateBanner(newShopId, oldId) {
+      return db
+        .ref(`pwa/products/banner-${oldId}`)
+        .once('value')
+        .then(snapshot => {
+          const banner = snapshot.val().banner
+          this.setNewBanner(newShopId, banner)
+        })
+    },
+    updateLogo(newShopId, oldId) {
+      return db
+        .ref(`pwa/products/logo-${oldId}`)
+        .once('value')
+        .then(snapshot => {
+          const logo = snapshot.val().logo
+          this.setNewLogo(newShopId, logo)
+        })
+    },
+    setNewBanner(newShopId, banner) {
+      return db.ref(`pwa/products/banner-${newShopId}`).update({
+        banner: banner,
+        shopid: newShopId
+      })
+    },
+    setNewLogo(newShopId, logo) {
+      return db.ref(`pwa/products/logo-${newShopId}`).update({
+        logo: logo,
+        shopid: newShopId
+      })
     },
     updateDb2(shopId, shopName) {
       return db
@@ -1875,8 +2062,6 @@ export default {
           shopname: product.shopname
         })
         .then(snap => {
-          // eslint-disable-next-line no-console
-          console.log('updated')
           this.alertsuccess6 = true
           setTimeout(() => {
             window.location.href = 'https://myshop.e-merse.com/inventory'
@@ -2287,6 +2472,10 @@ export default {
     },
     desktopAddOptionClicked(title) {
       switch (title) {
+        case 'Create an ad':
+          this.leftDrawer = false
+          this.$router.push('/adbuying')
+          break
         case 'Product':
           this.$router.push('/createproduct')
           break
@@ -2297,8 +2486,10 @@ export default {
           this.addSubcategoryDialog = true
           break
         case 'Upload/Change your Logo':
+          this.$refs.opengallerydesktop.click()
           break
         case 'Upload/Change your Banner':
+          this.$router.push('/selectbannerdesktop')
           break
         default:
           break
@@ -2307,11 +2498,14 @@ export default {
     navDrawerClick(title) {
       // this.leftDrawer = false
       switch (title) {
+        case 'Products':
+          this.$router.push('/inventory')
+          break
+        case 'Manage Ads':
+          this.$router.push('/checkads')
+          break
         case 'Edit Account Details':
           this.editAccountDialog = true
-          break
-        case 'Use a Custom Domain':
-          this.customDomainDialog = true
           break
         case 'Pay Monthly Subscription Cancel Subscription':
           // this.addSubcategoryDialog = true
@@ -2346,6 +2540,9 @@ export default {
     addOptionClicked(title) {
       this.sheet = false
       switch (title) {
+        case 'Create an ad':
+          this.$router.push('/adbuying')
+          break
         case 'Product':
           // eslint-disable-next-line no-case-declarations
           const totalProducts = this.$store.state.products.length + 1
@@ -2411,12 +2608,46 @@ export default {
         this.imgSrc = image
         this.cropLogoDialog = true
       }
+    },
+    setCropLogo(e) {
+      if (e) {
+        const image = URL.createObjectURL(e.target.files[0])
+        this.logoSrc = image
+        this.dialogLogo = true
+      }
     }
   }
 }
 </script>
 
 <style>
+.v-input--selection-controls.v-input .v-label {
+  font-size: smaller;
+}
+#fab-btn {
+  position: absolute;
+  right: 0;
+  bottom: 61px;
+}
+.done-btn {
+  width: 40%;
+  text-transform: capitalize;
+  font-weight: 700;
+}
+.image-placeholder {
+  margin: 5px;
+  height: 100px;
+  width: 250px;
+  text-align: center;
+  padding: 22px;
+  border-radius: 4px;
+  margin: auto;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
 #view-catalog {
   text-transform: capitalize;
 }
@@ -2528,7 +2759,7 @@ export default {
 }
 .container {
   padding: 12px;
-  max-width: 2000px;
+  max-width: 2000px !important;
 }
 .headline {
   text-align: center;

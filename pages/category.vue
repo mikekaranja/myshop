@@ -90,7 +90,6 @@ export default {
   },
   mounted() {
     this.items[1].text = this.$router.history.current.query.category
-    console.log(this.items[1].text)
     if (this.items[1].text !== 'All') {
       // fill subcategories
       const sub = this.$store.state.categories.filter(
@@ -122,7 +121,7 @@ export default {
 }
 .subtitle-1 {
   font-weight: 600;
-  text-align: left;
+  text-align: center;
   width: 100%;
   margin-bottom: 20px;
 }
@@ -140,6 +139,10 @@ export default {
   /* For mobile phones: */
   .bread-crumb {
     margin-left: 6px;
+    margin-top: 0px;
+  }
+  #product-images-holder {
+    margin-left: -10px !important;
   }
 }
 </style>

@@ -18,7 +18,7 @@
             @change="setImage($event)"
           />
           <!-- product images aligned -->
-          <v-row class="mb-6" style="padding-top: 35px;">
+          <v-row class="mb-6" style="padding-top: 35px;padding-left: 36px;">
             <v-col v-for="n in 6" :key="n" cols="6" style="margin-bottom:10px;">
               <div
                 v-show="productimages[n].length === 0"
@@ -34,6 +34,7 @@
               </div>
               <div
                 v-show="productimages[n].length > 0"
+                id="text-hold"
                 style="text-align:center;"
               >
                 <img
@@ -183,6 +184,25 @@
             :src="productimages[n]"
             alt=""
           />
+          <v-btn
+            v-show="productimages[n].length > 0"
+            style="margin-left: 65px;"
+            text
+            icon
+            color="black"
+            @click.native="addImage(n)"
+          >
+            <v-icon>autorenew</v-icon>
+          </v-btn>
+          <v-btn
+            v-show="productimages[n].length > 0"
+            text
+            icon
+            color="black"
+            @click.native="deleteImage(n)"
+          >
+            <v-icon>delete</v-icon>
+          </v-btn>
         </div>
       </div>
       <v-form
@@ -232,16 +252,20 @@
           :editor-toolbar="customToolbar"
         ></vue-editor>
 
-        <v-btn
-          v-show="!focus"
-          :disabled="!valid"
-          color="primary"
-          large
-          class="create-btn"
-          @click="validate"
+        <v-btn class="save-btn" color="primary" rounded @click="validate"
+          >Save</v-btn
         >
-          Add product
-        </v-btn>
+
+        <v-btn
+          color="primary"
+          text
+          rounded
+          class="delete-btn"
+          @click="openDeleteProductDialog"
+        >
+          <v-icon left dark>delete</v-icon>
+          Delete product</v-btn
+        >
       </v-form>
       <!-- snackbar to show too many items to be uploaded at a time -->
       <v-snackbar v-model="snackbar">
@@ -610,7 +634,7 @@ export default {
     },
     uploadImageAsPromise(imageFile) {
       return new Promise((resolve, reject) => {
-        const randomnumber = Math.floor(Math.random() * 100000) + 1
+        const randomnumber = Math.floor(Math.random() * 1000000)
         const imagename = `image-${randomnumber}`
         const uploadTask = storage.ref(`pwa/${imagename}`).put(imageFile)
 
@@ -731,6 +755,9 @@ export default {
 </script>
 
 <style scoped>
+#addproduct-header {
+  margin-left: 32px;
+}
 .save-btn {
   width: 55%;
   text-transform: none;
@@ -810,5 +837,95 @@ export default {
   height: 200px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .save-btn {
+    width: 100%;
+    text-transform: none;
+    margin: auto;
+    margin-top: 50px;
+    font-weight: 700;
+  }
+  .delete-btn {
+    width: 100%;
+    margin: auto;
+    text-transform: none;
+    margin-top: 20px;
+    font-weight: 700;
+  }
+  .headline {
+    margin-top: 10px;
+    font-family: 'Open Sans', sans-serif !important;
+    margin-bottom: 20px;
+    margin-left: 5px;
+    font-weight: 900;
+    text-align: left;
+  }
+  .display-3 {
+    font-family: 'Open Sans', sans-serif !important;
+    padding: 50px;
+    font-weight: 700;
+  }
+  .back-btn {
+    position: absolute;
+    top: 18px;
+  }
+  .create-btn {
+    border-radius: 0px;
+    font-size: large;
+    text-transform: capitalize;
+    font-weight: 500;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 5;
+    left: 0;
+  }
+  .scrolling-wrapper {
+    margin-top: 10px;
+    display: -webkit-box;
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .add-image {
+    margin-top: 10px;
+    color: black;
+    font-weight: 500;
+  }
+  .image-placeholder {
+    margin: 5px;
+    height: 200px;
+    width: 200px;
+    text-align: center;
+    padding: 40px;
+    border-radius: 4px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .image-placeholder button {
+    margin-top: 25%;
+  }
+  .product-image {
+    display: block;
+    border-radius: 4px;
+    object-fit: cover;
+    width: 200px;
+    margin: 5px;
+    height: 200px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .compress-below {
+    width: 100%;
+    margin-top: 50px;
+  }
 }
 </style>

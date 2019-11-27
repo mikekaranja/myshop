@@ -80,7 +80,11 @@ export default {
           } else {
             this.$store.commit('setOnboardingUid', uid)
             this.$store.commit('setOnboardingEmail', email)
-            this.$router.push('/onboarding')
+            if (this.$vuetify.breakpoint.mdAndUp) {
+              this.$router.push('/onboardingdesktop')
+            } else {
+              this.$router.push('/onboardingmobile')
+            }
             // User sign up
             this.$ga.event({
               eventCategory: 'Sign up button',
