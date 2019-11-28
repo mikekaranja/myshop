@@ -1,17 +1,19 @@
 <template>
   <div class="bgimg">
-    <v-card class="title-card">
+    <!-- <v-card class="title-card">
       <div id="title-shop" class="subtitle-1 font-weight-bold">
         {{ $store.state.user.shopname }}
       </div>
-    </v-card>
+    </v-card> -->
     <div id="title" class="title font-weight-bold">
-      Your Overall Statistics
+      Shop Statistics
     </div>
     <v-row id="overall-ad">
       <v-col style="padding: 5px;" cols="4" sm="4">
         <v-card class="mx-card">
-          <div class="subtitle-1 font-weight-bold">{{ user.totalclicks }}</div>
+          <div class="subtitle-1 font-weight-bold">
+            {{ user.totalclicks ? user.totalclicks : '0' }}
+          </div>
           <div class="caption font-weight-regular">
             Total Clicks
           </div>
@@ -19,7 +21,9 @@
       </v-col>
       <v-col style="padding: 5px;" cols="4" sm="4">
         <v-card class="mx-card">
-          <div class="subtitle-1 font-weight-bold">{{ user.totalviews }}</div>
+          <div class="subtitle-1 font-weight-bold">
+            {{ user.totalviews ? user.totalviews : '0' }}
+          </div>
           <div class="caption font-weight-regular">
             Total Views
           </div>
@@ -27,9 +31,11 @@
       </v-col>
       <v-col style="padding: 5px;" cols="4" sm="4">
         <v-card class="mx-card">
-          <div class="subtitle-1 font-weight-bold">{{ user.amountspent }}</div>
+          <div class="subtitle-1 font-weight-bold">
+            {{ user.amountspent ? user.amountspent : '0' }}
+          </div>
           <div class="caption font-weight-regular">
-            Amount Spent
+            Spent
           </div>
         </v-card>
       </v-col>
@@ -46,7 +52,7 @@
                 <v-img
                   height="138"
                   width="111"
-                  :src="item.imageUrls[0]"
+                  :src="item.imageUrls ? item.imageUrls[0] : '/upload.png'"
                 ></v-img>
               </v-col>
 
@@ -58,7 +64,7 @@
                   rounded
                   color="green"
                   dark
-                  >Active</v-btn
+                  >{{ item.status }}</v-btn
                 >
                 <div id="ad-desc" class="caption font-weight-bold">
                   {{ item.addescription }}
@@ -162,11 +168,9 @@ export default {
   padding: 0px;
 }
 .bgimg {
-  background-image: url('../static/Rectangle.svg');
   width: 100%;
   height: 120px;
   padding: 20px;
-  background-repeat-x: repeat;
 }
 #row-ads {
   width: 34%;
@@ -212,7 +216,7 @@ export default {
 }
 @media only screen and (max-width: 768px) {
   #title {
-    margin-top: 30px;
+    margin-top: 0px;
     text-align: left;
   }
   .title-card {

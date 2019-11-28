@@ -1,6 +1,6 @@
 <template>
   <div id="step-div" class="text-center">
-    <div class="title">Congratatulations {{ $store.state.user.name }}!</div>
+    <div class="title">Congratulations {{ $store.state.user.name }}!</div>
     <img id="img" src="/winners.svg" alt="image" />
     <div style="color:black;" class="subtitle-2 font-regular">
       Your ad has been submitted for review. We will alert you once it is
@@ -57,6 +57,16 @@ export default {}
   }
   .step-holder {
     width: 100%;
+  }
+  .bottom-nav {
+    width: 88%;
+    height: 65px;
+    position: fixed;
+    bottom: 0;
+    background-color: #ffffff;
+    opacity: 1;
+    padding: 12px;
+    text-align: center;
   }
   .bottom-btn {
     text-transform: none;

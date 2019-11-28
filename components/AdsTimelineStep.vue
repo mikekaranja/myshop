@@ -37,6 +37,7 @@
         v-if="selectfrom"
         v-model="picker1"
         color="primary"
+        :min="picker1"
         @change="dateFrom"
       ></v-date-picker>
     </v-fade-transition>
@@ -46,6 +47,7 @@
         v-model="picker2"
         :show-current="picker1"
         color="primary"
+        :min="picker1"
         @change="dateTo"
       ></v-date-picker>
     </v-fade-transition>
@@ -105,11 +107,13 @@ export default {
       this.from = this.reverseString(this.picker1)
       this.hint1 = 'From'
       this.openTo()
+      window.scrollTo(0, 0)
     },
     dateTo(e) {
       this.to = this.picker2
       this.selectto = false
       this.hint2 = 'To'
+      window.scrollTo(0, 0)
     },
     reverseString(str) {
       const splitString = str.split('-')

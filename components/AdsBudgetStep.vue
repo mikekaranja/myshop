@@ -60,7 +60,7 @@
       <div id="instructions">
         Enter <strong>Account</strong> No.
         <strong style="color:#92302f"> 00301916431250</strong>
-        <v-btn
+        <!-- <v-btn
           style="text-transform:none;"
           text
           color="grey"
@@ -71,7 +71,7 @@
             >mdi-content-copy</v-icon
           >
           Copy
-        </v-btn>
+        </v-btn> -->
       </div>
       <div id="instructions">
         Enter <strong>Amount</strong
@@ -81,6 +81,10 @@
         <v-text-field
           v-model="mpesacode"
           label="Enter Mpesa code here"
+          :rules="[
+            () => !!mpesacode || 'Enter valid mpesa code',
+            () => mpesacode.length === 10 || 'Enter valid mpesa code'
+          ]"
           solo
         ></v-text-field>
       </div>
@@ -140,6 +144,7 @@ export default {
         const obj = {
           mpesacode: this.mpesacode,
           shop: this.$store.state.user.shopid,
+          status: 'Under Review',
           date_created: new Date().toString()
         }
         this.$store.commit('AdFormData', obj)

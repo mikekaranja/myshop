@@ -1258,6 +1258,7 @@ export default {
       if (to.path === '/inventory') {
         if (this.$vuetify.breakpoint.smAndDown) {
           this.fabadd = true
+          this.cataloguescreen = '12px'
         }
       }
       if (to.path === '/createproduct') {
