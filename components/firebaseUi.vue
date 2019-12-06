@@ -6,7 +6,15 @@
 import { db, auth, authProviders } from '~/plugins/firebase'
 export default {
   name: 'Login',
+  data() {
+    return {
+      ad: '',
+      landingpage: ''
+    }
+  },
   mounted() {
+    this.ad = this.$store.state.ad
+    this.landingpage = this.$store.state.landingpage
     if (process.browser) {
       const firebaseui = require('firebaseui')
       const ui =

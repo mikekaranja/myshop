@@ -68,7 +68,7 @@ export default {
   plugins: [
     '~plugins/vue-clipper',
     '~plugins/vue-rx',
-    '~plugins/croppa',
+    '~plugins/hotjar',
     '~plugins/vuetify',
     '~/plugins/bus',
     '~/plugins/firebase',
@@ -86,6 +86,7 @@ export default {
         id: 'UA-121366089-30'
       }
     ],
+    ['@nuxtjs/google-tag-manager', { id: 'GTM-W4D4RWD' }],
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',

@@ -7,7 +7,7 @@
       <p role="image" aria-label="party">🥳</p>
     </div>
     <v-btn color="primary" rounded class="congrats-btn" @click="continueNext"
-      >View your catalogue</v-btn
+      >Preview shop</v-btn
     >
   </div>
 </template>

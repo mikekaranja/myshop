@@ -5,6 +5,8 @@ export default ({ store }) => {
     createPersistedState({
       key: 'MyShopStore',
       paths: [
+        'ad',
+        'landingpage',
         'authenticated',
         'addtohomescreen',
         'user',

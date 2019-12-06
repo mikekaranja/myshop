@@ -136,7 +136,7 @@
         @click="openCatalogue"
       >
         <v-icon left dark>mdi-eye-outline</v-icon>
-        View your Shop
+        Preview Shop
       </v-btn>
     </v-app-bar>
     <v-content
@@ -1128,7 +1128,7 @@ export default {
         { title: 'Manage Ads', icon: 'online.svg' },
         { title: 'Edit Account Details', icon: 'mdi-account-circle-outline' },
         // { title: 'Use a Custom Domain', icon: 'mdi-web' },
-        // { title: 'Pay Monthly Subscription', icon: 'mdi-credit-card-plus' },
+        { title: 'Pay Monthly Subscription', icon: 'mdi-credit-card-plus' },
         { title: 'Cancel Subscription', icon: 'mdi-credit-card-off' },
         { title: 'Log out', icon: 'mdi-logout' }
       ],
@@ -1628,7 +1628,7 @@ export default {
         currency: 'USD',
         txref: genTxref,
         payment_options: 'card',
-        payment_plan: 6897,
+        payment_plan: randomnumber,
         meta: [
           {
             metaname: 'UID',
@@ -2508,8 +2508,9 @@ export default {
         case 'Edit Account Details':
           this.editAccountDialog = true
           break
-        case 'Pay Monthly Subscription Cancel Subscription':
+        case 'Pay Monthly Subscription':
           // this.addSubcategoryDialog = true
+          this.kindlyPayAfterDialog = !this.kindlyPayAfterDialog
           break
         case 'Cancel Subscription':
           this.cancelSubscriptionDialog = true

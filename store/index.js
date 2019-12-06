@@ -3,6 +3,8 @@ import { db } from '~/plugins/firebase'
 const MyShopStore = () => {
   return new Vuex.Store({
     state: {
+      ad: '',
+      landingpage: '',
       authenticated: false,
       onboardingcategory: '',
       uid: '',
@@ -20,6 +22,10 @@ const MyShopStore = () => {
     },
     getters: {},
     mutations: {
+      SetAdConversions(state, data) {
+        state.ad = data.adname
+        state.landingpage = data.landingpagename
+      },
       authUser(state, user) {
         state.authenticated = user
       },
@@ -44,6 +50,15 @@ const MyShopStore = () => {
           user.phoneos = 'android'
         } else {
           user.phoneos = 'iphone'
+        }
+
+        // ad channel
+        const ad = window.localStorage.getItem('ad')
+        const landingpage = window.localStorage.getItem('landingpage')
+
+        if (ad) {
+          user.ad = ad
+          user.landingpage = landingpage
         }
 
         const updates = {}

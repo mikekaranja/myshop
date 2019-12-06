@@ -73,7 +73,7 @@
                 persistent-hint
               ></v-text-field>
 
-              <v-select
+              <!-- <v-select
                 v-model="currency"
                 :items="currencies"
                 menu-props="auto"
@@ -81,7 +81,7 @@
                 hide-details
                 prepend-icon="mdi-cash-usd"
                 single-line
-              ></v-select>
+              ></v-select> -->
 
               <v-btn
                 ref="validatestep1"
@@ -676,9 +676,14 @@ export default {
               eventLabel: shopName,
               eventValue: 4
             })
+            // ad channel
+            const ad = window.localStorage.getItem('ad')
+            const landingpage = window.localStorage.getItem('landingpage')
             return db
               .ref(`pwa/onboardingstats/onboarding-step1${shopId}`)
               .set({
+                ad: ad,
+                landingpage: landingpage,
                 step: 'step1',
                 shopid: shopId,
                 phonenumber: this.number
