@@ -156,21 +156,11 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
         Your free trial will end in 7 days.
-        <span
-          class="open-dialog"
-          @click="kindlyPayBeforeDialog = !kindlyPayBeforeDialog"
-        >
-          Click here to pay.</span
-        >
+        <span class="open-dialog" @click="mpesapage"> Click here to pay.</span>
       </div>
       <div v-show="after24hours" class="navbar-alert">
         {{ paymentalert }}
-        <span
-          class="open-dialog"
-          @click="kindlyPayAfterDialog = !kindlyPayAfterDialog"
-        >
-          Click here.</span
-        >
+        <span class="open-dialog" @click="mpesapage"> Click here.</span>
       </div>
       <v-container :style="{ padding: cataloguescreen }">
         <nuxt />
@@ -1255,6 +1245,12 @@ export default {
       this.loader2 = null
     },
     $route(to, from) {
+      // ad buying
+      if (to.path === '/paymentscreen') {
+        this.fabadd = false
+        this.bottombar = false
+        this.topbar = false
+      }
       if (to.path === '/inventory') {
         if (this.$vuetify.breakpoint.smAndDown) {
           this.fabadd = true
@@ -1478,6 +1474,9 @@ export default {
     })
   },
   methods: {
+    mpesapage() {
+      this.$router.push('/paymentscreen')
+    },
     openCatalogue() {
       window.open(
         `https://shop.e-merse.com/?${this.$store.state.user.shopid}`,
@@ -1538,9 +1537,9 @@ export default {
       // Before 24 hours
       if (hours <= 24 && expirydate > today && hours2 <= 24) {
         // show payment snackbar at the top
-        this.paymentalert = 'Your free trial will end in 7 days.'
-        this.before24hours = true
-      } else if (hours > 24 && expirydate < today) {
+        // this.paymentalert = 'Your free trial will end in 7 days.'
+        // this.before24hours = true
+      } else if (hours > 168 && expirydate < today) {
         // after 24 hours
         this.paymentalert = 'Your catalogue is deactivated. To activate,'
         this.after24hours = true
@@ -2510,7 +2509,8 @@ export default {
           break
         case 'Pay Monthly Subscription':
           // this.addSubcategoryDialog = true
-          this.kindlyPayAfterDialog = !this.kindlyPayAfterDialog
+          // this.kindlyPayAfterDialog = !this.kindlyPayAfterDialog
+          this.$router.push('/paymentscreen')
           break
         case 'Cancel Subscription':
           this.cancelSubscriptionDialog = true
@@ -2561,11 +2561,12 @@ export default {
               eventLabel: this.$store.state.user.shopname,
               eventValue: 27
             })
-            this.limitExceededDialog = true
-            this.limitexceededby = totalProducts - 50
-            this.radioPlan = '51 - 300 products - $24/month'
-            this.disabledplan1 = true
-            this.disabledplan3 = true
+            this.$router.push('/paymentscreen')
+            // this.limitExceededDialog = true
+            // this.limitexceededby = totalProducts - 50
+            // this.radioPlan = '51 - 300 products - $24/month'
+            // this.disabledplan1 = true
+            // this.disabledplan3 = true
           } else if (
             paymentPlan === '51 - 300 products - $24/month' &&
             totalProducts > 300
@@ -2577,13 +2578,15 @@ export default {
               eventLabel: this.$store.state.user.shopname,
               eventValue: 28
             })
-            this.limitExceededDialog = true
-            this.limitexceededby = totalProducts - 50
-            this.radioPlan = '51 - 300 products - $24/month'
-            this.disabledplan1 = true
-            this.disabledplan2 = true
+            this.$router.push('/paymentscreen')
+            // this.limitExceededDialog = true
+            // this.limitexceededby = totalProducts - 50
+            // this.radioPlan = '51 - 300 products - $24/month'
+            // this.disabledplan1 = true
+            // this.disabledplan2 = true
           } else if (this.after24hours === true) {
-            this.kindlyPayAfterDialog = true
+            // this.kindlyPayAfterDialog = true
+            this.$router.push('/paymentscreen')
           } else {
             this.$router.push('/createproduct')
           }
@@ -2623,6 +2626,9 @@ export default {
 </script>
 
 <style>
+.mdl-shadow--2dp {
+  box-shadow: none;
+}
 .v-input--selection-controls.v-input .v-label {
   font-size: smaller;
 }

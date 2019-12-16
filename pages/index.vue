@@ -20,9 +20,9 @@ export default {
         this.$router.push('/inventory')
       } else if (!this.$store.state.authenticated) {
         if (this.$vuetify.breakpoint.mdAndUp) {
-          this.$router.push('/logindesktop')
+          this.$router.push('/desktopsignup')
         } else {
-          this.$router.push('/loginmobile')
+          this.$router.push('/mobilesignup')
         }
       }
     }, 100)

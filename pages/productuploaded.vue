@@ -9,7 +9,7 @@
         rounded
         class="congrats-btn"
         @click="openCatalogue"
-        >View your catalogue</v-btn
+        >Preview Shop</v-btn
       >
       <v-btn
         v-show="$vuetify.breakpoint.smAndDown"
@@ -17,7 +17,7 @@
         rounded
         class="congrats-btn"
         to="/catalogue"
-        >View your catalogue</v-btn
+        >Preview Shop</v-btn
       >
       <v-btn
         color="primary"

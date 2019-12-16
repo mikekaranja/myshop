@@ -48,10 +48,10 @@ export default {
       {
         src:
           'https://cdn.polyfill.io/v2/polyfill.min.js?features=IntersectionObserver'
-      },
-      {
-        src: 'https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js'
       }
+      // {
+      //   src: 'https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js'
+      // }
     ]
   },
   /*
@@ -68,7 +68,7 @@ export default {
   plugins: [
     '~plugins/vue-clipper',
     '~plugins/vue-rx',
-    '~plugins/hotjar',
+    { src: '~/plugins/hotjar', ssr: false },
     '~plugins/vuetify',
     '~/plugins/bus',
     '~/plugins/firebase',

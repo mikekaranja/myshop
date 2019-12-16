@@ -24,9 +24,9 @@ export default {
       this.$router.push('/inventory')
     } else if (!this.$store.state.authenticated) {
       if (this.$vuetify.breakpoint.mdAndUp) {
-        this.$router.push('/logindesktop')
+        this.$router.push('/onboarduser')
       } else {
-        this.$router.push('/loginmobile')
+        this.$router.push('/onboarduser')
       }
     }
   }

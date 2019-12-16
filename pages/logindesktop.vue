@@ -46,7 +46,7 @@
               <div v-else class="caption font-weight-bold" style="color:gray">
                 Already have an account?
                 <span class="free-trial" @click="changeTitle('signin')"
-                  >Login</span
+                  >Login here</span
                 >
               </div>
             </div>

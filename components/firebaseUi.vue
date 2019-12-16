@@ -9,10 +9,12 @@ export default {
   data() {
     return {
       ad: '',
-      landingpage: ''
+      landingpage: '',
+      ipuserdata: {}
     }
   },
   mounted() {
+    this.ipdata()
     this.ad = this.$store.state.ad
     this.landingpage = this.$store.state.landingpage
     if (process.browser) {
@@ -22,18 +24,26 @@ export default {
 
       const config = {
         signInOptions: [
-          authProviders.Google,
-          authProviders.Facebook,
-          authProviders.Email
+          {
+            provider: authProviders.Phone,
+            // The default selected country.
+            defaultCountry: 'KE'
+          }
+          // authProviders.Phone
+          // authProviders.Facebook,
+          // authProviders.Email
         ],
         signInSuccessUrl: '/inventory',
         tosUrl: '/terms',
         privacyPolicyUrl: '/privacy',
         callbacks: {
           signInSuccessWithAuthResult: function(authResult) {
+            const shopname = window.localStorage.getItem('shopname')
+            const website = window.localStorage.getItem('website')
+            console.log(authResult.user.providerData[0].uid, shopname, website)
             const uid = authResult.user.providerData[0].uid
-            const email = authResult.user.providerData[0].email
-            this.checkIfNewUser(uid, email)
+            // const email = authResult.user.providerData[0].email
+            this.checkIfNewUser(uid, 'email', shopname, website)
           }.bind(this),
           uiShown: function() {
             // eslint-disable-next-line no-console
@@ -46,7 +56,7 @@ export default {
     }
   },
   methods: {
-    checkIfNewUser(uid, email) {
+    checkIfNewUser(uid, email, shopname, website) {
       return db
         .ref('pwa/users')
         .orderByChild('uid')
@@ -86,22 +96,77 @@ export default {
             this.$ga.set('userId', values[0].shopname)
             return false
           } else {
-            this.$store.commit('setOnboardingUid', uid)
-            this.$store.commit('setOnboardingEmail', email)
-            if (this.$vuetify.breakpoint.mdAndUp) {
-              this.$router.push('/onboardingdesktop')
-            } else {
-              this.$router.push('/onboardingmobile')
-            }
+            // const ad = window.localStorage.getItem('ad')
+            // const landingpage = window.localStorage.getItem('landingpage')
+            // const data = {
+            //   ad: ad,
+            //   landingpage: landingpage
+            // }
+            // this.$store.commit('SetAdConversions', data)
+
+            // this.$store.commit('setOnboardingUid', uid)
+            // this.$store.commit('setOnboardingEmail', email)
+            // if (this.$vuetify.breakpoint.mdAndUp) {
+            //   this.$router.push('/onboardingdesktop')
+            // } else {
+            //   this.$router.push('/onboardingmobile')
+            // }
+            this.saveNewShop(uid, shopname, website)
+            this.$router.push('/inventory')
             // User sign up
             this.$ga.event({
-              eventCategory: 'Sign up button',
+              eventCategory: 'Successful Sign up from new page',
               eventAction: 'New sign up',
-              eventLabel: email,
-              eventValue: 2
+              eventLabel: shopname,
+              eventValue: 300
             })
           }
         })
+    },
+    async ipdata() {
+      const data = await this.$axios.$get(
+        'https://api.ipdata.co?api-key=371d9162f88bdd60ac87cbb7381fc0cefbe25c087b12040aac8d1d01'
+      )
+      this.ipuserdata = data
+      return data
+    },
+    saveNewShop(uid, shopname, website) {
+      const shopName = shopname
+        .trim()
+        .replace(
+          // eslint-disable-next-line no-useless-escape
+          /[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi,
+          ''
+        )
+        .toLowerCase()
+      const shopId = shopName.replace(/ /g, '-').toLowerCase()
+      // let uid = this.$store.state.uid
+      // if (uid.startsWith('@')) {
+      //   uid = uid.substr(1)
+      //   uid = uid.slice(0, -1)
+      // }
+      const user = {
+        website: website,
+        uid: uid,
+        currency: 'Ksh',
+        name: shopName,
+        email: '',
+        shopname: shopName,
+        shopid: shopId,
+        phonenumber: uid,
+        payment_plan: '1 - 50 products $8/month',
+        sign_up_date: new Date().toString(),
+        expiry_date: this.addDays(1).toString(),
+        ipdata: this.ipuserdata
+      }
+      this.snackbarText = ''
+      this.snackbar = !this.snackbar
+      return this.$store.commit('saveUser', user)
+    },
+    addDays(days) {
+      const date = new Date()
+      date.setDate(date.getDate() + days)
+      return date
     }
   }
 }

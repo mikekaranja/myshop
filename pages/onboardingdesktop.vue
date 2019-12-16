@@ -734,13 +734,13 @@ export default {
               eventValue: 4
             })
             // ad channel
-            const ad = window.localStorage.getItem('ad')
-            const landingpage = window.localStorage.getItem('landingpage')
+            // const ad = window.localStorage.getItem('ad')
+            // const landingpage = window.localStorage.getItem('landingpage')
             return db
               .ref(`pwa/onboardingstats/onboarding-step1${shopId}`)
               .set({
-                ad: ad,
-                landingpage: landingpage,
+                ad: this.$store.state.ad,
+                landingpage: this.$store.state.landingpage,
                 step: 'step1',
                 shopid: shopId,
                 phonenumber: this.number

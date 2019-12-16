@@ -17,7 +17,7 @@
       rounded
       class="congrats-btn"
       to="/catalogue"
-      >View your catalogue</v-btn
+      >Preview Shop</v-btn
     >
   </div>
 </template>

@@ -18,10 +18,14 @@ const MyShopStore = () => {
       onboardingshopname: '',
       onboardinguser: {},
       adbanner: true,
-      addata: {}
+      addata: {},
+      verifynumber: ''
     },
     getters: {},
     mutations: {
+      verifyPhone(state, data) {
+        state.verifynumber = data
+      },
       SetAdConversions(state, data) {
         state.ad = data.adname
         state.landingpage = data.landingpagename
