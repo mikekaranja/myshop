@@ -15,8 +15,6 @@ export default {
   },
   mounted() {
     this.ipdata()
-    this.ad = this.$store.state.ad
-    this.landingpage = this.$store.state.landingpage
     if (process.browser) {
       const firebaseui = require('firebaseui')
       const ui =
@@ -24,14 +22,9 @@ export default {
 
       const config = {
         signInOptions: [
-          {
-            provider: authProviders.Phone,
-            // The default selected country.
-            defaultCountry: 'KE'
-          }
-          // authProviders.Phone
-          // authProviders.Facebook,
-          // authProviders.Email
+          authProviders.Google,
+          authProviders.Facebook,
+          authProviders.Email
         ],
         signInSuccessUrl: '/inventory',
         tosUrl: '/terms',
@@ -42,9 +35,10 @@ export default {
             const website = window.localStorage.getItem('website')
             console.log(authResult.user.providerData[0].uid, shopname, website)
             const uid = authResult.user.providerData[0].uid
-            // const email = authResult.user.providerData[0].email
-            this.checkIfNewUser(uid, 'email', shopname, website)
+            const email = authResult.user.providerData[0].email
+            this.checkIfNewUser(uid, email, shopname, website)
           }.bind(this),
+          // .bind(this)
           uiShown: function() {
             // eslint-disable-next-line no-console
             console.log('')
@@ -96,21 +90,6 @@ export default {
             this.$ga.set('userId', values[0].shopname)
             return false
           } else {
-            // const ad = window.localStorage.getItem('ad')
-            // const landingpage = window.localStorage.getItem('landingpage')
-            // const data = {
-            //   ad: ad,
-            //   landingpage: landingpage
-            // }
-            // this.$store.commit('SetAdConversions', data)
-
-            // this.$store.commit('setOnboardingUid', uid)
-            // this.$store.commit('setOnboardingEmail', email)
-            // if (this.$vuetify.breakpoint.mdAndUp) {
-            //   this.$router.push('/onboardingdesktop')
-            // } else {
-            //   this.$router.push('/onboardingmobile')
-            // }
             this.saveNewShop(uid, shopname, website)
             this.$router.push('/inventory')
             // User sign up
@@ -140,11 +119,10 @@ export default {
         )
         .toLowerCase()
       const shopId = shopName.replace(/ /g, '-').toLowerCase()
-      // let uid = this.$store.state.uid
-      // if (uid.startsWith('@')) {
-      //   uid = uid.substr(1)
-      //   uid = uid.slice(0, -1)
-      // }
+      if (uid.startsWith('@')) {
+        uid = uid.substr(1)
+        uid = uid.slice(0, -1)
+      }
       const user = {
         website: website,
         uid: uid,

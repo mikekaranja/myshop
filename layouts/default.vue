@@ -174,7 +174,7 @@
     <v-footer v-show="bottombar" color="white" padless :fixed="fixed" app>
       <v-bottom-navigation v-model="bottomNav" grow>
         <v-btn value="inventory" @click="openInventory">
-          <span>Products</span>
+          <span>My Products</span>
           <v-icon>$vuetify.icons.inventory</v-icon>
         </v-btn>
 
@@ -184,7 +184,7 @@
         </v-btn>
 
         <v-btn value="catalogue" to="/catalogue">
-          <span>My shop</span>
+          <span>View site</span>
           <v-icon>$vuetify.icons.myshop</v-icon>
         </v-btn>
       </v-bottom-navigation>
@@ -1125,7 +1125,7 @@ export default {
       sheet: false,
       tiles: [
         { icon: 'online.svg', title: 'Create an ad' },
-        { icon: 'mdi-tag-outline', title: 'Product' },
+        { icon: 'mdi-tag-outline', title: 'Add Product' },
         { icon: 'mdi-folder-outline', title: 'Category' },
         { icon: 'mdi-folder-multiple-outline', title: 'Subcategory' },
         { icon: 'mdi-image-outline', title: 'Upload/Change your Logo' },

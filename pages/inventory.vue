@@ -14,7 +14,7 @@
           <desktop-category-card :item="category"></desktop-category-card>
         </v-col>
       </v-row>
-      <v-snackbar
+      <!-- <v-snackbar
         v-if="adbanner"
         v-model="snackbar"
         :timeout="0"
@@ -24,13 +24,13 @@
         <v-btn color="white" text @click="openAdsPage">
           Get started
         </v-btn>
-      </v-snackbar>
+      </v-snackbar> -->
     </div>
     <div
       v-show="$vuetify.breakpoint.smAndDown"
       style="width: 100%;min-height: 100vh;"
     >
-      <div v-if="adbanner" id="card-notice" style="text-align:end;">
+      <!-- <div v-if="adbanner" id="card-notice" style="text-align:end;">
         <div style="display:flex;padding:10px;padding-bottom: 0px;">
           <v-icon color="white" @click="closeBanner">mdi-close</v-icon>
           <div
@@ -53,7 +53,7 @@
             Get started
           </v-btn>
         </div>
-      </div>
+      </div> -->
       <div class="display-1 font-weight-bold">
         Categories
       </div>

@@ -120,10 +120,10 @@ export default {
     }, 50)
   },
   mounted() {
-    const x = window.document.getElementsByClassName('firebaseui-title')
-    x[0].textContent = 'Enter your phone number'
-    const y = window.document.getElementsByClassName('firebaseui-button')
-    y[0].textContent = 'Continue'
+    // const x = window.document.getElementsByClassName('firebaseui-title')
+    // x[0].textContent = 'Enter your phone number'
+    // const y = window.document.getElementsByClassName('firebaseui-button')
+    // y[0].textContent = 'Continue'
   },
   methods: {
     login() {

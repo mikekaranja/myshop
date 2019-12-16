@@ -40,17 +40,25 @@
         </div>
       </v-form>
     </div>
+    <div v-if="verify" id="verify-sms">
+      <img class="top-logo" src="https://myshop.e-merse.com/icon.jpg" alt="" />
+      <firebase-ui v-show="verify" class="fire-div"></firebase-ui>
+    </div>
   </div>
 </template>
 
 <script>
+import firebaseUi from '~/components/FirebaseUi'
 export default {
+  components: {
+    firebaseUi
+  },
   data() {
     return {
       number: '',
       shop: '',
       website: '',
-      verify: false,
+      verify: true,
       valid: true,
       numberRules: [
         v => !!v || 'Phone Number is required',
@@ -82,6 +90,12 @@ export default {
       }
     }, 50)
   },
+  mounted() {
+    // const x = window.document.getElementsByClassName('firebaseui-title')
+    // x[0].textContent = 'Enter your phone number'
+    // const y = window.document.getElementsByClassName('firebaseui-button')
+    // y[0].textContent = 'Continue'
+  },
   methods: {
     login() {
       this.verify = true
@@ -104,7 +118,7 @@ export default {
         })
         window.localStorage.setItem('shopname', this.shop)
         window.localStorage.setItem('website', this.website)
-        this.$router.push('/firebasemobilesignup')
+        this.verify = true
       }
     }
   }
