@@ -32,13 +32,6 @@
                   required
                 ></v-text-field>
 
-                <v-text-field
-                  v-model="number"
-                  :rules="numberRules"
-                  label="WhatsApp Number"
-                  required
-                ></v-text-field>
-
                 <v-btn
                   style="color: white;font-size: x-large;height: 75px;"
                   :disabled="!valid"
@@ -61,6 +54,16 @@
               </v-form>
             </div>
             <div v-show="verify" id="wordings" class="text-center">
+              <v-btn
+                id="arrow-left"
+                class="mx-2"
+                fab
+                small
+                text
+                to="/desktopsignup"
+              >
+                <v-icon color="black">mdi-arrow-left</v-icon>
+              </v-btn>
               <img
                 class="desktop-logo"
                 src="https://myshop.e-merse.com/icon.jpg"
@@ -94,11 +97,12 @@ export default {
       number: '',
       shop: '',
       website: '',
-      verify: false,
+      verify: true,
       valid: true,
       numberRules: [
         v => !!v || 'Phone Number is required',
-        v => (v && v.length === 9) || 'Phone Number must be valid'
+        v =>
+          (v && v.length === 9) || 'Phone Number must be equal to 9 characters'
       ],
       shopRules: [
         v => !!v || 'Shop Name is required',
@@ -133,7 +137,7 @@ export default {
   },
   methods: {
     login() {
-      this.$router.push('/firebasedesktopsignup')
+      this.verify = true
     },
     validate() {
       // User sign up
@@ -148,12 +152,11 @@ export default {
         this.$ga.event({
           eventCategory: 'Start free trial button',
           eventAction: 'New sign up button clicked successfully',
-          eventLabel: `${this.shop}, ${this.number}`,
+          eventLabel: this.shop,
           eventValue: 200
         })
         window.localStorage.setItem('shopname', this.shop)
         window.localStorage.setItem('website', this.website)
-        window.localStorage.setItem('number', this.number)
         this.$router.push('/firebasedesktopsignup')
       }
     }
@@ -162,6 +165,11 @@ export default {
 </script>
 
 <style>
+#arrow-left {
+  position: absolute;
+  left: -20px;
+  top: 40px;
+}
 #already-account {
   margin-top: 30px;
 }

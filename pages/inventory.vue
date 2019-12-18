@@ -1,78 +1,70 @@
 <template>
   <v-layout class="text-center" wrap>
     <div v-show="$vuetify.breakpoint.mdAndUp" class="desktop-div">
-      <div id="categories-header-desktop" class="display-2 font-weight-bold">
-        Categories
+      <div v-if="$store.state.products.length >= 1">
+        <div id="categories-header-desktop" class="display-2 font-weight-bold">
+          Categories
+        </div>
+        <v-row class="mb-6" style="padding-left: 23px;">
+          <v-col
+            v-for="(category, index) in categories"
+            :key="index"
+            cols="6"
+            md="2"
+          >
+            <desktop-category-card :item="category"></desktop-category-card>
+          </v-col>
+        </v-row>
       </div>
-      <v-row class="mb-6" style="padding-left: 23px;">
-        <v-col
-          v-for="(category, index) in categories"
-          :key="index"
-          cols="6"
-          md="2"
-        >
-          <desktop-category-card :item="category"></desktop-category-card>
-        </v-col>
-      </v-row>
-      <!-- <v-snackbar
-        v-if="adbanner"
-        v-model="snackbar"
-        :timeout="0"
-        color="success"
-      >
-        {{ text }}
-        <v-btn color="white" text @click="openAdsPage">
-          Get started
-        </v-btn>
-      </v-snackbar> -->
+      <div v-if="$store.state.products.length < 1">
+        <img id="empty-img" src="/emptystate.svg" alt="empty" />
+        <div id="nada-text" class="body-2">No products yet</div>
+      </div>
     </div>
     <div
       v-show="$vuetify.breakpoint.smAndDown"
-      style="width: 100%;min-height: 100vh;"
+      style="width: 100%;min-height: 50vh;"
     >
-      <!-- <div v-if="adbanner" id="card-notice" style="text-align:end;">
-        <div style="display:flex;padding:10px;padding-bottom: 0px;">
-          <v-icon color="white" @click="closeBanner">mdi-close</v-icon>
-          <div
-            style="margin-top: 1px;margin-left: 10px;"
-            class="subtitle-2 font-weight-bold"
-          >
-            Advertise on google!
-          </div>
+      <div v-if="$store.state.products.length >= 1">
+        <div class="display-1 font-weight-bold">
+          Categories
         </div>
-        <div class="caption">
-          Get seen by thousands of customers on the internet.
-        </div>
-        <div style="padding-bottom:5px;">
-          <v-btn
-            style="text-transform:none;margin-left:auto;text-decoration:underline;text-align:center;"
-            text
-            color="white"
-            to="/adbuying"
-          >
-            Get started
-          </v-btn>
-        </div>
-      </div> -->
-      <div class="display-1 font-weight-bold">
-        Categories
+        <category-card
+          v-for="(category, index) in categories"
+          :key="index"
+          :item="category"
+        ></category-card>
       </div>
-      <!-- <category-card item="All"></category-card> -->
-      <category-card
-        v-for="(category, index) in categories"
-        :key="index"
-        :item="category"
-      ></category-card>
-      <!-- <v-btn
-        id="fab-btn"
-        class="mx-2"
-        fab
-        dark
-        color="primary"
-        @click="openOptions"
+      <div v-if="$store.state.products.length < 1">
+        <img id="empty-img" src="/emptystate.svg" alt="empty" />
+        <div id="nada-text" class="body-2">No products yet</div>
+      </div>
+    </div>
+    <div v-show="$store.state.tour === true" id="tap-here">
+      <img src="/screen1.svg" alt="screen" />
+      <div
+        id="add-text"
+        style="color:white;"
+        class="body-2 font-weight-regular"
       >
-        <v-icon dark>mdi-plus</v-icon>
-      </v-btn> -->
+        Tap here to add a product
+      </div>
+      <v-btn id="ok-got" color="#979797" depressed small @click="removeOk"
+        >Ok, Got it</v-btn
+      >
+    </div>
+    <div v-show="$store.state.tour === true" v-if="showaddhere" id="add-here">
+      <img style="width: 98%;" src="/screen2.svg" alt="screen" />
+      <div
+        id="add-here-text"
+        style="color:white;"
+        class="body-2 font-weight-regular"
+      >
+        Add a product here
+      </div>
+      <v-btn id="ok-got-it" color="#979797" depressed small @click="removeOk"
+        >Ok, Got it</v-btn
+      >
     </div>
   </v-layout>
 </template>
@@ -88,6 +80,7 @@ export default {
   },
   data() {
     return {
+      showaddhere: false,
       no: [''],
       close: true,
       snackbar: true,
@@ -104,9 +97,15 @@ export default {
       )
       return categoriesarray
     },
-    ...mapState(['adbanner'])
+    ...mapState(['adbanner', 'tour'])
   },
   mounted() {
+    if (
+      this.$store.state.products.length < 1 &&
+      this.$store.state.tour !== 'done'
+    ) {
+      this.$store.commit('setTour', true)
+    }
     setTimeout(() => {
       if (this.$store.state.authenticated) {
         this.$bus.$emit('showbottomandtop', true)
@@ -114,6 +113,12 @@ export default {
     }, 1000)
   },
   created() {
+    this.$bus.$on('showcaption', value => {
+      this.showaddhere = true
+    })
+    this.$bus.$on('hidecaption', value => {
+      this.showaddhere = false
+    })
     setTimeout(() => {
       if (!this.$store.state.authenticated) {
         this.$router.push('/login')
@@ -123,6 +128,9 @@ export default {
     }, 50)
   },
   methods: {
+    removeOk() {
+      this.$store.commit('setTour', 'done')
+    },
     openAdsPage() {
       this.closeBanner()
       this.$router.push('/checkads')
@@ -156,6 +164,34 @@ export default {
 }
 </script>
 <style scoped>
+#add-here-text {
+  color: white;
+  margin-top: -37%;
+  margin-left: 15px;
+}
+#add-here {
+  position: fixed;
+  bottom: 305px;
+  right: 0;
+  z-index: 999;
+}
+#add-text {
+  color: white;
+  margin-top: -36%;
+}
+#tap-here {
+  display: none;
+}
+#empty-img {
+  width: 35%;
+  margin: auto;
+  margin-top: 5%;
+}
+#nada-text {
+  text-align: center;
+  color: grey;
+  margin-top: 30px;
+}
 #card-notice {
   background: rgb(92, 185, 91);
   color: white;
@@ -190,5 +226,36 @@ export default {
   margin-bottom: 20px;
   margin-left: 5px;
   margin-top: 18px;
+}
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  #tap-here {
+    display: block;
+    position: fixed;
+    bottom: 141px;
+    right: 53px;
+  }
+  #empty-img {
+    width: 65%;
+    margin: auto;
+    margin-top: 15%;
+  }
+  #nada-text {
+    text-align: center;
+    color: grey;
+    margin-top: 30px;
+  }
+  #ok-got {
+    margin-left: 33%;
+    margin-top: 4px;
+    text-transform: none;
+    color: white;
+  }
+  #ok-got-it {
+    margin-left: 23%;
+    margin-top: 4px;
+    text-transform: none;
+    color: white;
+  }
 }
 </style>

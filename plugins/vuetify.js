@@ -13,7 +13,7 @@ export default ctx => {
     theme: {
       themes: {
         light: {
-          primary: '#92302F',
+          primary: '#B13D00',
           accent: colors.deepPurple.accent3,
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,

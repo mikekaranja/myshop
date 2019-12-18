@@ -69,6 +69,7 @@ export default {
     '~plugins/vue-clipper',
     '~plugins/vue-rx',
     { src: '~/plugins/hotjar', ssr: false },
+    { src: '~/plugins/clickoutside', ssr: false },
     '~plugins/vuetify',
     '~/plugins/bus',
     '~/plugins/firebase',

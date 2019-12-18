@@ -19,6 +19,16 @@
           required
         ></v-text-field>
 
+        <div id="whatsapp-number"></div>
+
+        <v-text-field
+          v-model="number"
+          :rules="numberRules"
+          label="WhatsApp Number"
+          type="tel"
+          required
+        ></v-text-field>
+
         <v-btn
           style="color:white;font-weight:700;"
           :disabled="!valid"
@@ -54,8 +64,7 @@ export default {
       valid: true,
       numberRules: [
         v => !!v || 'Phone Number is required',
-        v =>
-          (v && v.length === 9) || 'Phone Number must be equal to 9 characters'
+        v => (v && v.length === 10) || 'Phone Number must be valid'
       ],
       shopRules: [
         v => !!v || 'Shop Name is required',
@@ -84,7 +93,7 @@ export default {
   },
   methods: {
     login() {
-      this.verify = true
+      this.$router.push('/firebasemobilesignup')
     },
     validate() {
       // User sign up
@@ -99,11 +108,12 @@ export default {
         this.$ga.event({
           eventCategory: 'Create my shop click button',
           eventAction: 'New sign up button clicked successfully',
-          eventLabel: this.shop,
+          eventLabel: `${this.shop}, ${this.number}`,
           eventValue: 200
         })
         window.localStorage.setItem('shopname', this.shop)
         window.localStorage.setItem('website', this.website)
+        window.localStorage.setItem('number', this.number)
         this.$router.push('/firebasemobilesignup')
       }
     }
@@ -112,6 +122,9 @@ export default {
 </script>
 
 <style>
+#whatsapp-number {
+  margin-top: 15px;
+}
 .fire-div {
   margin-top: 30%;
 }
@@ -133,7 +146,7 @@ export default {
 }
 .mr-4 {
   text-transform: capitalize;
-  margin-top: 25%;
+  margin-top: 15%;
 }
 .first-column {
   background: #5f3d42;

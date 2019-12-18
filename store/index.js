@@ -19,10 +19,14 @@ const MyShopStore = () => {
       onboardinguser: {},
       adbanner: true,
       addata: {},
-      verifynumber: ''
+      verifynumber: '',
+      tour: false
     },
     getters: {},
     mutations: {
+      setTour(state, data) {
+        state.tour = data
+      },
       verifyPhone(state, data) {
         state.verifynumber = data
       },

@@ -1,5 +1,10 @@
 <template>
   <div id="container">
+    <div class="top-nav">
+      <v-btn class="mx-2" fab small text to="/mobilesignup">
+        <v-icon color="black">mdi-arrow-left</v-icon>
+      </v-btn>
+    </div>
     <div v-if="!verify" class="text-center" style="padding:5px;">
       <img class="top-logo" src="https://myshop.e-merse.com/icon.jpg" alt="" />
       <v-form id="form-inputs" ref="form" v-model="valid" lazy-validation>
@@ -42,7 +47,8 @@
     </div>
     <div v-if="verify" id="verify-sms">
       <img class="top-logo" src="https://myshop.e-merse.com/icon.jpg" alt="" />
-      <firebase-ui v-show="verify" class="fire-div"></firebase-ui>
+      <div id="fire-div" class="subtitle-1 font-weight-bold">Sign in with:</div>
+      <firebase-ui v-show="verify"></firebase-ui>
     </div>
   </div>
 </template>
@@ -126,7 +132,7 @@ export default {
 </script>
 
 <style>
-.fire-div {
+#fire-div {
   margin-top: 30%;
 }
 #already-account {

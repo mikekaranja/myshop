@@ -33,10 +33,10 @@ export default {
           signInSuccessWithAuthResult: function(authResult) {
             const shopname = window.localStorage.getItem('shopname')
             const website = window.localStorage.getItem('website')
-            console.log(authResult.user.providerData[0].uid, shopname, website)
+            const number = window.localStorage.getItem('number')
             const uid = authResult.user.providerData[0].uid
             const email = authResult.user.providerData[0].email
-            this.checkIfNewUser(uid, email, shopname, website)
+            this.checkIfNewUser(uid, email, number, shopname, website)
           }.bind(this),
           // .bind(this)
           uiShown: function() {
@@ -50,7 +50,7 @@ export default {
     }
   },
   methods: {
-    checkIfNewUser(uid, email, shopname, website) {
+    checkIfNewUser(uid, email, number, shopname, website) {
       return db
         .ref('pwa/users')
         .orderByChild('uid')
@@ -89,8 +89,8 @@ export default {
             // set userId
             this.$ga.set('userId', values[0].shopname)
             return false
-          } else {
-            this.saveNewShop(uid, shopname, website)
+          } else if (shopname) {
+            this.saveNewShop(uid, email, number, shopname, website)
             this.$router.push('/inventory')
             // User sign up
             this.$ga.event({
@@ -99,6 +99,10 @@ export default {
               eventLabel: shopname,
               eventValue: 300
             })
+          } else if (!shopname && this.$vuetify.breakpoint.smAndDown) {
+            this.$router.push('/mobilesignup')
+          } else if (!shopname && this.$vuetify.breakpoint.mdAndUp) {
+            this.$router.push('/desktopsignup')
           }
         })
     },
@@ -109,7 +113,7 @@ export default {
       this.ipuserdata = data
       return data
     },
-    saveNewShop(uid, shopname, website) {
+    saveNewShop(uid, email, number, shopname, website) {
       const shopName = shopname
         .trim()
         .replace(
@@ -128,10 +132,10 @@ export default {
         uid: uid,
         currency: 'Ksh',
         name: shopName,
-        email: '',
+        email: email,
         shopname: shopName,
         shopid: shopId,
-        phonenumber: uid,
+        phonenumber: number,
         payment_plan: '1 - 50 products $8/month',
         sign_up_date: new Date().toString(),
         expiry_date: this.addDays(1).toString(),

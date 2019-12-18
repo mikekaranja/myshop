@@ -199,6 +199,20 @@
           required
         ></v-text-field>
 
+        <!-- <v-text-field
+          v-model="discountprice"
+          type="number"
+          label="Discount Price"
+          required
+          @keypress="isNumber"
+        ></v-text-field>
+
+        <v-text-field
+          v-model="discountpercent"
+          label="Discount percent"
+          required
+        ></v-text-field> -->
+
         <v-select
           v-model="category"
           :items="categories"
@@ -268,6 +282,8 @@ import { db, storage } from '~/plugins/firebase'
 export default {
   data() {
     return {
+      discountpercent: '',
+      discountprice: '',
       initialimage: '',
       myImage: {},
       cropImageDialog: false,
@@ -338,24 +354,34 @@ export default {
           this.subcategories = newArray
         }
       }
+    },
+    discountprice: function(val, oldval) {
+      if (this.price > 0) {
+        const diff = this.price - val
+        console.log(diff, this.price)
+        const rate = (diff / this.price) * 100
+        const percent = Math.round(rate)
+        if (val > parseInt(this.price)) {
+          this.discountpercent = `Nan`
+        } else {
+          this.discountpercent = `${percent}%`
+        }
+      }
+      // // set comma to price
+      // if (
+      //   valy.length === 4 ||
+      //   valy.length === 5 ||
+      //   valy.length === 6 ||
+      //   valy.length === 7 ||
+      //   valy.length === 8 ||
+      //   valy.length === 9 ||
+      //   valy.length === 10 ||
+      //   valy.length === 11 ||
+      //   valy.length === 12
+      // ) {
+      //   this.price = valy.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      // }
     }
-    // price: function(val, oldval) {
-    //   const valy = val.replace(/,/g, '')
-    //   // set comma to price
-    //   if (
-    //     valy.length === 4 ||
-    //     valy.length === 5 ||
-    //     valy.length === 6 ||
-    //     valy.length === 7 ||
-    //     valy.length === 8 ||
-    //     valy.length === 9 ||
-    //     valy.length === 10 ||
-    //     valy.length === 11 ||
-    //     valy.length === 12
-    //   ) {
-    //     this.price = valy.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-    //   }
-    // }
   },
   mounted() {
     this.windowHeight = window.innerHeight

@@ -72,8 +72,11 @@
       :fixed="fixed"
       app
     >
-      <v-btn icon @click.stop="leftDrawer = !leftDrawer">
+      <v-btn v-if="!showArrow" icon @click.stop="leftDrawer = !leftDrawer">
         <v-icon>menu</v-icon>
+      </v-btn>
+      <v-btn v-if="showArrow" icon to="/">
+        <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-menu
         style="z-index: 12;"
@@ -165,6 +168,32 @@
       <v-container :style="{ padding: cataloguescreen }">
         <nuxt />
       </v-container>
+      <!-- <div v-show="$store.state.tour" id="tap-here">
+        <img src="screen1.svg" alt="screen" />
+        <div
+          id="add-text"
+          style="color:white;"
+          class="body-2 font-weight-regular"
+        >
+          Tap here to add a product
+        </div>
+        <v-btn id="ok-got" color="#979797" depressed small @click="removeOk"
+          >Ok, Got it</v-btn
+        >
+      </div>
+      <div v-show="$store.state.tour" v-if="showaddhere" id="add-here">
+        <img style="width: 98%;" src="screen2.svg" alt="screen" />
+        <div
+          id="add-here-text"
+          style="color:white;"
+          class="body-2 font-weight-regular"
+        >
+          Add a product here
+        </div>
+        <v-btn id="ok-got-it" color="#979797" depressed small @click="removeOk"
+          >Ok, Got it</v-btn
+        >
+      </div> -->
     </v-content>
     <!-- <banner-install
       v-show="addtohomescreen === 'newshop'"
@@ -178,12 +207,12 @@
           <v-icon>$vuetify.icons.inventory</v-icon>
         </v-btn>
 
-        <v-btn value="advertise" to="/checkads">
+        <v-btn value="advertise" @click="openAdvertise">
           <span>Advertise</span>
           <v-icon>$vuetify.icons.advertise</v-icon>
         </v-btn>
 
-        <v-btn value="catalogue" to="/catalogue">
+        <v-btn value="catalogue" @click="openSite">
           <span>View site</span>
           <v-icon>$vuetify.icons.myshop</v-icon>
         </v-btn>
@@ -196,14 +225,14 @@
         fab
         dark
         color="primary"
-        @click="sheet = true"
+        @click="openBottomSheet"
       >
         <v-icon dark>mdi-plus</v-icon>
       </v-btn>
     </v-footer>
     <!-- bottom sheets -->
     <!-- add stuff bottom sheet -->
-    <v-bottom-sheet v-model="sheet">
+    <v-bottom-sheet v-model="sheet" v-click-outside="hideCaption">
       <v-list>
         <v-list-item
           v-for="tile in tiles"
@@ -1049,6 +1078,88 @@
         />
       </v-card>
     </v-dialog>
+
+    <!-- site dialog -->
+    <v-dialog v-model="dialogSite" width="400">
+      <v-card style="border-radius: 8px;">
+        <v-card-text class="text-center">
+          <img style="width:22%;margin-top:30px;" src="heads.png" alt="heads" />
+          <div
+            id="crop-title"
+            style="color: black;padding:5px;font-weight:600;margin-top: 8px;"
+            class="subtitle-1 font-weight-regular"
+          >
+            Heads up!
+          </div>
+          <div style="color:gray" class="caption font-weight-regular">
+            You can only view your site after you upload products
+          </div>
+          <v-btn
+            style="text-transform: capitalize;margin-top: 40px;"
+            class="done-btn"
+            color="primary"
+            large
+            rounded
+            block
+            @click="createproduct"
+          >
+            Upload a product
+          </v-btn>
+          <v-btn
+            style="margin-top:10px;font-weight:700;text-transform:none;"
+            color="primary"
+            rounded
+            text
+            depressed
+            block
+            large
+            @click="dialogSite = !dialogSite"
+            >Cancel</v-btn
+          >
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <!-- advertise dialog -->
+    <v-dialog v-model="dialogAdvertise" width="400">
+      <v-card style="border-radius: 8px;">
+        <v-card-text class="text-center">
+          <img style="width:56%;margin-top:30px;" src="empty.svg" alt="heads" />
+          <div
+            id="crop-title"
+            style="color: black;padding:5px;font-weight:600;margin-top: 20px;"
+            class="subtitle-1 font-weight-regular"
+          >
+            Upload at least 6 products
+          </div>
+          <div style="color:gray" class="caption font-weight-regular">
+            Customers love to see a variety of products to choose from.
+          </div>
+          <v-btn
+            style="text-transform: capitalize;margin-top: 40px;"
+            class="done-btn"
+            color="primary"
+            large
+            rounded
+            block
+            @click="createproduct"
+          >
+            Upload products
+          </v-btn>
+          <v-btn
+            style="margin-top:10px;font-weight:700;text-transform:none;"
+            color="primary"
+            rounded
+            text
+            depressed
+            block
+            large
+            @click="dialogAdvertise = !dialogAdvertise"
+            >Cancel</v-btn
+          >
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <!-- upload logo input file -->
     <input
       ref="opengallery"
@@ -1082,14 +1193,21 @@
 
 <script>
 import { mapState } from 'vuex'
+import ClickOutside from 'vue-click-outside'
 import { db, auth, storage } from '~/plugins/firebase'
 // import BannerInstall from '~/components/BannerInstall'
 export default {
   // components: {
   //   BannerInstall
   // },
+  // do not forget this section
+  directives: {
+    ClickOutside
+  },
   data() {
     return {
+      dialogAdvertise: false,
+      dialogSite: false,
       fabadd: true,
       logoSrc: '',
       dialogLogo: false,
@@ -1114,7 +1232,7 @@ export default {
         }
       ],
       draweritems: [
-        { title: 'Products', icon: 'mdi-view-dashboard' },
+        { title: 'My Products', icon: 'mdi-view-dashboard' },
         { title: 'Manage Ads', icon: 'online.svg' },
         { title: 'Edit Account Details', icon: 'mdi-account-circle-outline' },
         // { title: 'Use a Custom Domain', icon: 'mdi-web' },
@@ -1126,8 +1244,8 @@ export default {
       tiles: [
         { icon: 'online.svg', title: 'Create an ad' },
         { icon: 'mdi-tag-outline', title: 'Add Product' },
-        { icon: 'mdi-folder-outline', title: 'Category' },
-        { icon: 'mdi-folder-multiple-outline', title: 'Subcategory' },
+        { icon: 'mdi-folder-outline', title: 'Add Category' },
+        { icon: 'mdi-folder-multiple-outline', title: 'Add Subcategory' },
         { icon: 'mdi-image-outline', title: 'Upload/Change your Logo' },
         { icon: 'mdi-image-outline', title: 'Upload/Change your Banner' }
       ],
@@ -1213,7 +1331,8 @@ export default {
       disabledplan2: false,
       disabledplan3: false,
       paymentsuccessful: false,
-      paymentplan: ''
+      paymentplan: '',
+      showArrow: false
     }
   },
   computed: {
@@ -1260,6 +1379,10 @@ export default {
       if (to.path === '/createproduct') {
         this.fabadd = false
         this.bottombar = false
+        this.showArrow = true
+      }
+      if (from.path === '/createproduct') {
+        this.showArrow = false
       }
       // ad buying
       if (to.path === '/adbuying') {
@@ -1399,6 +1522,9 @@ export default {
     }
   },
   mounted() {
+    // if (this.$vuetify.breakpoint.smAndDown && this.$store.state.authenticated) {
+    //   this.leftDrawer = false
+    // }
     setTimeout(() => {
       if (this.$vuetify.breakpoint.mdAndUp && this.$store.state.authenticated) {
         this.leftDrawer = true
@@ -1474,6 +1600,33 @@ export default {
     })
   },
   methods: {
+    createproduct() {
+      this.dialogAdvertise = false
+      this.dialogSite = false
+      this.$router.push('/createproduct')
+    },
+    openBottomSheet() {
+      this.sheet = true
+      // less than 1 product
+      if (this.$store.state.products.length < 1) {
+        setTimeout(() => {
+          this.$bus.$emit('showcaption', 'sheetopen')
+        }, 200)
+      }
+      this.$ga.event({
+        eventCategory: 'Add FAB button',
+        eventAction: 'Add FAB button click',
+        eventLabel: this.$store.state.user.shopname,
+        eventValue: 90
+      })
+    },
+    hideCaption() {
+      setTimeout(() => {
+        if (!this.sheet) {
+          this.$bus.$emit('hidecaption', 'sheetclose')
+        }
+      }, 100)
+    },
     mpesapage() {
       this.$router.push('/paymentscreen')
     },
@@ -1933,12 +2086,34 @@ export default {
           })
       }
     },
+    openSite() {
+      if (this.$store.state.products.length < 1) {
+        this.dialogSite = true
+      } else {
+        this.overlay = true
+        this.$router.push('/catalogue')
+        setTimeout(() => {
+          this.overlay = false
+        }, 1100)
+      }
+    },
+    openAdvertise() {
+      if (this.$store.state.products.length < 6) {
+        this.dialogAdvertise = true
+      } else {
+        this.overlay = true
+        this.$router.push('/checkads')
+        setTimeout(() => {
+          this.overlay = false
+        }, 1100)
+      }
+    },
     openInventory() {
       this.overlay = true
       this.$router.push('/inventory')
       setTimeout(() => {
         this.overlay = false
-      }, 1300)
+      }, 1200)
     },
     updateAccount() {
       // ga analytics
@@ -2473,16 +2648,20 @@ export default {
     desktopAddOptionClicked(title) {
       switch (title) {
         case 'Create an ad':
-          this.leftDrawer = false
-          this.$router.push('/adbuying')
+          if (this.$store.state.products.length < 6) {
+            this.dialogAdvertise = true
+          } else {
+            this.leftDrawer = false
+            this.$router.push('/adbuying')
+          }
           break
-        case 'Product':
+        case 'Add Product':
           this.$router.push('/createproduct')
           break
-        case 'Category':
+        case 'Add Category':
           this.addCategoryDialog = true
           break
-        case 'Subcategory':
+        case 'Add Subcategory':
           this.addSubcategoryDialog = true
           break
         case 'Upload/Change your Logo':
@@ -2498,11 +2677,16 @@ export default {
     navDrawerClick(title) {
       // this.leftDrawer = false
       switch (title) {
-        case 'Products':
+        case 'My Products':
           this.$router.push('/inventory')
+          this.leftDrawer = false
           break
         case 'Manage Ads':
-          this.$router.push('/checkads')
+          if (this.$store.state.products.length < 1) {
+            this.dialogAdvertise = true
+          } else {
+            this.$router.push('/checkads')
+          }
           break
         case 'Edit Account Details':
           this.editAccountDialog = true
@@ -2543,9 +2727,14 @@ export default {
       this.sheet = false
       switch (title) {
         case 'Create an ad':
-          this.$router.push('/adbuying')
+          if (this.$store.state.products.length < 6) {
+            this.dialogAdvertise = true
+          } else {
+            this.leftDrawer = false
+            this.$router.push('/adbuying')
+          }
           break
-        case 'Product':
+        case 'Add Product':
           // eslint-disable-next-line no-case-declarations
           const totalProducts = this.$store.state.products.length + 1
           // eslint-disable-next-line no-case-declarations
@@ -2591,11 +2780,13 @@ export default {
             this.$router.push('/createproduct')
           }
           break
-        case 'Category':
+        case 'Add Category':
           this.addCategoryDialog = true
+          this.$bus.$emit('hidecaption', 'sheetclose')
           break
-        case 'Subcategory':
+        case 'Add Subcategory':
           this.addSubcategoryDialog = true
+          this.$bus.$emit('hidecaption', 'sheetclose')
           break
         case 'Upload/Change your Logo':
           this.$refs.opengallery.click()

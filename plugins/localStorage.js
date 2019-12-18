@@ -5,6 +5,7 @@ export default ({ store }) => {
     createPersistedState({
       key: 'MyShopStore',
       paths: [
+        'tour',
         'ad',
         'landingpage',
         'authenticated',
