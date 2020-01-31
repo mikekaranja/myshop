@@ -84,8 +84,7 @@
               v-model="discountprice"
               :rules="priceRules"
               type="number"
-              label="Discount Price"
-              required
+              label="Price after discount"
               @keypress="isNumber"
             ></v-text-field>
 
@@ -240,8 +239,7 @@
           v-model="discountprice"
           :rules="priceRules"
           type="number"
-          label="Discount Price"
-          required
+          label="Price after discount"
           @keypress="isNumber"
         ></v-text-field>
 
