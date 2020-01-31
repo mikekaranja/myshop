@@ -80,6 +80,15 @@
               required
             ></v-text-field>
 
+            <v-text-field
+              v-model="discountprice"
+              :rules="priceRules"
+              type="number"
+              label="Discount Price"
+              required
+              @keypress="isNumber"
+            ></v-text-field>
+
             <v-select
               v-model="category"
               :items="categories"
@@ -225,6 +234,15 @@
           label="Price"
           type="number"
           required
+        ></v-text-field>
+
+        <v-text-field
+          v-model="discountprice"
+          :rules="priceRules"
+          type="number"
+          label="Discount Price"
+          required
+          @keypress="isNumber"
         ></v-text-field>
 
         <v-select
@@ -469,6 +487,7 @@ export default {
       this.subcategory = product[0].subcategory ? product[0].subcategory : []
       this.description = product[0].description
       this.name = product[0].name
+      this.discountprice = product[0].discountprice
       this.price = product[0].price.toString()
       for (let i = 0; i < this.item.imageUrls.length; i++) {
         const image = this.item.imageUrls[i]
@@ -736,10 +755,11 @@ export default {
         item: 'product',
         name: this.name,
         price: parseInt(this.price.replace(',', '')),
+        discountprice: this.discountprice,
         description: this.description,
         imageUrls: imageUrls,
         category: this.category,
-        subcategory: this.subcategory,
+        subcategory: this.subcategory ? this.subcategory : [''],
         date_updated: new Date().toString()
       }
 

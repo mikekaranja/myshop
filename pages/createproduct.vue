@@ -78,6 +78,15 @@
               @keypress="isNumber"
             ></v-text-field>
 
+            <v-text-field
+              v-model="discountprice"
+              :rules="priceRules"
+              type="number"
+              label="Discount Price"
+              required
+              @keypress="isNumber"
+            ></v-text-field>
+
             <v-select
               v-model="category"
               :items="categories"
@@ -199,7 +208,7 @@
           required
         ></v-text-field>
 
-        <!-- <v-text-field
+        <v-text-field
           v-model="discountprice"
           type="number"
           label="Discount Price"
@@ -207,7 +216,7 @@
           @keypress="isNumber"
         ></v-text-field>
 
-        <v-text-field
+        <!--  <v-text-field
           v-model="discountpercent"
           label="Discount percent"
           required
@@ -573,11 +582,12 @@ export default {
         item: 'product',
         name: this.name,
         price: this.price,
+        discountprice: this.discountprice,
         currency: 'Ksh',
         description: this.description,
         imageUrls: this.imageUrls,
         category: this.category,
-        subcategory: this.subcategory,
+        subcategory: this.subcategory ? this.subcategory : [''],
         date_created: new Date().toString()
       }
       const newPostKey = db

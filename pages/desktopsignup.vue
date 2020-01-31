@@ -98,7 +98,7 @@ export default {
       valid: true,
       numberRules: [
         v => !!v || 'Phone Number is required',
-        v => (v && v.length === 9) || 'Phone Number must be valid'
+        v => (v && v.length === 10) || 'Phone Number must be valid'
       ],
       shopRules: [
         v => !!v || 'Shop Name is required',
