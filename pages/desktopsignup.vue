@@ -48,7 +48,7 @@
                   x-large
                   @click="validate"
                 >
-                  Start free trial
+                  Get started
                 </v-btn>
                 <div
                   id="already-account"
@@ -138,7 +138,7 @@ export default {
     validate() {
       // User sign up
       this.$ga.event({
-        eventCategory: 'Start free trial button',
+        eventCategory: 'get started button',
         eventAction: 'New sign up button clicked attempt',
         eventLabel: this.shop,
         eventValue: 100
@@ -146,7 +146,7 @@ export default {
       if (this.$refs.form.validate()) {
         // User sign up
         this.$ga.event({
-          eventCategory: 'Start free trial button',
+          eventCategory: 'get started button',
           eventAction: 'New sign up button clicked successfully',
           eventLabel: `${this.shop}, ${this.number}`,
           eventValue: 200

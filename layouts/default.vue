@@ -1411,10 +1411,10 @@ export default {
         if (this.$vuetify.breakpoint.mdAndUp) {
           this.leftDrawer = true
         }
-        const expirydate = new Date(this.$store.state.user.expiry_date)
-        const signupdate = new Date(this.$store.state.user.sign_up_date)
-        const today = new Date()
-        this.setPaymentMessage(today, expirydate, signupdate)
+        // const expirydate = new Date(this.$store.state.user.expiry_date)
+        // const signupdate = new Date(this.$store.state.user.sign_up_date)
+        // const today = new Date()
+        // this.setPaymentMessage(today, expirydate, signupdate)
         // step 6 complete
         // ga analytics
         this.$ga.event({
@@ -1444,10 +1444,10 @@ export default {
         }
       }
       if (to.path === '/catalogue' && from.path === '/onboardingcomplete') {
-        const expirydate = new Date(this.$store.state.user.expiry_date)
-        const signupdate = new Date(this.$store.state.user.sign_up_date)
-        const today = new Date()
-        this.setPaymentMessage(today, expirydate, signupdate)
+        // const expirydate = new Date(this.$store.state.user.expiry_date)
+        // const signupdate = new Date(this.$store.state.user.sign_up_date)
+        // const today = new Date()
+        // this.setPaymentMessage(today, expirydate, signupdate)
         // step 6 complete
         // ga analytics
         this.$ga.event({
@@ -1472,10 +1472,10 @@ export default {
         this.shopname = this.$store.state.user.shopname
         this.email = this.$store.state.user.email
         this.paymentplan = this.$store.state.user.payment_plan
-        const expirydate = new Date(this.$store.state.user.expiry_date)
-        const signupdate = new Date(this.$store.state.user.sign_up_date)
-        const today = new Date()
-        this.setPaymentMessage(today, expirydate, signupdate)
+        // const expirydate = new Date(this.$store.state.user.expiry_date)
+        // const signupdate = new Date(this.$store.state.user.sign_up_date)
+        // const today = new Date()
+        // this.setPaymentMessage(today, expirydate, signupdate)
       }
       if (to.path === '/catalogue' && from.path === '/onboardingcomplete') {
         if (this.$store.state.addtohomescreen === 'newshop') {
@@ -1529,10 +1529,10 @@ export default {
       if (this.$vuetify.breakpoint.mdAndUp && this.$store.state.authenticated) {
         this.leftDrawer = true
       }
-      const expirydate = new Date(this.$store.state.user.expiry_date)
-      const signupdate = new Date(this.$store.state.user.sign_up_date)
-      const today = new Date()
-      this.setPaymentMessage(today, expirydate, signupdate)
+      // const expirydate = new Date(this.$store.state.user.expiry_date)
+      // const signupdate = new Date(this.$store.state.user.sign_up_date)
+      // const today = new Date()
+      // this.setPaymentMessage(today, expirydate, signupdate)
       // set account details
       this.phonenumber = this.$store.state.user.phonenumber
       this.shopname = this.$store.state.user.shopname
@@ -1628,7 +1628,24 @@ export default {
       }, 100)
     },
     mpesapage() {
-      this.$router.push('/paymentscreen')
+      // this.$router.push('/paymentscreen')
+      const products = this.$store.state.products
+      if (products.length > 0 && products.length < 51) {
+        window.open(
+          `https://sleepy-coast-74146.herokuapp.com/?ttl=800&eml=${this.$store.state.user.email}&tel=${this.$store.state.user.phonenumber}`,
+          '_blank'
+        )
+      } else if (products.length >= 51 && products.length < 101) {
+        window.open(
+          `https://sleepy-coast-74146.herokuapp.com/?ttl=1500&eml=${this.$store.state.user.email}&tel=${this.$store.state.user.phonenumber}`,
+          '_blank'
+        )
+      } else if (products.length >= 101 && products.length < 301) {
+        window.open(
+          `https://sleepy-coast-74146.herokuapp.com/?ttl=4800&eml=${this.$store.state.user.email}&tel=${this.$store.state.user.phonenumber}`,
+          '_blank'
+        )
+      }
     },
     openCatalogue() {
       window.open(
@@ -1661,7 +1678,8 @@ export default {
               shopname: values[0].shopname,
               expiry_date: values[0].expiry_date,
               sign_up_date: values[0].sign_up_date,
-              payment_plan: values[0].payment_plan
+              payment_plan: values[0].payment_plan,
+              website: values[0].website
             }
             this.$store.commit('setUserData', shopdata)
             return false
@@ -1932,6 +1950,7 @@ export default {
       }
     },
     shareProductOn(title) {
+      console.log(this.$store.state.user.website)
       if (title === 'WhatsApp') {
         this.shareProductDialog()
       } else {
@@ -1944,7 +1963,7 @@ export default {
         })
         window.open(
           'https://www.facebook.com/sharer/sharer.php?u=' +
-            `https://e-merse.com/viewlink?text=${this.shareid}`,
+            `https://e-merse.com/viewlink?text=${this.shareid}&url=${this.$store.state.user.website}`,
           'facebook-popup',
           'height=350,width=600'
         )
@@ -1962,7 +1981,7 @@ export default {
       // eslint-disable-next-line no-console
       if (this.$vuetify.breakpoint.mdAndUp) {
         window.open(
-          `https://wa.me/?text=Check this out! https://e-merse.com/viewlink?text=${this.shareid}`,
+          `https://wa.me/?text=Check this out! https://e-merse.com/viewlink?text=${this.shareid}&url=${this.$store.state.user.website}`,
           '_blank'
         )
       } else if (
@@ -1976,7 +1995,7 @@ export default {
             title: this.sharename,
             // change the text of your share as you may like; to e.g desc of your pwa
             text: '',
-            url: `https://e-merse.com/viewlink?text=${this.shareid}`
+            url: `https://e-merse.com/viewlink?text=${this.shareid}&url=${this.$store.state.user.website}`
           })
           .then(() => {
             // eslint-disable-next-line no-console
@@ -2694,7 +2713,25 @@ export default {
         case 'Pay Monthly Subscription':
           // this.addSubcategoryDialog = true
           // this.kindlyPayAfterDialog = !this.kindlyPayAfterDialog
-          this.$router.push('/paymentscreen')
+          // this.$router.push('/paymentscreen')
+          // eslint-disable-next-line no-case-declarations
+          const products = this.$store.state.products
+          if (products.length > 0 && products.length < 51) {
+            window.open(
+              `https://sleepy-coast-74146.herokuapp.com/?ttl=800&eml=${this.$store.state.user.email}&tel=${this.$store.state.user.phonenumber}`,
+              '_blank'
+            )
+          } else if (products.length >= 51 && products.length < 101) {
+            window.open(
+              `https://sleepy-coast-74146.herokuapp.com/?ttl=1500&eml=${this.$store.state.user.email}&tel=${this.$store.state.user.phonenumber}`,
+              '_blank'
+            )
+          } else if (products.length >= 101 && products.length < 301) {
+            window.open(
+              `https://sleepy-coast-74146.herokuapp.com/?ttl=4800&eml=${this.$store.state.user.email}&tel=${this.$store.state.user.phonenumber}`,
+              '_blank'
+            )
+          }
           break
         case 'Cancel Subscription':
           this.cancelSubscriptionDialog = true
@@ -2735,50 +2772,7 @@ export default {
           }
           break
         case 'Add Product':
-          // eslint-disable-next-line no-case-declarations
-          const totalProducts = this.$store.state.products.length + 1
-          // eslint-disable-next-line no-case-declarations
-          const paymentPlan = this.$store.state.user.payment_plan
-          if (
-            paymentPlan === '1 - 50 products - $7.50/month' &&
-            totalProducts > 50
-          ) {
-            // ga analytics
-            this.$ga.event({
-              eventCategory: 'limit exceeded button',
-              eventAction: 'Limit Exceeded by 50 products',
-              eventLabel: this.$store.state.user.shopname,
-              eventValue: 27
-            })
-            this.$router.push('/paymentscreen')
-            // this.limitExceededDialog = true
-            // this.limitexceededby = totalProducts - 50
-            // this.radioPlan = '51 - 300 products - $24/month'
-            // this.disabledplan1 = true
-            // this.disabledplan3 = true
-          } else if (
-            paymentPlan === '51 - 300 products - $24/month' &&
-            totalProducts > 300
-          ) {
-            // ga analytics
-            this.$ga.event({
-              eventCategory: 'limit exceeded button',
-              eventAction: 'Limit Exceeded by 300 products',
-              eventLabel: this.$store.state.user.shopname,
-              eventValue: 28
-            })
-            this.$router.push('/paymentscreen')
-            // this.limitExceededDialog = true
-            // this.limitexceededby = totalProducts - 50
-            // this.radioPlan = '51 - 300 products - $24/month'
-            // this.disabledplan1 = true
-            // this.disabledplan2 = true
-          } else if (this.after24hours === true) {
-            // this.kindlyPayAfterDialog = true
-            this.$router.push('/paymentscreen')
-          } else {
-            this.$router.push('/createproduct')
-          }
+          this.$router.push('/createproduct')
           break
         case 'Add Category':
           this.addCategoryDialog = true

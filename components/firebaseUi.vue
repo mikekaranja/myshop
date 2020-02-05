@@ -71,7 +71,8 @@ export default {
               shopname: values[0].shopname,
               expiry_date: values[0].expiry_date,
               sign_up_date: values[0].sign_up_date,
-              payment_plan: values[0].payment_plan
+              payment_plan: values[0].payment_plan,
+              website: values[0].website
             }
             // insert user data into vuex
             this.$store.commit('authUser', true)
