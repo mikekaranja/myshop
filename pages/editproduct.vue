@@ -744,13 +744,14 @@ export default {
           imageUrls.push(el)
         }
       }
+      // parseInt(this.price.replace(',', ''))
       const product = {
         title: this.item.title,
         shopid: shopid,
         shopname: shopname,
         item: 'product',
         name: this.name,
-        price: parseInt(this.price.replace(',', '')),
+        price: this.price,
         discountprice: this.discountprice ? this.discountprice : '',
         description: this.description,
         imageUrls: imageUrls,
