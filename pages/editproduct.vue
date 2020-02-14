@@ -751,7 +751,7 @@ export default {
         item: 'product',
         name: this.name,
         price: parseInt(this.price.replace(',', '')),
-        discountprice: this.discountprice,
+        discountprice: this.discountprice ? this.discountprice : '',
         description: this.description,
         imageUrls: imageUrls,
         category: this.category,
