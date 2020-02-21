@@ -12,7 +12,7 @@
             {{ shopname }}
           </v-list-item-title>
           <v-list-item-subtitle>
-            Plan: {{ paymentplan ? paymentplan.split('$')[0] : '' }}
+            Number of products {{ $store.state.products.length }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>

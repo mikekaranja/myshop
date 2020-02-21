@@ -540,6 +540,9 @@ export default {
         if (!this.$refs.image1.src) {
           this.snackbartext = 'Please add the first image to continue'
           this.snackbar = true
+        } else if (this.discountprice >= this.price) {
+          this.snackbartext = 'Discount price should be lower than the price'
+          this.snackbar = true
         } else {
           this.saveProduct()
         }
