@@ -644,7 +644,7 @@
       </v-card>
     </v-dialog>
     <!-- Edit Account Details dialog -->
-    <v-dialog v-model="editAccountDialog" max-width="400">
+    <v-dialog v-model="editAccountDialog" max-width="600">
       <v-card class="rounded-card">
         <v-card-title class="subtitle-1">Edit Account Details </v-card-title>
         <v-card-text>
@@ -655,15 +655,42 @@
             prepend-icon="mdi-whatsapp"
           ></v-text-field>
           <v-text-field
-            v-model="shopname"
-            label="Shop name"
-            prepend-icon="create"
-          ></v-text-field>
-          <v-text-field
             v-model="email"
             label="Email address"
             prepend-icon="email"
           ></v-text-field>
+          <!-- <v-text-field
+            v-model="shopname"
+            label="Shop name"
+            prepend-icon="create"
+          ></v-text-field> -->
+          <v-text-field
+            v-model="shoplocation"
+            label="Shop location"
+            prepend-icon="location_on"
+          ></v-text-field>
+          <v-text-field
+            v-model="facebooklink"
+            label="Facebook link"
+            prepend-icon="mdi-facebook"
+          ></v-text-field>
+          <v-text-field
+            v-model="instagramlink"
+            label="Instagram link"
+            prepend-icon="mdi-instagram"
+          ></v-text-field>
+          <!-- <v-text-field
+            v-model="shopdescription"
+            label="Shop description"
+            textarea
+            prepend-icon="description"
+          ></v-text-field> -->
+          <v-textarea
+            v-model="shopdescription"
+            auto-grow
+            label="Brief Shop description"
+            prepend-icon="description"
+          ></v-textarea>
           <v-alert
             :value="alertsuccess6"
             transition="scale-transition"
@@ -1206,6 +1233,10 @@ export default {
   },
   data() {
     return {
+      shoplocation: '',
+      facebooklink: '',
+      instagramlink: '',
+      shopdescription: '',
       dialogAdvertise: false,
       dialogSite: false,
       fabadd: true,
@@ -1537,6 +1568,11 @@ export default {
       this.phonenumber = this.$store.state.user.phonenumber
       this.shopname = this.$store.state.user.shopname
       this.email = this.$store.state.user.email
+      this.shoplocation = this.$store.state.user.shoplocation
+      this.shopdescription = this.$store.state.user.shopdescription
+      this.facebooklink = this.$store.state.user.facebooklink
+      this.instagramlink = this.$store.state.user.instagramlink
+
       this.paymentplan = this.$store.state.user.payment_plan
       if (this.$store.state.user.shopname) {
         // set userId
@@ -2152,22 +2188,23 @@ export default {
         )
         .toLowerCase()
       const shopId = shopName.replace(/ /g, '-').toLowerCase()
-      if (shopName !== this.$store.state.user.shopname) {
-        // update store
-        const shop = {
-          shopid: shopId,
-          shopname: shopName,
-          email: this.email,
-          phonenumber: this.phonenumber
-        }
-        this.updateBanner(shopId, this.$store.state.user.shopid)
-        this.updateLogo(shopId, this.$store.state.user.shopid)
-        this.$store.commit('changeShopName', shop)
-        this.updateDb2(shopId, shopName)
-        this.updateAllProducts(shopId, shopName)
-      } else {
-        this.updateDb(shopId, shopName)
-      }
+      this.updateDb(shopId, shopName)
+      // if (shopName !== this.$store.state.user.shopname) {
+      //   // update store
+      //   const shop = {
+      //     shopid: shopId,
+      //     shopname: shopName,
+      //     email: this.email,
+      //     phonenumber: this.phonenumber
+      //   }
+      //   this.updateBanner(shopId, this.$store.state.user.shopid)
+      //   this.updateLogo(shopId, this.$store.state.user.shopid)
+      //   this.$store.commit('changeShopName', shop)
+      //   this.updateDb2(shopId, shopName)
+      //   this.updateAllProducts(shopId, shopName)
+      // } else {
+      //   this.updateDb(shopId, shopName)
+      // }
     },
     updateBanner(newShopId, oldId) {
       return db
@@ -2217,7 +2254,11 @@ export default {
           email: this.email,
           phonenumber: this.phonenumber,
           shopname: shopName,
-          shopid: shopId
+          shopid: shopId,
+          shopdescription: this.shopdescription,
+          shoplocation: this.shoplocation,
+          facebooklink: this.facebooklink,
+          instagramlink: this.instagramlink
         })
         .then(snap => {
           this.alertsuccess6 = true
