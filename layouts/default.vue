@@ -659,11 +659,11 @@
             label="Email address"
             prepend-icon="email"
           ></v-text-field>
-          <!-- <v-text-field
+          <v-text-field
             v-model="shopname"
             label="Shop name"
             prepend-icon="create"
-          ></v-text-field> -->
+          ></v-text-field>
           <v-text-field
             v-model="shoplocation"
             label="Shop location"
@@ -679,12 +679,6 @@
             label="Instagram link"
             prepend-icon="mdi-instagram"
           ></v-text-field>
-          <!-- <v-text-field
-            v-model="shopdescription"
-            label="Shop description"
-            textarea
-            prepend-icon="description"
-          ></v-text-field> -->
           <v-textarea
             v-model="shopdescription"
             auto-grow
