@@ -175,13 +175,32 @@
               Add Image
             </div>
           </div>
-          <img
+          <!-- <img
             v-show="productimages[n].length > 0"
             :ref="`image${n}`"
             class="product-image"
             :src="productimages[n]"
             alt=""
-          />
+          /> -->
+          <div
+            v-show="productimages[n].length > 0"
+            id="text-hold"
+            style="text-align:center;"
+          >
+            <img
+              v-show="productimages[n].length > 0"
+              :ref="`image${n}`"
+              class="product-image"
+              :src="productimages[n]"
+              alt=""
+            />
+            <v-btn text icon color="black" @click.native="addImage(n)">
+              <v-icon>autorenew</v-icon>
+            </v-btn>
+            <v-btn text icon color="black" @click.native="deleteImage(n)">
+              <v-icon>delete</v-icon>
+            </v-btn>
+          </div>
         </div>
       </div>
       <v-form
@@ -255,6 +274,60 @@
           Add product
         </v-btn>
       </v-form>
+      <!-- Crop Banner dialog -->
+      <v-dialog v-model="uploaddialog" width="1000">
+        <v-card class="rounded-card">
+          <v-card-text
+            style="padding-top:20px;padding-right:0px;padding-left:0px;"
+          >
+            <!-- <div id="crop-title" class="subtitle-1">
+              Drag to position your banner
+            </div> -->
+            <div style="color:black;margin-left:8px;" class="subtitle-2">
+              * banner size width: over 1500px
+            </div>
+            <v-alert
+              :value="alertsuccess9"
+              style="margin: auto;margin-top:12px;"
+              dense
+              type="success"
+            >
+              <strong>The banner image has been uploaded successfully.</strong>
+            </v-alert>
+          </v-card-text>
+          <v-card-actions style="padding: 15px;">
+            <div class="flex-grow-1"></div>
+            <v-btn
+              :disabled="loading"
+              style="margin-right: 30px;"
+              class="done-btn"
+              color="primary"
+              rounded
+              depressed
+              outlined
+              large
+              @click="uploaddialog = !uploaddialog"
+              >Cancel</v-btn
+            >
+            <v-btn
+              :loading="loading"
+              class="done-btn"
+              color="primary"
+              large
+              rounded
+              @click="uploadImage"
+            >
+              Save Image
+            </v-btn>
+          </v-card-actions>
+          <img
+            style="width:100%;opacity:0;"
+            class="result"
+            :src="resultURL"
+            alt=""
+          />
+        </v-card>
+      </v-dialog>
       <!-- snackbar to show too many items to be uploaded at a time -->
       <v-snackbar v-model="snackbar">
         {{ snackbartext }}
@@ -288,6 +361,7 @@ import { db, storage } from '~/plugins/firebase'
 export default {
   data() {
     return {
+      uploaddialog: false,
       discountpercent: '',
       discountprice: '',
       initialimage: '',
@@ -395,6 +469,9 @@ export default {
     // this.categories.push(this.$store.state.category)
   },
   methods: {
+    deleteImage(n) {
+      return this.productimages.splice(n, 1, '')
+    },
     isNumber(evt) {
       evt = evt || window.event
       // eslint-disable-next-line prefer-const
