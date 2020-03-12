@@ -275,27 +275,50 @@
         </v-btn>
       </v-form>
       <!-- Crop Banner dialog -->
-      <v-dialog v-model="uploaddialog" width="1000">
+      <v-dialog v-model="uploaddialog" width="650">
         <v-card class="rounded-card">
           <v-card-text
-            style="padding-top:20px;padding-right:0px;padding-left:0px;"
+            style="text-align:center;padding-top:20px;padding-right:0px;padding-left:0px;"
           >
+            <div>
+              <croppa
+                v-model="myCroppa"
+                :width="croppaWidthHeight"
+                :height="croppaWidthHeight"
+                auto-sizing
+                :accept="'image/*'"
+                placeholder="Choose an image (> 500 x 500)"
+                placeholder-color="#000"
+                :placeholder-font-size="16"
+                canvas-color="transparent"
+                :show-remove-button="true"
+                remove-button-color="black"
+                :show-loading="true"
+                :loading-size="50"
+                :remove-button-size="36"
+                :prevent-white-space="true"
+                @new-image-drawn="handleNewImage"
+              >
+              </croppa>
+            </div>
+
             <!-- <div id="crop-title" class="subtitle-1">
               Drag to position your banner
             </div> -->
-            <div style="color:black;margin-left:8px;" class="subtitle-2">
+            <!-- <div style="color:black;margin-left:8px;" class="subtitle-2">
               * banner size width: over 1500px
-            </div>
+            </div> -->
             <v-alert
-              :value="alertsuccess9"
+              id="alert"
+              :value="alert"
               style="margin: auto;margin-top:12px;"
               dense
-              type="success"
+              :type="alertType"
             >
-              <strong>The banner image has been uploaded successfully.</strong>
+              <strong>{{ alertText }}</strong>
             </v-alert>
           </v-card-text>
-          <v-card-actions style="padding: 15px;">
+          <v-card-actions id="actions-btns">
             <div class="flex-grow-1"></div>
             <v-btn
               :disabled="loading"
@@ -305,27 +328,23 @@
               rounded
               depressed
               outlined
-              large
+              :small="$vuetify.breakpoint.smAndDown"
               @click="uploaddialog = !uploaddialog"
               >Cancel</v-btn
             >
             <v-btn
+              :disabled="uploadbtndisable"
               :loading="loading"
               class="done-btn"
               color="primary"
-              large
               rounded
+              :small="$vuetify.breakpoint.smAndDown"
               @click="uploadImage"
             >
               Save Image
             </v-btn>
           </v-card-actions>
-          <img
-            style="width:100%;opacity:0;"
-            class="result"
-            :src="resultURL"
-            alt=""
-          />
+          <!-- <img style="width:100%;" class="result" :src="resultUrl" alt="" /> -->
         </v-card>
       </v-dialog>
       <!-- snackbar to show too many items to be uploaded at a time -->
@@ -361,6 +380,15 @@ import { db, storage } from '~/plugins/firebase'
 export default {
   data() {
     return {
+      croppaWidthHeight: 0,
+      loader: null,
+      loading: false,
+      uploadbtndisable: true,
+      alertText: '',
+      alertType: '',
+      alert: false,
+      resultUrl: '',
+      myCroppa: {},
       uploaddialog: false,
       discountpercent: '',
       discountprice: '',
@@ -413,6 +441,14 @@ export default {
     }
   },
   watch: {
+    loader() {
+      const l = this.loader
+      this[l] = !this[l]
+
+      setTimeout(() => (this[l] = false), 3500)
+
+      this.loader = null
+    },
     category: function(val, oldval) {
       if (val.length > oldval.length) {
         const difference = val.filter(x => !oldval.includes(x))
@@ -465,10 +501,38 @@ export default {
   },
   mounted() {
     this.windowHeight = window.innerHeight
-    // this.category = this.$store.state.category
-    // this.categories.push(this.$store.state.category)
+    const width =
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth
+
+    this.croppaWidthHeight = width < 600 ? width * 0.6 : width * 0.35
   },
   methods: {
+    handleNewImage() {
+      if (
+        this.myCroppa.naturalWidth < 500 &&
+        this.myCroppa.naturalHeight < 500
+      ) {
+        this.alertText = 'Kindly upload an image larger than 500 x 500.'
+        this.alertType = 'error'
+        this.alert = true
+        this.uploadbtndisable = true
+      } else {
+        this.alert = false
+        this.uploadbtndisable = false
+      }
+    },
+    uploadImage() {
+      this.loader = 'loading'
+      this.myCroppa.generateBlob(
+        blob => {
+          this.uploadImageAsPromise(blob)
+        },
+        'image/jpeg',
+        0.8
+      )
+    },
     deleteImage(n) {
       return this.productimages.splice(n, 1, '')
     },
@@ -494,8 +558,9 @@ export default {
         this.focus = false
       }
     },
-    setImage(e) {
-      const image = URL.createObjectURL(e.target.files[0])
+    setImage(url) {
+      const image = url
+      // URL.createObjectURL(e.target.files[0])
       switch (this.imageselected) {
         case 1:
           this.productimages.splice(1, 1, image)
@@ -526,7 +591,7 @@ export default {
       }
       this.overlay = true
       this.imageuploaddone = 'block'
-      this.compressImage(e)
+      // this.compressImage(e)
     },
     compressImage(e) {
       const image = URL.createObjectURL(e.target.files[0])
@@ -599,8 +664,11 @@ export default {
                 // console.log('File available at', downloadURL)
                 if (downloadURL) {
                   this.imageUrls.push(downloadURL)
+                  this.setImage(downloadURL)
                   this.overlay = false
                   this.imageuploaddone = 'none'
+                  this.uploaddialog = false
+                  this.myCroppa.refresh()
                 }
               })
           }.bind(this)
@@ -609,8 +677,9 @@ export default {
       })
     },
     addImage(n) {
-      this.$refs.opengallery.click()
+      // this.$refs.opengallery.click()
       this.imageselected = n
+      this.uploaddialog = true
     },
     validate() {
       if (this.$refs.form.validate()) {
@@ -689,6 +758,15 @@ export default {
 </script>
 
 <style scoped>
+#alert {
+  width: 79%;
+}
+#actions-btns {
+  padding: 43px;
+  padding-top: 20px;
+  display: block;
+  text-align: center;
+}
 .add-image {
   margin-top: 10px;
   color: black;
@@ -733,9 +811,63 @@ export default {
 #addproduct-header {
   margin-left: 32px;
 }
-
+.croppa-container {
+  background-color: white;
+  margin-top: 20px;
+}
+.croppa-container canvas {
+  border: 2px dotted grey;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+.croppa-container:hover {
+  opacity: 1;
+}
+.custom-loader {
+  animation: loader 1s infinite;
+  display: flex;
+}
+@-moz-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
+  .croppa-container {
+    padding: 6px;
+  }
+  .croppa-container canvas {
+    max-width: 100%;
+    max-height: 100%;
+  }
   .headline {
     margin-top: 10px;
     font-family: 'Open Sans', sans-serif !important;

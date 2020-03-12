@@ -75,7 +75,8 @@ export default {
     '~/plugins/firebase',
     { src: '~/plugins/vue-cropper', mode: 'client' },
     { src: '~/plugins/localStorage', ssr: false },
-    { src: '~plugins/quill', mode: 'client' }
+    { src: '~plugins/quill', mode: 'client' },
+    { src: '~/plugins/croppa.js', ssr: false }
   ],
   /*
    ** Nuxt.js modules
