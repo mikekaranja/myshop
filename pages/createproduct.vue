@@ -732,8 +732,8 @@ export default {
         currency: 'Ksh',
         description: this.description,
         imageUrls: this.imageUrls,
-        category: this.category,
-        subcategory: this.subcategory ? this.subcategory : [''],
+        category: [this.category],
+        subcategory: this.subcategory ? [this.subcategory] : [''],
         date_created: new Date().toString()
       }
       const newPostKey = db

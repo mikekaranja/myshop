@@ -885,8 +885,8 @@ export default {
         discountprice: this.discountprice ? this.discountprice : '',
         description: this.description,
         imageUrls: imageUrls,
-        category: this.category,
-        subcategory: this.subcategory ? this.subcategory : [''],
+        category: [this.category],
+        subcategory: this.subcategory ? [this.subcategory] : [''],
         date_updated: new Date().toString()
       }
 
