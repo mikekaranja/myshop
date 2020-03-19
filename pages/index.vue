@@ -19,7 +19,19 @@ export default {
       if (this.$store.state.authenticated) {
         this.$router.push('/inventory')
       } else if (!this.$store.state.authenticated) {
-        if (this.$vuetify.breakpoint.mdAndUp) {
+        if (this.$router.currentRoute.query.signin === 'login') {
+          if (this.$vuetify.breakpoint.mdAndUp) {
+            this.$router.push('/logindesktop')
+          } else {
+            this.$router.push('/loginmobile')
+          }
+        } else if (this.$router.currentRoute.query.signin === 'signup') {
+          if (this.$vuetify.breakpoint.mdAndUp) {
+            this.$router.push('/desktopsignup')
+          } else {
+            this.$router.push('/mobilesignup')
+          }
+        } else if (this.$vuetify.breakpoint.mdAndUp) {
           this.$router.push('/desktopsignup')
         } else {
           this.$router.push('/mobilesignup')
