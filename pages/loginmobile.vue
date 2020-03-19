@@ -5,7 +5,13 @@
       class="text-center"
       style="padding:5px;"
     >
-      <img class="top-logo" src="https://myshop.e-merse.com/icon.jpg" alt="" />
+      <a href="https://e-merse.com" target="_blank">
+        <img
+          class="top-logo"
+          src="https://myshop.e-merse.com/icon.jpg"
+          alt=""
+        />
+      </a>
       <!-- <p>We're <span style="font-weight:500;">pumped</span> to see you!</p> -->
       <div class="title bold">Welcome Back!</div>
       <p style="margin-top: 15px;">

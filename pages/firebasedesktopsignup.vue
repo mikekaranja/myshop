@@ -5,11 +5,13 @@
         <v-row :class="mb - 6" no-gutters style="min-height: 100vh;">
           <v-col class="first-column" cols="5">
             <div v-show="!verify" id="wording" class="text-center">
-              <img
-                class="desktop-logo"
-                src="https://myshop.e-merse.com/icon.jpg"
-                alt=""
-              />
+              <a href="https://e-merse.com" target="_blank">
+                <img
+                  class="desktop-logo"
+                  src="https://myshop.e-merse.com/icon.jpg"
+                  alt=""
+                />
+              </a>
               <v-form
                 id="form-inputs"
                 ref="form"
@@ -64,11 +66,13 @@
               >
                 <v-icon color="black">mdi-arrow-left</v-icon>
               </v-btn>
-              <img
-                class="desktop-logo"
-                src="https://myshop.e-merse.com/icon.jpg"
-                alt=""
-              />
+              <a href="https://e-merse.com" target="_blank">
+                <img
+                  class="desktop-logo"
+                  src="https://myshop.e-merse.com/icon.jpg"
+                  alt=""
+                />
+              </a>
               <firebase-ui v-show="verify"></firebase-ui>
             </div>
           </v-col>

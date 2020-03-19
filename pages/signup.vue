@@ -34,11 +34,13 @@
           </v-col>
           <v-col class="second-column">
             <div class="text-center" style="padding:5px;">
-              <img
-                class="desktop-logo"
-                src="https://myshop.e-merse.com/icon.jpg"
-                alt=""
-              />
+              <a href="https://e-merse.com" target="_blank">
+                <img
+                  class="desktop-logo"
+                  src="https://myshop.e-merse.com/icon.jpg"
+                  alt=""
+                />
+              </a>
               <div class="subtitle-1 font-weight-bold">
                 Sign into your account
               </div>

@@ -21,11 +21,13 @@
           </v-col>
           <v-col class="second-column">
             <div class="text-center" style="padding:5px;">
-              <img
-                class="desktop-logo"
-                src="https://myshop.e-merse.com/icon.jpg"
-                alt=""
-              />
+              <a href="https://e-merse.com" target="_blank">
+                <img
+                  class="desktop-logo"
+                  src="https://myshop.e-merse.com/icon.jpg"
+                  alt=""
+                />
+              </a>
               <div
                 style="margin-bottom: 20px;"
                 class="subtitle-1 font-weight-bold"

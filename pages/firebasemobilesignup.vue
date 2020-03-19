@@ -6,7 +6,13 @@
       </v-btn>
     </div>
     <div v-if="!verify" class="text-center" style="padding:5px;">
-      <img class="top-logo" src="https://myshop.e-merse.com/icon.jpg" alt="" />
+      <a href="https://e-merse.com" target="_blank">
+        <img
+          class="top-logo"
+          src="https://myshop.e-merse.com/icon.jpg"
+          alt=""
+        />
+      </a>
       <v-form id="form-inputs" ref="form" v-model="valid" lazy-validation>
         <v-text-field
           v-model="shop"
@@ -46,8 +52,14 @@
       </v-form>
     </div>
     <div v-if="verify" id="verify-sms">
-      <img class="top-logo" src="https://myshop.e-merse.com/icon.jpg" alt="" />
-      <div id="fire-div" class="subtitle-1 font-weight-bold">Sign in with:</div>
+      <a href="https://e-merse.com" target="_blank">
+        <img
+          class="top-logo"
+          src="https://myshop.e-merse.com/icon.jpg"
+          alt=""
+        />
+      </a>
+      <!-- <div id="fire-div" class="subtitle-1 font-weight-bold">Sign in with:</div> -->
       <firebase-ui v-show="verify"></firebase-ui>
     </div>
   </div>

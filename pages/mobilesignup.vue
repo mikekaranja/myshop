@@ -1,7 +1,13 @@
 <template>
   <div id="container">
     <div v-if="!verify" class="text-center" style="padding:5px;">
-      <img class="top-logo" src="https://myshop.e-merse.com/icon.jpg" alt="" />
+      <a href="https://e-merse.com" target="_blank">
+        <img
+          class="top-logo"
+          src="https://myshop.e-merse.com/icon.jpg"
+          alt=""
+        />
+      </a>
       <v-form id="form-inputs" ref="form" v-model="valid" lazy-validation>
         <v-text-field
           v-model="shop"
