@@ -124,7 +124,7 @@ export default {
 #wording {
   position: relative;
   left: 50%;
-  top: 50%;
+  top: 40%;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }

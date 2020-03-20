@@ -200,6 +200,7 @@ export default {
 }
 .desktop-logo {
   width: 48%;
+  margin-top: 40px;
 }
 .first-column {
   background: #ffffff;
