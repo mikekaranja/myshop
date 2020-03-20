@@ -79,6 +79,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-menu
+        v-if="addproduct"
         style="z-index: 12;"
         origin="center center"
         transition="scale-transition"
@@ -126,10 +127,11 @@
         </v-list>
       </v-menu>
       <v-spacer />
-      <v-btn to="/search" icon>
+      <v-btn v-if="addproduct" to="/search" icon>
         <v-icon>search</v-icon>
       </v-btn>
       <v-btn
+        v-if="addproduct"
         v-show="$vuetify.breakpoint.mdAndUp"
         id="view-catalog"
         outlined
@@ -1227,6 +1229,7 @@ export default {
   },
   data() {
     return {
+      addproduct: true,
       shoplocation: '',
       facebooklink: '',
       instagramlink: '',
@@ -1258,11 +1261,11 @@ export default {
       ],
       draweritems: [
         { title: 'My Products', icon: 'mdi-view-dashboard' },
-        { title: 'Manage Ads', icon: 'online.svg' },
+        // { title: 'Manage Ads', icon: 'online.svg' },
         { title: 'Edit Account Details', icon: 'mdi-account-circle-outline' },
         // { title: 'Use a Custom Domain', icon: 'mdi-web' },
-        { title: 'Pay Monthly Subscription', icon: 'mdi-credit-card-plus' },
-        { title: 'Cancel Subscription', icon: 'mdi-credit-card-off' },
+        // { title: 'Pay Monthly Subscription', icon: 'mdi-credit-card-plus' },
+        // { title: 'Cancel Subscription', icon: 'mdi-credit-card-off' },
         { title: 'Log out', icon: 'mdi-logout' }
       ],
       sheet: false,
@@ -1405,9 +1408,11 @@ export default {
         this.fabadd = false
         this.bottombar = false
         this.showArrow = true
+        this.addproduct = false
       }
       if (from.path === '/createproduct') {
         this.showArrow = false
+        this.addproduct = true
       }
       // ad buying
       if (to.path === '/adbuying') {
@@ -2776,7 +2781,7 @@ export default {
             () => {
               this.$store.commit('authUser', false)
               this.$store.commit('clearUser', false)
-              window.location.href = 'https://myshop.e-merse.com/'
+              window.location.href = 'https://myshop.e-merse.com/?signin=login'
             },
             error => {
               // eslint-disable-next-line no-console

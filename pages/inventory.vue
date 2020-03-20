@@ -1,7 +1,7 @@
 <template>
   <v-layout class="text-center" wrap>
     <div v-show="$vuetify.breakpoint.mdAndUp" class="desktop-div">
-      <div v-if="$store.state.products.length >= 1">
+      <div v-if="noproducts === 1">
         <div id="categories-header-desktop" class="display-2 font-weight-bold">
           Categories
         </div>
@@ -16,7 +16,7 @@
           </v-col>
         </v-row>
       </div>
-      <div v-if="$store.state.products.length < 1">
+      <div v-if="noproducts === 2">
         <img id="empty-img" src="/emptystate.svg" alt="empty" />
         <div id="nada-text" class="body-2">No products yet</div>
       </div>
@@ -25,7 +25,7 @@
       v-show="$vuetify.breakpoint.smAndDown"
       style="width: 100%;min-height: 50vh;"
     >
-      <div v-if="$store.state.products.length >= 1">
+      <div v-if="noproducts === 1">
         <div class="display-1 font-weight-bold">
           Categories
         </div>
@@ -35,7 +35,7 @@
           :item="category"
         ></category-card>
       </div>
-      <div v-if="$store.state.products.length < 1">
+      <div v-if="noproducts === 2">
         <img id="empty-img" src="/emptystate.svg" alt="empty" />
         <div id="nada-text" class="body-2">No products yet</div>
       </div>
@@ -80,6 +80,7 @@ export default {
   },
   data() {
     return {
+      noproducts: 0,
       showaddhere: false,
       no: [''],
       close: true,
@@ -100,6 +101,13 @@ export default {
     ...mapState(['adbanner', 'tour'])
   },
   mounted() {
+    setTimeout(() => {
+      if (this.$store.state.products.length > 0) {
+        this.noproducts = 1
+      } else if (this.$store.state.products.length < 1) {
+        this.noproducts = 2
+      }
+    }, 2500)
     if (
       this.$store.state.products.length < 1 &&
       this.$store.state.tour !== 'done'
@@ -155,6 +163,7 @@ export default {
       // filter by products
       const items = orderbydatearray.filter(el => el.title)
       this.$store.commit('addProducts', items)
+      console.log('no of items', items.length)
       return this.$router.push('/inventory')
     },
     openOptions() {

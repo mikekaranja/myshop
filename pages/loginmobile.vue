@@ -18,6 +18,13 @@
         Keep updating your stock and sharing your products with customers
       </p>
       <firebase-ui></firebase-ui>
+      <div
+        class="caption font-weight-bold"
+        style="color:gray; margin-top: 20px;"
+      >
+        Don't have an account?
+        <span class="free-trial" @click="changeTitle">Sign up</span>
+      </div>
     </div>
   </div>
 </template>
@@ -55,18 +62,7 @@ export default {
   },
   methods: {
     changeTitle(title) {
-      if (title === 'signin') {
-        this.sign = 'Login to your account'
-        this.signin = true
-        this.headline = 'Welcome Back!'
-        this.subtitle =
-          'Keep updating your stock and sharing your products with customers'
-      } else if (title === 'signup') {
-        this.sign = 'Sign up to create an account'
-        this.signin = false
-        this.headline = 'Get more sales by showcasing your products online'
-        this.subtitle = 'Start your 24 hr free trial by creating an account'
-      }
+      this.$router.push('/mobilesignup')
     }
   }
 }

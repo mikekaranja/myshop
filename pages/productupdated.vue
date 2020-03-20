@@ -1,7 +1,17 @@
 <template>
   <!-- Catelogue ready UI -->
   <div id="congrats-div" class="text-center">
-    <sweet-alert class="sweet-alert"></sweet-alert>
+    <v-btn
+      style="float: right;"
+      class="ma-2"
+      text
+      icon
+      color="red"
+      to="/inventory"
+    >
+      <v-icon large>mdi-close</v-icon>
+    </v-btn>
+    <sweet-alert style="margin-top:80px;" class="sweet-alert"></sweet-alert>
     <div class="headline">Product Updated Successfully</div>
     <v-btn
       v-show="$vuetify.breakpoint.mdAndUp"

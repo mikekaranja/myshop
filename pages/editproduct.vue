@@ -23,7 +23,7 @@
               <div
                 v-show="productimages[n].length === 0"
                 class="image-placeholder"
-                @click.native="addImage(n)"
+                @click="addImage(n)"
               >
                 <v-btn text icon color="black" @click.native="addImage(n)">
                   <v-icon large>mdi-plus-circle-outline</v-icon>
@@ -345,6 +345,7 @@
         >
           <div>
             <croppa
+              ref="croppa"
               v-model="myCroppa"
               :width="croppaWidthHeight"
               :height="croppaWidthHeight"
@@ -835,9 +836,11 @@ export default {
       }
     },
     addImage(n) {
-      // this.$refs.opengallery.click()
       this.imageselected = n
       this.uploaddialog = true
+      setTimeout(() => {
+        this.$refs.croppa.chooseFile()
+      }, 600)
     },
     validate() {
       if (this.$refs.form.validate()) {
@@ -885,8 +888,8 @@ export default {
         discountprice: this.discountprice ? this.discountprice : '',
         description: this.description,
         imageUrls: imageUrls,
-        category: [this.category],
-        subcategory: this.subcategory ? [this.subcategory] : [''],
+        category: this.category,
+        subcategory: this.subcategory,
         date_updated: new Date().toString()
       }
 
@@ -962,6 +965,7 @@ export default {
   font-weight: 500;
 }
 .image-placeholder {
+  cursor: pointer;
   margin: 5px;
   height: 200px;
   width: 200px;

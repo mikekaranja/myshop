@@ -137,7 +137,11 @@ export default {
   },
   methods: {
     login() {
-      this.$router.push('/firebasedesktopsignup')
+      if (this.$vuetify.breakpoint.smAndDown) {
+        this.$router.push('/loginmobile')
+      } else {
+        this.$router.push('/logindesktop')
+      }
     },
     validate() {
       // User sign up
@@ -196,7 +200,6 @@ export default {
 }
 .desktop-logo {
   width: 48%;
-  margin-top: 34px;
 }
 .first-column {
   background: #ffffff;

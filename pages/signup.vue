@@ -52,7 +52,7 @@
               >
                 Don't have an account?
                 <span class="free-trial" @click="changeTitle('signup')"
-                  >Start a free trial</span
+                  >Sign up</span
                 >
               </div>
               <div v-else class="caption font-weight-bold" style="color:gray">

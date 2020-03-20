@@ -99,7 +99,7 @@ export default {
   },
   methods: {
     login() {
-      this.$router.push('/firebasemobilesignup')
+      this.$router.push('/loginmobile')
     },
     validate() {
       // User sign up

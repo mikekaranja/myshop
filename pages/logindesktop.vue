@@ -3,7 +3,7 @@
     <div v-show="$vuetify.breakpoint.mdAndUp" class="text-center">
       <v-container style="padding: 0px;">
         <v-row :class="mb - 6" no-gutters style="min-height: 100vh;">
-          <v-col class="first-column">
+          <v-col class="first-column-lo">
             <div id="wording" class="text-center">
               <div
                 style="font-family: 'Open Sans', sans-serif !important;color:white;"
@@ -19,11 +19,11 @@
               </div>
             </div>
           </v-col>
-          <v-col class="second-column">
+          <v-col class="second-column-lo">
             <div class="text-center" style="padding:5px;">
               <a href="https://e-merse.com" target="_blank">
                 <img
-                  class="desktop-logo"
+                  class="desktop-logo-lo"
                   src="https://myshop.e-merse.com/icon.jpg"
                   alt=""
                 />
@@ -42,7 +42,7 @@
               >
                 Don't have an account?
                 <span class="free-trial" @click="changeTitle('signup')"
-                  >Start a free trial</span
+                  >Sign up</span
                 >
               </div>
               <div v-else class="caption font-weight-bold" style="color:gray">
@@ -99,10 +99,11 @@ export default {
         this.subtitle =
           'Keep updating your stock and sharing your products with customers'
       } else if (title === 'signup') {
-        this.sign = 'Sign up to create an account'
-        this.signin = false
-        this.headline = 'Get more sales by showcasing your products online'
-        this.subtitle = 'Start your 24 hr free trial by creating an account'
+        if (this.$vuetify.breakpoint.smAndDown) {
+          this.$router.push('/mobilesignup')
+        } else {
+          this.$router.push('/desktopsignup')
+        }
       }
     }
   }
@@ -110,12 +111,15 @@ export default {
 </script>
 
 <style>
-.desktop-logo {
+.desktop-logo-lo {
   width: 30%;
   margin-top: 70px;
 }
-.first-column {
-  background: #5f3d42;
+.first-column-lo {
+  background: #bc6537 !important;
+}
+.second-column-lo {
+  background: #ffffff !important;
 }
 #wording {
   position: relative;

@@ -23,7 +23,7 @@
               <div
                 v-show="productimages[n].length === 0"
                 class="image-placeholder"
-                @click.native="addImage(n)"
+                @click="addImage(n)"
               >
                 <v-btn text icon color="black" @click.native="addImage(n)">
                   <v-icon large>mdi-plus-circle-outline</v-icon>
@@ -166,7 +166,7 @@
           <div
             v-show="productimages[n].length === 0"
             class="image-placeholder"
-            @click.native="addImage(n)"
+            @click="addImage(n)"
           >
             <v-btn text icon color="black" @click.native="addImage(n)">
               <v-icon large>mdi-plus-circle-outline</v-icon>
@@ -281,7 +281,12 @@
             style="text-align:center;padding-top:20px;padding-right:0px;padding-left:0px;"
           >
             <div>
+              <div id="crop-title" class="subtitle-1">
+                <img id="crop-title-img" src="/swipe.png" alt="" />
+                Drag to crop
+              </div>
               <croppa
+                ref="croppa"
                 v-model="myCroppa"
                 :width="croppaWidthHeight"
                 :height="croppaWidthHeight"
@@ -302,9 +307,6 @@
               </croppa>
             </div>
 
-            <!-- <div id="crop-title" class="subtitle-1">
-              Drag to position your banner
-            </div> -->
             <!-- <div style="color:black;margin-left:8px;" class="subtitle-2">
               * banner size width: over 1500px
             </div> -->
@@ -677,9 +679,11 @@ export default {
       })
     },
     addImage(n) {
-      // this.$refs.opengallery.click()
       this.imageselected = n
       this.uploaddialog = true
+      setTimeout(() => {
+        this.$refs.croppa.chooseFile()
+      }, 600)
     },
     validate() {
       if (this.$refs.form.validate()) {
@@ -732,8 +736,8 @@ export default {
         currency: 'Ksh',
         description: this.description,
         imageUrls: this.imageUrls,
-        category: [this.category],
-        subcategory: this.subcategory ? [this.subcategory] : [''],
+        category: this.category,
+        subcategory: this.subcategory,
         date_created: new Date().toString()
       }
       const newPostKey = db
@@ -773,6 +777,7 @@ export default {
   font-weight: 500;
 }
 .image-placeholder {
+  cursor: pointer;
   margin: 5px;
   height: 200px;
   width: 200px;
@@ -823,6 +828,9 @@ export default {
 .croppa-container:hover {
   opacity: 1;
 }
+#crop-title-img {
+  width: 5%;
+}
 .custom-loader {
   animation: loader 1s infinite;
   display: flex;
@@ -861,6 +869,12 @@ export default {
 }
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
+  #crop-title-img {
+    width: 10%;
+  }
+  #crop-title {
+    padding: 0px;
+  }
   .croppa-container {
     padding: 6px;
   }
@@ -906,6 +920,18 @@ export default {
     overflow-y: hidden;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
+  }
+  .scrolling-wrapper::-webkit-scrollbar {
+    width: 10px;
+  }
+  .scrolling-wrapper::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background: #fff;
+  }
+  .scrolling-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
   }
   .add-image {
     margin-top: 10px;
