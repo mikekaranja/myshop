@@ -99,8 +99,8 @@ export default {
   // sentry
   sentry: {
     dsn: 'https://f7e8c12f229545fa87a3f627f38ef57d@sentry.io/5169439', // Enter your project's DSN here
-    config: {}, // Additional config
-  }
+    config: {} // Additional config
+  },
   // manifest
   manifest: {
     name: 'E-merse',
