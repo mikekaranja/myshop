@@ -55,7 +55,7 @@ export default {
   mounted() {
     this.items[1].text = this.$router.history.current.query.category
     this.items[2].text = this.$router.history.current.query.subcategory
-    if (this.items[2].text === 'All') {
+    if (this.items[2].text === 'All Products') {
       const validcategory = this.$store.state.products.filter(el => el.category)
       this.products = validcategory.filter(item =>
         item.category.includes(this.items[1].text)

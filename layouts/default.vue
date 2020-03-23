@@ -78,6 +78,10 @@
       <v-btn v-if="showArrow" icon to="/">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
+      <v-spacer />
+      <v-btn v-if="addproduct" to="/search" icon>
+        <v-icon>search</v-icon>
+      </v-btn>
       <v-menu
         v-if="addproduct"
         style="z-index: 12;"
@@ -126,11 +130,7 @@
           </v-list-item-group>
         </v-list>
       </v-menu>
-      <v-spacer />
-      <v-btn v-if="addproduct" to="/search" icon>
-        <v-icon>search</v-icon>
-      </v-btn>
-      <v-btn
+      <!-- <v-btn
         v-if="addproduct"
         v-show="$vuetify.breakpoint.mdAndUp"
         id="view-catalog"
@@ -142,7 +142,7 @@
       >
         <v-icon left dark>mdi-eye-outline</v-icon>
         Preview Shop
-      </v-btn>
+      </v-btn> -->
     </v-app-bar>
     <v-content
       :style="{
@@ -645,6 +645,48 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <!-- Delete product dialog -->
+    <v-dialog v-model="deleteProductDialog" max-width="400">
+      <v-card class="rounded-card">
+        <v-card-title class="subtitle-1"
+          >Are you sure you want to delete this Product?
+        </v-card-title>
+        <!-- Deleting a subcategory will delete all the products
+          within it. -->
+        <v-card-text>
+          <v-alert
+            :value="alertsuccess15"
+            transition="scale-transition"
+            style="font-size: small;"
+            type="success"
+          >
+            Product deleted successfully
+          </v-alert>
+          <div>
+            <v-btn
+              :loading="loading2"
+              style="margin-top:10px;font-weight:700;text-transform:none;"
+              color="primary"
+              rounded
+              outlined
+              depressed
+              block
+              @click="deleteProductForSure"
+              >Yes, delete product</v-btn
+            >
+            <v-btn
+              color="primary"
+              block
+              rounded
+              style="margin-top:20px;text-transform:capitalize;font-weight:700;"
+              @click="deleteProductDialog = !deleteProductDialog"
+            >
+              Cancel</v-btn
+            >
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <!-- Edit Account Details dialog -->
     <v-dialog v-model="editAccountDialog" max-width="600">
       <v-card class="rounded-card">
@@ -664,6 +706,11 @@
           <v-text-field
             v-model="shopname"
             label="Shop name"
+            prepend-icon="create"
+          ></v-text-field>
+          <v-text-field
+            v-model="website"
+            label="Website"
             prepend-icon="create"
           ></v-text-field>
           <v-text-field
@@ -1229,7 +1276,9 @@ export default {
   },
   data() {
     return {
+      deleteid: '',
       addproduct: true,
+      website: '',
       shoplocation: '',
       facebooklink: '',
       instagramlink: '',
@@ -1263,9 +1312,9 @@ export default {
         { title: 'My Products', icon: 'mdi-view-dashboard' },
         // { title: 'Manage Ads', icon: 'online.svg' },
         { title: 'Edit Account Details', icon: 'mdi-account-circle-outline' },
-        // { title: 'Use a Custom Domain', icon: 'mdi-web' },
-        // { title: 'Pay Monthly Subscription', icon: 'mdi-credit-card-plus' },
-        // { title: 'Cancel Subscription', icon: 'mdi-credit-card-off' },
+        { icon: 'mdi-image-outline', title: 'Upload/Change your Logo' },
+        { icon: 'mdi-image-outline', title: 'Upload/Change your Banner' },
+        { icon: 'mdi-eye-outline', title: 'Preview Shop' },
         { title: 'Log out', icon: 'mdi-logout' }
       ],
       sheet: false,
@@ -1273,9 +1322,9 @@ export default {
         { icon: 'online.svg', title: 'Create an ad' },
         { icon: 'mdi-tag-outline', title: 'Add Product' },
         { icon: 'mdi-folder-outline', title: 'Add Category' },
-        { icon: 'mdi-folder-multiple-outline', title: 'Add Subcategory' },
-        { icon: 'mdi-image-outline', title: 'Upload/Change your Logo' },
-        { icon: 'mdi-image-outline', title: 'Upload/Change your Banner' }
+        { icon: 'mdi-folder-multiple-outline', title: 'Add Subcategory' }
+        // { icon: 'mdi-image-outline', title: 'Upload/Change your Logo' },
+        // { icon: 'mdi-image-outline', title: 'Upload/Change your Banner' }
       ],
       shares: [
         { icon: 'mdi-whatsapp', title: 'WhatsApp' },
@@ -1292,7 +1341,7 @@ export default {
       deleteCategoryDialog: false,
       addSubcategoryDialog: false,
       editSubcategoryDialog: false,
-      deleteSubcategoryDialog: false,
+      deleteProductDialog: false,
       cancelSubscriptionDialog: false,
       shareCategoryBottomSheet: false,
       shareSubcategoryBottomSheet: false,
@@ -1317,6 +1366,7 @@ export default {
       alertsuccess7: false,
       alertsuccess8: false,
       alertsuccess9: false,
+      alertsuccess15: false,
       alerttext: '',
       subcategory: '',
       categoryid: '',
@@ -1392,6 +1442,9 @@ export default {
       this.loader2 = null
     },
     $route(to, from) {
+      if (this.$vuetify.breakpoint.mdAndUp && this.$store.state.authenticated) {
+        this.leftDrawer = true
+      }
       // ad buying
       if (to.path === '/paymentscreen') {
         this.fabadd = false
@@ -1502,6 +1555,11 @@ export default {
         this.shopname = this.$store.state.user.shopname
         this.email = this.$store.state.user.email
         this.paymentplan = this.$store.state.user.payment_plan
+        this.website = this.$store.state.user.website
+        this.shoplocation = this.$store.state.user.shoplocation
+        this.shopdescription = this.$store.state.user.shopdescription
+        this.facebooklink = this.$store.state.user.facebooklink
+        this.instagramlink = this.$store.state.user.instagramlink
         // const expirydate = new Date(this.$store.state.user.expiry_date)
         // const signupdate = new Date(this.$store.state.user.sign_up_date)
         // const today = new Date()
@@ -1566,13 +1624,14 @@ export default {
       // set account details
       this.phonenumber = this.$store.state.user.phonenumber
       this.shopname = this.$store.state.user.shopname
+      this.website = this.$store.state.user.website
       this.email = this.$store.state.user.email
       this.shoplocation = this.$store.state.user.shoplocation
       this.shopdescription = this.$store.state.user.shopdescription
       this.facebooklink = this.$store.state.user.facebooklink
       this.instagramlink = this.$store.state.user.instagramlink
-
       this.paymentplan = this.$store.state.user.payment_plan
+
       if (this.$store.state.user.shopname) {
         // set userId
         this.$ga.set('userId', this.$store.state.user.shopname)
@@ -1583,7 +1642,7 @@ export default {
       }
       // check subscription
       if (this.$store.state.user.uid) {
-        this.checkSubscription()
+        // this.checkSubscription()
       }
     }, 1000)
   },
@@ -1603,6 +1662,11 @@ export default {
       this.shopname = this.$store.state.user.shopname
       this.email = this.$store.state.user.email
       this.paymentplan = this.$store.state.user.payment_plan
+      this.website = this.$store.state.user.website
+      this.shoplocation = this.$store.state.user.shoplocation
+      this.shopdescription = this.$store.state.user.shopdescription
+      this.facebooklink = this.$store.state.user.facebooklink
+      this.instagramlink = this.$store.state.user.instagramlink
     })
     this.$bus.$on('showbottomandtop', value => {
       this.topbar = true
@@ -1632,6 +1696,11 @@ export default {
     this.$bus.$on('shareProduct', value => {
       this.shareid = value.id
       this.shareProductBottomSheet = true
+    })
+    this.$bus.$on('deleteProduct', value => {
+      console.log('hi')
+      this.deleteid = value.id
+      this.deleteProductDialog = true
     })
   },
   methods: {
@@ -2169,41 +2238,40 @@ export default {
         this.overlay = false
       }, 1200)
     },
-    updateAccount() {
+    updateAccount2() {
       // ga analytics
       this.$ga.event({
         eventCategory: 'edit account button',
         eventAction: 'Edited Account details',
-        eventLabel: this.$store.state.user.shopname,
+        eventLabel: this.shopname,
         eventValue: 19
       })
-      this.loader2 = 'loading2'
-      const shopName = this.shopname
-        .trim()
-        .replace(
-          // eslint-disable-next-line no-useless-escape
-          /[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi,
-          ''
-        )
-        .toLowerCase()
-      const shopId = shopName.replace(/ /g, '-').toLowerCase()
-      this.updateDb(shopId, shopName)
-      // if (shopName !== this.$store.state.user.shopname) {
-      //   // update store
-      //   const shop = {
-      //     shopid: shopId,
-      //     shopname: shopName,
-      //     email: this.email,
-      //     phonenumber: this.phonenumber
-      //   }
-      //   this.updateBanner(shopId, this.$store.state.user.shopid)
-      //   this.updateLogo(shopId, this.$store.state.user.shopid)
-      //   this.$store.commit('changeShopName', shop)
-      //   this.updateDb2(shopId, shopName)
-      //   this.updateAllProducts(shopId, shopName)
-      // } else {
-      //   this.updateDb(shopId, shopName)
-      // }
+      // this.loader2 = 'loading2'
+      const shopId = this.shopname.replace(/ /g, '-').toLowerCase()
+      console.log(shopId)
+      // this.updateDb(shopId, this.shopname)
+    },
+    updateAccount() {
+      const shopId = this.shopname.replace(/ /g, '-').toLowerCase()
+      return db
+        .ref(`pwa/users/${this.$store.state.user.id}`)
+        .update({
+          email: this.email,
+          phonenumber: this.phonenumber,
+          shopname: this.shopname,
+          website: this.website,
+          shopid: shopId,
+          shopdescription: this.shopdescription ? this.shopdescription : '',
+          shoplocation: this.shoplocation ? this.shoplocation : '',
+          facebooklink: this.facebooklink ? this.facebooklink : '',
+          instagramlink: this.instagramlink ? this.instagramlink : ''
+        })
+        .then(snap => {
+          this.alertsuccess6 = true
+          setTimeout(() => {
+            window.location.href = 'https://myshop.e-merse.com/inventory'
+          }, 2000)
+        })
     },
     updateBanner(newShopId, oldId) {
       return db
@@ -2234,37 +2302,6 @@ export default {
         logo: logo,
         shopid: newShopId
       })
-    },
-    updateDb2(shopId, shopName) {
-      return db
-        .ref(`pwa/users/${this.$store.state.user.id}`)
-        .update({
-          email: this.email,
-          phonenumber: this.phonenumber,
-          shopname: shopName,
-          shopid: shopId
-        })
-        .then(snap => {})
-    },
-    updateDb(shopId, shopName) {
-      return db
-        .ref(`pwa/users/${this.$store.state.user.id}`)
-        .update({
-          email: this.email,
-          phonenumber: this.phonenumber,
-          shopname: shopName,
-          shopid: shopId,
-          shopdescription: this.shopdescription,
-          shoplocation: this.shoplocation,
-          facebooklink: this.facebooklink,
-          instagramlink: this.instagramlink
-        })
-        .then(snap => {
-          this.alertsuccess6 = true
-          setTimeout(() => {
-            window.location.href = 'https://myshop.e-merse.com/inventory'
-          }, 1800)
-        })
     },
     updateAllProducts(shopId, shopName) {
       // eslint-disable-next-line prefer-const
@@ -2710,7 +2747,7 @@ export default {
           if (this.$store.state.products.length < 6) {
             this.dialogAdvertise = true
           } else {
-            this.leftDrawer = false
+            this.leftDrawer = true
             this.$router.push('/adbuying')
           }
           break
@@ -2723,22 +2760,34 @@ export default {
         case 'Add Subcategory':
           this.addSubcategoryDialog = true
           break
-        case 'Upload/Change your Logo':
-          this.$refs.opengallerydesktop.click()
-          break
-        case 'Upload/Change your Banner':
-          this.$router.push('/selectbannerdesktop')
-          break
+        // case 'Upload/Change your Logo':
+        //   this.$refs.opengallerydesktop.click()
+        //   break
+        // case 'Upload/Change your Banner':
+        //   this.$router.push('/selectbannerdesktop')
+        //   break
         default:
           break
       }
+    },
+    deleteProductForSure() {
+      this.loader2 = 'loading2'
+      return db
+        .ref(`pwa/products/${this.deleteid}`)
+        .remove()
+        .then(snap => {
+          this.alertsuccess15 = true
+          setTimeout(() => {
+            window.location.href = 'https://myshop.e-merse.com/inventory'
+          }, 1800)
+        })
     },
     navDrawerClick(title) {
       // this.leftDrawer = false
       switch (title) {
         case 'My Products':
           this.$router.push('/inventory')
-          this.leftDrawer = false
+          this.leftDrawer = true
           break
         case 'Manage Ads':
           if (this.$store.state.products.length < 1) {
@@ -2750,31 +2799,14 @@ export default {
         case 'Edit Account Details':
           this.editAccountDialog = true
           break
-        case 'Pay Monthly Subscription':
-          // this.addSubcategoryDialog = true
-          // this.kindlyPayAfterDialog = !this.kindlyPayAfterDialog
-          // this.$router.push('/paymentscreen')
-          // eslint-disable-next-line no-case-declarations
-          const products = this.$store.state.products
-          if (products.length > 0 && products.length < 51) {
-            window.open(
-              `https://sleepy-coast-74146.herokuapp.com/?ttl=800&eml=${this.$store.state.user.email}&tel=${this.$store.state.user.phonenumber}`,
-              '_blank'
-            )
-          } else if (products.length >= 51 && products.length < 101) {
-            window.open(
-              `https://sleepy-coast-74146.herokuapp.com/?ttl=1500&eml=${this.$store.state.user.email}&tel=${this.$store.state.user.phonenumber}`,
-              '_blank'
-            )
-          } else if (products.length >= 101 && products.length < 301) {
-            window.open(
-              `https://sleepy-coast-74146.herokuapp.com/?ttl=4800&eml=${this.$store.state.user.email}&tel=${this.$store.state.user.phonenumber}`,
-              '_blank'
-            )
-          }
+        case 'Upload/Change your Logo':
+          this.$refs.opengallery.click()
           break
-        case 'Cancel Subscription':
-          this.cancelSubscriptionDialog = true
+        case 'Upload/Change your Banner':
+          this.$router.push('/selectbanner')
+          break
+        case 'Preview Shop':
+          window.open(`${this.$store.state.user.website}`, '_blank')
           break
         case 'Log out':
           auth.signOut().then(
@@ -2807,7 +2839,7 @@ export default {
           if (this.$store.state.products.length < 6) {
             this.dialogAdvertise = true
           } else {
-            this.leftDrawer = false
+            this.leftDrawer = true
             this.$router.push('/adbuying')
           }
           break
@@ -2822,12 +2854,12 @@ export default {
           this.addSubcategoryDialog = true
           this.$bus.$emit('hidecaption', 'sheetclose')
           break
-        case 'Upload/Change your Logo':
-          this.$refs.opengallery.click()
-          break
-        case 'Upload/Change your Banner':
-          this.$router.push('/selectbanner')
-          break
+        // case 'Upload/Change your Logo':
+        //   this.$refs.opengallery.click()
+        //   break
+        // case 'Upload/Change your Banner':
+        //   this.$router.push('/selectbanner')
+        //   break
         default:
           break
       }

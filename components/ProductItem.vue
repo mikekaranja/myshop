@@ -26,9 +26,21 @@
           }}</span>
         </nuxt-link>
       </div>
-      <div style="display: flex;margin-top:10px;">
+      <div style="display: block;margin-top:10px;">
         <v-btn
           style="text-transform:capitalize;font-weight:bold;"
+          block
+          small
+          outlined
+          rounded
+          color="red"
+          @click="emitDeleteDialog"
+        >
+          <v-icon left dark>delete</v-icon>
+          Delete
+        </v-btn>
+        <v-btn
+          style="text-transform:capitalize;font-weight:bold;margin-top:5px;"
           block
           small
           outlined
@@ -60,6 +72,13 @@ export default {
   methods: {
     emitShareDialog() {
       this.$bus.$emit('shareProduct', {
+        name: this.item.name,
+        id: this.item.id
+      })
+    },
+    emitDeleteDialog() {
+      console.log('hello')
+      this.$bus.$emit('deleteProduct', {
         name: this.item.name,
         id: this.item.id
       })

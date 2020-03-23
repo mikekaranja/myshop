@@ -13,12 +13,14 @@
 
       <v-card-actions style="padding:2px;">
         <div class="flex-grow-1"></div>
-        <v-btn v-show="item !== 'All'" icon>
+        <v-btn v-show="item !== 'All Products'" icon>
           <v-icon small @click="edit(item)">mdi-pencil</v-icon>
         </v-btn>
         <v-btn icon>
           <v-icon
-            :style="[item === 'All' ? { marginLeft: '-9px' } : { styleB }]"
+            :style="[
+              item === 'All Products' ? { marginLeft: '-9px' } : { styleB }
+            ]"
             small
             @click="emitShareDialog(item)"
             >mdi-share-variant</v-icon

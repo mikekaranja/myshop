@@ -26,13 +26,18 @@
       <v-card-actions style="padding:2px;">
         <div class="flex-grow-1"></div>
         <v-btn icon>
-          <v-icon v-show="item !== 'All'" small @click="edit(item.subcategory)"
+          <v-icon
+            v-show="item !== 'All Products'"
+            small
+            @click="edit(item.subcategory)"
             >mdi-pencil</v-icon
           >
         </v-btn>
         <v-btn icon>
           <v-icon
-            :style="[item === 'All' ? { marginLeft: '-9px' } : { styleB }]"
+            :style="[
+              item === 'All Products' ? { marginLeft: '-9px' } : { styleB }
+            ]"
             small
             @click="share(item)"
             >mdi-share-variant</v-icon

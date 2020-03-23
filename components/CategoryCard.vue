@@ -14,7 +14,7 @@
       <v-col cols="4">
         <div style="display: flex;">
           <v-btn
-            v-show="item !== 'All'"
+            v-show="item !== 'All Products'"
             style="margin-left: auto;"
             text
             icon
@@ -23,7 +23,7 @@
             <v-icon>create</v-icon>
           </v-btn>
           <v-btn
-            :style="{ marginLeft: `${item !== 'All' ? '' : 'auto'}` }"
+            :style="{ marginLeft: `${item !== 'All Products' ? '' : 'auto'}` }"
             class="share-btn"
             text
             icon

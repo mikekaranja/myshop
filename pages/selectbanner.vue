@@ -349,7 +349,7 @@ export default {
 }
 .banners-img {
   width: 100%;
-  height: 105px;
+  height: 200px;
   object-fit: cover;
   border: red;
   border-style: solid;
@@ -358,14 +358,15 @@ export default {
 }
 .fixed-btm {
   padding: 20px;
+  padding-left: 25%;
+  padding-right: 25%;
   background: white;
   position: fixed;
   bottom: 0px;
-  width: 100%;
+  width: 81%;
   display: block;
   justify-content: center;
   z-index: 5;
-  left: 0;
 }
 .back-btn {
   position: absolute;

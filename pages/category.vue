@@ -14,8 +14,8 @@
         <v-col cols="6" md="2">
           <desktop-subcategory-card
             v-if="$vuetify.breakpoint.mdAndUp"
-            v-show="items[1].text !== 'All'"
-            :item="{ category: items[1].text, subcategory: 'All' }"
+            v-show="items[1].text !== 'All Products'"
+            :item="{ category: items[1].text, subcategory: 'All Products' }"
           ></desktop-subcategory-card>
         </v-col>
         <v-col
@@ -33,8 +33,8 @@
     <!-- mobile screen -->
     <subcategory-card
       v-if="$vuetify.breakpoint.smAndDown"
-      v-show="items[1].text !== 'All'"
-      :item="{ category: items[1].text, subcategory: 'All' }"
+      v-show="items[1].text !== 'All Products'"
+      :item="{ category: items[1].text, subcategory: 'All Products' }"
     ></subcategory-card>
     <subcategory-card
       v-for="(subcategory, index) in subcategories"
@@ -43,7 +43,7 @@
       :item="{ category: items[1].text, subcategory: subcategory }"
     ></subcategory-card>
     <v-row
-      v-show="items[1].text === 'All'"
+      v-show="items[1].text === 'All Products'"
       id="product-images-holder"
       class="mb-6"
       style="text-align:center;"
@@ -90,7 +90,7 @@ export default {
   },
   mounted() {
     this.items[1].text = this.$router.history.current.query.category
-    if (this.items[1].text !== 'All') {
+    if (this.items[1].text !== 'All Products') {
       // fill subcategories
       const sub = this.$store.state.categories.filter(
         el => el.categoryname === this.items[1].text

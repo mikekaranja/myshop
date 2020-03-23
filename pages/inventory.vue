@@ -3,7 +3,7 @@
     <div v-show="$vuetify.breakpoint.mdAndUp" class="desktop-div">
       <div v-if="noproducts === 1">
         <div id="categories-header-desktop" class="display-2 font-weight-bold">
-          Categories
+          My Products
         </div>
         <v-row class="mb-6" style="padding-left: 23px;">
           <v-col
@@ -92,7 +92,7 @@ export default {
   computed: {
     categories() {
       // eslint-disable-next-line prefer-const
-      let categoriesarray = ['All']
+      let categoriesarray = ['All Products']
       this.$store.state.categories.map(item =>
         categoriesarray.push(item.categoryname)
       )
@@ -132,6 +132,7 @@ export default {
         this.$router.push('/login')
       } else if (this.$store.state.authenticated) {
         this.getData()
+        this.getUserData()
       }
     }, 50)
   },
@@ -165,6 +166,13 @@ export default {
       this.$store.commit('addProducts', items)
       console.log('no of items', items.length)
       return this.$router.push('/inventory')
+    },
+    async getUserData() {
+      const shopid = this.$store.state.user.shopid
+      const data = await this.$axios.$get(
+        `https://e-merse.firebaseio.com/pwa/users.json?orderBy="shopid"&equalTo="${shopid}"`
+      )
+      return this.$store.commit('setUserData', Object.values(data)[0])
     },
     openOptions() {
       this.$bus.$emit('OpenBottomNav', true)

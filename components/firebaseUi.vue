@@ -31,7 +31,6 @@ export default {
         privacyPolicyUrl: '/privacy',
         callbacks: {
           signInSuccessWithAuthResult: function(authResult) {
-            this.$bus.$emit('showpaymentplan', true)
             const shopname = window.localStorage.getItem('shopname')
             const website = window.localStorage.getItem('website')
             const number = window.localStorage.getItem('number')
@@ -70,6 +69,10 @@ export default {
               phonenumber: values[0].phonenumber,
               shopid: values[0].shopid,
               shopname: values[0].shopname,
+              shoplocation: values[0].shoplocation,
+              shopdescription: values[0].shopdescription,
+              facebooklink: values[0].facebooklink,
+              instagramlink: values[0].instagramlink,
               expiry_date: values[0].expiry_date,
               sign_up_date: values[0].sign_up_date,
               payment_plan: values[0].payment_plan,
