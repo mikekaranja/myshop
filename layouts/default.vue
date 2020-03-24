@@ -57,8 +57,9 @@
 
       <template v-slot:append>
         <div class="logo-bottom">
-          <v-avatar :size="81">
-            <img src="https://myshop.e-merse.com/icon.png" alt="icon" />
+          <v-avatar tile>
+            <!-- <img src="https://myshop.e-merse.com/icon.png" alt="icon" /> -->
+            <v-icon large>mdi-code-array</v-icon>
           </v-avatar>
           <div id="version" class="subtitle-2 font-weight-light">v1.1.0</div>
         </div>
@@ -75,12 +76,32 @@
       <v-btn v-if="!showArrow" icon @click.stop="leftDrawer = !leftDrawer">
         <v-icon>menu</v-icon>
       </v-btn>
-      <v-btn v-if="showArrow" icon to="/">
+      <v-btn v-if="showArrow" icon @click="showWarnDialog">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-spacer />
       <v-btn v-if="addproduct" to="/search" icon>
         <v-icon>search</v-icon>
+      </v-btn>
+      <v-btn
+        v-if="addbutton"
+        v-show="$vuetify.breakpoint.smAndDown"
+        to="/inventory"
+        icon
+      >
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+      <v-btn
+        v-if="addbutton"
+        v-show="$vuetify.breakpoint.mdAndUp"
+        id="add-btn"
+        large
+        rounded
+        color="primary"
+        to="/inventory"
+      >
+        <v-icon left dark>mdi-close</v-icon>
+        Cancel
       </v-btn>
       <v-menu
         v-if="addproduct"
@@ -209,10 +230,10 @@
           <v-icon>$vuetify.icons.inventory</v-icon>
         </v-btn>
 
-        <v-btn value="advertise" @click="openAdvertise">
+        <!-- <v-btn value="advertise" @click="openAdvertise">
           <span>Advertise</span>
           <v-icon>$vuetify.icons.advertise</v-icon>
-        </v-btn>
+        </v-btn> -->
 
         <v-btn value="catalogue" @click="openSite">
           <span>View site</span>
@@ -687,11 +708,71 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <!-- Edit Account Details dialog -->
+    <!--  Go back warniing dialog -->
+    <v-dialog v-model="warningDialog" max-width="400">
+      <v-card class="rounded-card">
+        <v-card-title class="subtitle-1"
+          >You have not saved your progress. Are you sure you want to leave?
+        </v-card-title>
+        <!-- Deleting a subcategory will delete all the products
+          within it. -->
+        <v-card-text>
+          <div>
+            <v-btn
+              :loading="loading2"
+              style="margin-top:10px;font-weight:700;text-transform:none;"
+              color="primary"
+              rounded
+              outlined
+              depressed
+              block
+              @click="closeWarningDialog"
+              >Yes</v-btn
+            >
+            <v-btn
+              color="primary"
+              block
+              rounded
+              style="margin-top:20px;text-transform:capitalize;font-weight:700;"
+              @click="warningDialog = !warningDialog"
+            >
+              Cancel</v-btn
+            >
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <!-- Edit Shop Details dialog -->
     <v-dialog v-model="editAccountDialog" max-width="600">
       <v-card class="rounded-card">
-        <v-card-title class="subtitle-1">Edit Account Details </v-card-title>
+        <v-card-title class="subtitle-1">Edit Shop Details </v-card-title>
         <v-card-text>
+          <div style="margin-top:20px;display: inline-grid;">
+            <div>Tap the button below to upload your logo</div>
+            <v-btn
+              style="margin-top:1px;font-weight:700;text-transform:none;"
+              color="primary"
+              rounded
+              depressed
+              @click="logoUpload"
+            >
+              <v-icon left dark>mdi-image</v-icon>
+              Upload your Logo</v-btn
+            >
+            <div style="margin-top:18px;">
+              Tap the button below to upload your banner
+            </div>
+            <v-btn
+              style="margin-bottom:20px;font-weight:700;text-transform:none;"
+              color="primary"
+              rounded
+              depressed
+              @click="bannerUpload"
+            >
+              <v-icon left dark>mdi-image</v-icon>
+              Upload your Banner</v-btn
+            >
+          </div>
           <v-text-field
             v-model="phonenumber"
             label="Whatsapp number"
@@ -742,14 +823,14 @@
           >
             Account details updated successfully
           </v-alert>
-          <div>
+          <div style="display: inline-grid;text-align:center;width:100%;">
             <v-btn
               :loading="loading2"
-              style="margin-top:10px;font-weight:700;text-transform:none;"
+              style="width: 80%;
+    margin: auto;margin-top:10px;font-weight:700;text-transform:none;"
               color="primary"
               rounded
               depressed
-              block
               large
               @click="updateAccount"
               >Save</v-btn
@@ -760,7 +841,6 @@
               rounded
               text
               depressed
-              block
               large
               @click="editAccountDialog = !editAccountDialog"
               >Cancel</v-btn
@@ -829,14 +909,6 @@
           <div id="crop-title" class="subtitle-1">
             Drag to position your logo
           </div>
-          <!-- <vue-cropper
-            ref="cropper"
-            :zoomable="false"
-            :min-crop-box-width="200"
-            :min-crop-box-height="100"
-            :crop-box-resizable="false"
-            :src="img"
-          ></vue-cropper> -->
           <clipper-fixed
             ref="clipper"
             :src="imgSrc"
@@ -1092,12 +1164,7 @@
           <div id="crop-title" class="subtitle-1">
             Drag to position your logo
           </div>
-          <clipper-basic
-            ref="clipper"
-            style="height: 400px;"
-            :src="logoSrc"
-            :wrap-ratio="1"
-          />
+          <clipper-basic ref="clipper" :src="logoSrc" :wrap-ratio="1" />
           <div
             style="color:black;margin-left:8px;text-align: center;"
             class="subtitle-2"
@@ -1139,6 +1206,7 @@
           >
             Done
           </v-btn>
+          <div class="flex-grow-1"></div>
         </v-card-actions>
         <img
           style="width:100%;opacity:0;"
@@ -1276,6 +1344,7 @@ export default {
   },
   data() {
     return {
+      warningDialog: false,
       deleteid: '',
       addproduct: true,
       website: '',
@@ -1311,9 +1380,9 @@ export default {
       draweritems: [
         { title: 'My Products', icon: 'mdi-view-dashboard' },
         // { title: 'Manage Ads', icon: 'online.svg' },
-        { title: 'Edit Account Details', icon: 'mdi-account-circle-outline' },
-        { icon: 'mdi-image-outline', title: 'Upload/Change your Logo' },
-        { icon: 'mdi-image-outline', title: 'Upload/Change your Banner' },
+        { title: 'Edit Shop Details', icon: 'mdi-account-circle-outline' },
+        // { icon: 'mdi-image-outline', title: 'Upload/Change your Logo' },
+        // { icon: 'mdi-image-outline', title: 'Upload/Change your Banner' },
         { icon: 'mdi-eye-outline', title: 'Preview Shop' },
         { title: 'Log out', icon: 'mdi-logout' }
       ],
@@ -1410,7 +1479,8 @@ export default {
       disabledplan3: false,
       paymentsuccessful: false,
       paymentplan: '',
-      showArrow: false
+      showArrow: false,
+      addbutton: false
     }
   },
   computed: {
@@ -1445,7 +1515,14 @@ export default {
       if (this.$vuetify.breakpoint.mdAndUp && this.$store.state.authenticated) {
         this.leftDrawer = true
       }
-      // ad buying
+      if (to.path === '/search') {
+        this.addbutton = true
+        this.addproduct = false
+      }
+      if (from.path === '/search') {
+        this.addproduct = true
+        this.addbutton = false
+      }
       if (to.path === '/paymentscreen') {
         this.fabadd = false
         this.bottombar = false
@@ -1463,7 +1540,17 @@ export default {
         this.showArrow = true
         this.addproduct = false
       }
+      if (to.path === '/editproduct') {
+        this.fabadd = false
+        this.bottombar = false
+        this.showArrow = true
+        this.addproduct = false
+      }
       if (from.path === '/createproduct') {
+        this.showArrow = false
+        this.addproduct = true
+      }
+      if (from.path === '/editproduct') {
         this.showArrow = false
         this.addproduct = true
       }
@@ -1704,6 +1791,25 @@ export default {
     })
   },
   methods: {
+    showWarnDialog() {
+      this.warningDialog = true
+    },
+    closeWarningDialog() {
+      this.warningDialog = false
+      this.$router.push('/')
+    },
+    logoUpload() {
+      this.editAccountDialog = false
+      if (this.$vuetify.breakpoint.mdAndUp) {
+        this.$refs.opengallerydesktop.click()
+      } else {
+        this.$refs.opengallery.click()
+      }
+    },
+    bannerUpload() {
+      this.editAccountDialog = false
+      this.$router.push('/selectbannerdesktop')
+    },
     createproduct() {
       this.dialogAdvertise = false
       this.dialogSite = false
@@ -2210,14 +2316,13 @@ export default {
       }
     },
     openSite() {
-      if (this.$store.state.products.length < 1) {
-        this.dialogSite = true
+      if (this.$store.state.user.website.startsWith('https://')) {
+        window.open(`${this.$store.state.user.website}`, '_blank')
       } else {
-        this.overlay = true
-        this.$router.push('/catalogue')
-        setTimeout(() => {
-          this.overlay = false
-        }, 1100)
+        window.open(
+          `https://shop.e-merse.com/?${this.$store.state.user.shopid}`,
+          '_blank'
+        )
       }
     },
     openAdvertise() {
@@ -2796,7 +2901,7 @@ export default {
             this.$router.push('/checkads')
           }
           break
-        case 'Edit Account Details':
+        case 'Edit Shop Details':
           this.editAccountDialog = true
           break
         case 'Upload/Change your Logo':
@@ -2926,7 +3031,7 @@ export default {
   margin-left: 22%;
 }
 #version {
-  padding-top: 15%;
+  padding-top: 10%;
 }
 .clipper-fixed .cover .area {
   height: 33% !important;

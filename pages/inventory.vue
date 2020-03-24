@@ -27,7 +27,7 @@
     >
       <div v-if="noproducts === 1">
         <div class="display-1 font-weight-bold">
-          Categories
+          My Products
         </div>
         <category-card
           v-for="(category, index) in categories"

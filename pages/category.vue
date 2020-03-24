@@ -99,6 +99,9 @@ export default {
         this.subcategories = sub[0].subcategories
       } else {
         this.subcategories = []
+        this.$router.push(
+          `/subcategory?category=${this.items[1].text}&subcategory=All%20Products`
+        )
       }
     } else {
       this.desktopheight = 'none'

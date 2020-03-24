@@ -1109,6 +1109,18 @@ export default {
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
   }
+  .scrolling-wrapper::-webkit-scrollbar {
+    width: 10px;
+  }
+  .scrolling-wrapper::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background: #fff;
+  }
+  .scrolling-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+  }
   .add-image {
     margin-top: 10px;
     color: black;
