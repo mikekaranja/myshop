@@ -843,11 +843,12 @@ export default {
       }, 600)
     },
     validate() {
+      console.log(this.discountprice, this.price)
       if (this.$refs.form.validate()) {
         if (this.productimages[1].length === 0) {
           this.snackbartext = 'Please add the first image to continue'
           this.snackbar = true
-        } else if (this.discountprice >= this.price) {
+        } else if (parseInt(this.discountprice) >= parseInt(this.price)) {
           this.snackbartext = 'Discount price should be lower than the price'
           this.snackbar = true
         } else {
@@ -888,8 +889,8 @@ export default {
         discountprice: this.discountprice ? this.discountprice : '',
         description: this.description,
         imageUrls: imageUrls,
-        category: this.category,
-        subcategory: this.subcategory,
+        category: this.category.length > 0 ? this.category : [''],
+        subcategory: this.subcategory.length > 0 ? this.subcategory : [''],
         date_updated: new Date().toString()
       }
 

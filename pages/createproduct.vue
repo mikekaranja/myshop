@@ -712,7 +712,7 @@ export default {
         window.scroll(0, 0)
       }
     },
-    saveProduct() {
+    saveProduct2() {
       // ga analytics
       this.$ga.event({
         eventCategory: 'Add Product button',
@@ -736,8 +736,8 @@ export default {
         currency: 'Ksh',
         description: this.description,
         imageUrls: this.imageUrls,
-        category: this.category,
-        subcategory: this.subcategory,
+        category: this.category.length > 0 ? this.category : [''],
+        subcategory: this.subcategory.length > 0 ? this.subcategory : [''],
         date_created: new Date().toString()
       }
       const newPostKey = db
