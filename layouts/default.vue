@@ -1319,7 +1319,7 @@ export default {
       ],
       sheet: false,
       tiles: [
-        { icon: 'online.svg', title: 'Create an ad' },
+        // { icon: 'online.svg', title: 'Create an ad' },
         { icon: 'mdi-tag-outline', title: 'Add Product' },
         { icon: 'mdi-folder-outline', title: 'Add Category' },
         { icon: 'mdi-folder-multiple-outline', title: 'Add Subcategory' }
