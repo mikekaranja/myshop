@@ -712,7 +712,7 @@ export default {
         window.scroll(0, 0)
       }
     },
-    saveProduct2() {
+    saveProduct() {
       // ga analytics
       this.$ga.event({
         eventCategory: 'Add Product button',
