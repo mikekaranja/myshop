@@ -42,6 +42,7 @@
                   class="product-image"
                   :src="productimages[n]"
                   alt=""
+                  @click="reopenImage(n)"
                 />
                 <v-btn text icon color="black" @click.native="addImage(n)">
                   <v-icon>autorenew</v-icon>
@@ -290,6 +291,7 @@
                 v-model="myCroppa"
                 :width="croppaWidthHeight"
                 :height="croppaWidthHeight"
+                :initial-image="initialimg"
                 auto-sizing
                 :accept="'image/*'"
                 placeholder="Choose an image (> 500 x 500)"
@@ -427,7 +429,9 @@ export default {
       focus: false,
       windowHeight: 0,
       deleteProductDialog: false,
-      imageuploaddone: 'block'
+      imageuploaddone: 'block',
+      initialimg: '',
+      initialimages: ['', '', '', '', '', '', '', '']
     }
   },
   computed: {
@@ -485,20 +489,6 @@ export default {
           this.discountpercent = `${percent}%`
         }
       }
-      // // set comma to price
-      // if (
-      //   valy.length === 4 ||
-      //   valy.length === 5 ||
-      //   valy.length === 6 ||
-      //   valy.length === 7 ||
-      //   valy.length === 8 ||
-      //   valy.length === 9 ||
-      //   valy.length === 10 ||
-      //   valy.length === 11 ||
-      //   valy.length === 12
-      // ) {
-      //   this.price = valy.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      // }
     }
   },
   mounted() {
@@ -511,6 +501,22 @@ export default {
     this.croppaWidthHeight = width < 600 ? width * 0.6 : width * 0.35
   },
   methods: {
+    reopenImage(num) {
+      const arrImage = this.initialimages[num]
+      this.initialimg = arrImage
+      this.myCroppa.refresh()
+      setTimeout(() => {
+        this.uploaddialog = true
+      }, 200)
+    },
+    addImage(n) {
+      this.initialimg = ''
+      this.imageselected = n
+      this.uploaddialog = true
+      setTimeout(() => {
+        this.$refs.croppa.chooseFile()
+      }, 600)
+    },
     handleNewImage() {
       if (
         this.myCroppa.naturalWidth < 500 &&
@@ -523,6 +529,31 @@ export default {
       } else {
         this.alert = false
         this.uploadbtndisable = false
+        this.setImageSrc(this.myCroppa.img.src)
+      }
+    },
+    setImageSrc(src) {
+      switch (this.imageselected) {
+        case 1:
+          this.initialimages.splice(1, 1, src)
+          break
+        case 2:
+          this.initialimages.splice(2, 1, src)
+          break
+        case 3:
+          this.initialimages.splice(3, 1, src)
+          break
+        case 4:
+          this.initialimages.splice(4, 1, src)
+          break
+        case 5:
+          this.initialimages.splice(5, 1, src)
+          break
+        case 6:
+          this.initialimages.splice(6, 1, src)
+          break
+        default:
+          break
       }
     },
     uploadImage() {
@@ -678,13 +709,6 @@ export default {
         resolve()
       })
     },
-    addImage(n) {
-      this.imageselected = n
-      this.uploaddialog = true
-      setTimeout(() => {
-        this.$refs.croppa.chooseFile()
-      }, 600)
-    },
     validate() {
       if (this.$refs.form.validate()) {
         if (!this.$refs.image1.src) {
@@ -793,6 +817,7 @@ export default {
   margin-top: 25%;
 }
 .product-image {
+  cursor: pointer;
   display: block;
   border-radius: 4px;
   object-fit: cover;

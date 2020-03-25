@@ -57,9 +57,8 @@
 
       <template v-slot:append>
         <div class="logo-bottom">
-          <v-avatar tile>
-            <!-- <img src="https://myshop.e-merse.com/icon.png" alt="icon" /> -->
-            <v-icon large>mdi-code-array</v-icon>
+          <v-avatar :size="81">
+            <img src="https://myshop.e-merse.com/icon.png" alt="icon" />
           </v-avatar>
           <div id="version" class="subtitle-2 font-weight-light">v1.1.0</div>
         </div>
@@ -756,7 +755,7 @@
               depressed
               @click="logoUpload"
             >
-              <v-icon left dark>mdi-image</v-icon>
+              <v-icon left dark>mdi-image-plus</v-icon>
               Upload your Logo</v-btn
             >
             <div style="margin-top:18px;">
@@ -769,7 +768,7 @@
               depressed
               @click="bannerUpload"
             >
-              <v-icon left dark>mdi-image</v-icon>
+              <v-icon left dark>mdi-image-size-select-large</v-icon>
               Upload your Banner</v-btn
             >
           </div>
@@ -789,11 +788,12 @@
             label="Shop name"
             prepend-icon="create"
           ></v-text-field>
-          <v-text-field
+          <!-- <v-text-field
             v-model="website"
+            readonly
             label="Website"
             prepend-icon="create"
-          ></v-text-field>
+          ></v-text-field> -->
           <v-text-field
             v-model="shoplocation"
             label="Shop location"
@@ -1546,11 +1546,31 @@ export default {
         this.showArrow = true
         this.addproduct = false
       }
+      if (to.path === '/productupdated') {
+        this.fabadd = false
+        this.bottombar = false
+        this.showArrow = true
+        this.addproduct = false
+      }
+      if (to.path === '/productuploaded') {
+        this.fabadd = false
+        this.bottombar = false
+        this.showArrow = true
+        this.addproduct = false
+      }
       if (from.path === '/createproduct') {
         this.showArrow = false
         this.addproduct = true
       }
       if (from.path === '/editproduct') {
+        this.showArrow = false
+        this.addproduct = true
+      }
+      if (from.path === '/productupdated') {
+        this.showArrow = false
+        this.addproduct = true
+      }
+      if (from.path === '/productuploaded') {
         this.showArrow = false
         this.addproduct = true
       }
@@ -1796,7 +1816,7 @@ export default {
     },
     closeWarningDialog() {
       this.warningDialog = false
-      this.$router.push('/')
+      this.$router.push('/inventory')
     },
     logoUpload() {
       this.editAccountDialog = false
@@ -2915,7 +2935,7 @@ export default {
             window.open(`${this.$store.state.user.website}`, '_blank')
           } else {
             window.open(
-              `https://shop.e-merse.com/${this.$store.state.user.shopid}`,
+              `https://shop.e-merse.com/?${this.$store.state.user.shopid}`,
               '_blank'
             )
           }
@@ -3038,7 +3058,7 @@ export default {
   margin-left: 22%;
 }
 #version {
-  padding-top: 10%;
+  padding-top: 15%;
 }
 .clipper-fixed .cover .area {
   height: 33% !important;

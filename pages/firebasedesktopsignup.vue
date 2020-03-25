@@ -74,6 +74,21 @@
                 />
               </a>
               <firebase-ui v-show="verify"></firebase-ui>
+              <div
+                v-if="signin"
+                class="caption font-weight-bold"
+                style="color:gray; margin-top: 20px;"
+              >
+                If you already signed in with google and used that email to sign
+                <br />
+                in with the email option simply go back by
+                <span class="free-trial" @click="changeTitle('signup')"
+                  ><a
+                    href="https://www.accountchooser.com/redirect.html#myshop.e-merse.com"
+                    >clicking here</a
+                  ></span
+                >
+              </div>
             </div>
           </v-col>
           <v-col class="second-column" cols="7">

@@ -13,20 +13,7 @@
     <sweet-alert style="margin-top:80px;" class="sweet-alert"></sweet-alert>
     <div class="headline">Product Uploaded Successfully</div>
     <div style="display: inline-grid;">
-      <v-btn
-        v-show="$vuetify.breakpoint.mdAndUp"
-        color="primary"
-        rounded
-        class="congrats-btn"
-        @click="openCatalogue"
-        >Preview Shop</v-btn
-      >
-      <v-btn
-        v-show="$vuetify.breakpoint.smAndDown"
-        color="primary"
-        rounded
-        class="congrats-btn"
-        to="/catalogue"
+      <v-btn color="primary" rounded class="congrats-btn" @click="openCatalogue"
         >Preview Shop</v-btn
       >
       <v-btn
@@ -48,11 +35,15 @@ export default {
     SweetAlert
   },
   methods: {
-    openCatalogue() {
-      window.open(
-        `https://shop.e-merse.com/?${this.$store.state.user.shopid}`,
-        '_blank'
-      )
+    openSite() {
+      if (this.$store.state.user.website.startsWith('https://')) {
+        window.open(`${this.$store.state.user.website}`, '_blank')
+      } else {
+        window.open(
+          `https://shop.e-merse.com/?${this.$store.state.user.shopid}`,
+          '_blank'
+        )
+      }
     }
   }
 }

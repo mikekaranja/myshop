@@ -43,6 +43,7 @@
                   class="product-image"
                   :src="productimages[n]"
                   alt=""
+                  @click="reopenImage(n)"
                 />
                 <v-btn text icon color="black" @click.native="addImage(n)">
                   <v-icon>autorenew</v-icon>
@@ -349,6 +350,7 @@
               v-model="myCroppa"
               :width="croppaWidthHeight"
               :height="croppaWidthHeight"
+              :initial-image="initialimg"
               auto-sizing
               :accept="'image/*'"
               placeholder="Choose an image (> 500 x 500)"
@@ -485,7 +487,9 @@ export default {
       windowHeight: 0,
       deleteDialog: false,
       firsttime: false,
-      position: 0
+      position: 0,
+      initialimg: '',
+      initialimages: ['', '', '', '', '', '', '', '']
     }
   },
   computed: {
@@ -603,6 +607,22 @@ export default {
     }
   },
   methods: {
+    reopenImage(num) {
+      const arrImage = this.initialimages[num]
+      this.initialimg = arrImage
+      this.myCroppa.refresh()
+      setTimeout(() => {
+        this.uploaddialog = true
+      }, 200)
+    },
+    addImage(n) {
+      this.initialimg = ''
+      this.imageselected = n
+      this.uploaddialog = true
+      setTimeout(() => {
+        this.$refs.croppa.chooseFile()
+      }, 600)
+    },
     handleNewImage() {
       if (
         this.myCroppa.naturalWidth < 500 &&
@@ -615,6 +635,31 @@ export default {
       } else {
         this.alert = false
         this.uploadbtndisable = false
+        this.setImageSrc(this.myCroppa.img.src)
+      }
+    },
+    setImageSrc(src) {
+      switch (this.imageselected) {
+        case 1:
+          this.initialimages.splice(1, 1, src)
+          break
+        case 2:
+          this.initialimages.splice(2, 1, src)
+          break
+        case 3:
+          this.initialimages.splice(3, 1, src)
+          break
+        case 4:
+          this.initialimages.splice(4, 1, src)
+          break
+        case 5:
+          this.initialimages.splice(5, 1, src)
+          break
+        case 6:
+          this.initialimages.splice(6, 1, src)
+          break
+        default:
+          break
       }
     },
     uploadImage() {
@@ -835,13 +880,6 @@ export default {
           break
       }
     },
-    addImage(n) {
-      this.imageselected = n
-      this.uploaddialog = true
-      setTimeout(() => {
-        this.$refs.croppa.chooseFile()
-      }, 600)
-    },
     validate() {
       console.log(this.discountprice, this.price)
       if (this.$refs.form.validate()) {
@@ -967,7 +1005,7 @@ export default {
 }
 .image-placeholder {
   cursor: pointer;
-  margin: 5px;
+  margin: auto;
   height: 200px;
   width: 200px;
   text-align: center;
@@ -981,11 +1019,12 @@ export default {
   margin-top: 25%;
 }
 .product-image {
+  cursor: pointer;
   display: block;
   border-radius: 4px;
   object-fit: cover;
   width: 200px;
-  margin: 5px;
+  margin: auto;
   height: 200px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
