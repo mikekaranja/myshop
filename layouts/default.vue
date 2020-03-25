@@ -2911,7 +2911,14 @@ export default {
           this.$router.push('/selectbanner')
           break
         case 'Preview Shop':
-          window.open(`${this.$store.state.user.website}`, '_blank')
+          if (this.$store.state.user.website.startsWith('https')) {
+            window.open(`${this.$store.state.user.website}`, '_blank')
+          } else {
+            window.open(
+              `https://shop.e-merse.com/${this.$store.state.user.shopid}`,
+              '_blank'
+            )
+          }
           break
         case 'Log out':
           auth.signOut().then(
