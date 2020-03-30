@@ -2,12 +2,7 @@
   <div id="scroll-item" class="product-item">
     <div class="progressive">
       <nuxt-link :to="{ path: '/editproduct?item=' + item.title }" replace>
-        <img
-          id="img"
-          class="preview lazy"
-          src="/blur.jpg"
-          :data-src="item.imageUrls[0]"
-        />
+        <v-lazy-image id="img" :src="item.imageUrls[0]" />
       </nuxt-link>
     </div>
     <div class="product-content">
@@ -88,6 +83,13 @@ export default {
 </script>
 
 <style scoped>
+.v-lazy-image {
+  filter: blur(10px);
+  transition: filter 0.7s;
+}
+.v-lazy-image-loaded {
+  filter: blur(0);
+}
 .preloader1 {
   text-align: center;
   padding-top: 39%;

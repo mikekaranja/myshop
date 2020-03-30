@@ -20,11 +20,29 @@
         <img id="empty-img" src="/emptystate.svg" alt="empty" />
         <div id="nada-text" class="body-2">No products yet</div>
       </div>
+      <div v-if="noproducts === 0" class="gif-text-center">
+        <v-progress-circular
+          class="spinner"
+          :size="70"
+          :width="7"
+          color="primary"
+          indeterminate
+        ></v-progress-circular>
+      </div>
     </div>
     <div
       v-show="$vuetify.breakpoint.smAndDown"
       style="width: 100%;min-height: 50vh;"
     >
+      <div v-if="noproducts === 0" class="gif-text-center">
+        <v-progress-circular
+          class="spinner"
+          :size="70"
+          :width="7"
+          color="primary"
+          indeterminate
+        ></v-progress-circular>
+      </div>
       <div v-if="noproducts === 1">
         <div class="display-1 font-weight-bold">
           My Products
@@ -85,8 +103,7 @@ export default {
       no: [''],
       close: true,
       snackbar: true,
-      text:
-        'Advertise on google! Get seen by thousands of customers on the internet.'
+      text: ''
     }
   },
   computed: {
@@ -121,6 +138,12 @@ export default {
     }, 1000)
   },
   created() {
+    this.$bus.$on('reloadCategories', value => {
+      this.getData()
+    })
+    this.$bus.$on('reloadShopdetails', value => {
+      this.getUserData()
+    })
     this.$bus.$on('showcaption', value => {
       this.showaddhere = true
     })
@@ -148,7 +171,7 @@ export default {
       // this.close = false
       this.$store.commit('closeAdBanner', false)
     },
-    async getData() {
+    async getData(reload) {
       const shopid = this.$store.state.user.shopid
       const data = await this.$axios.$get(
         `https://e-merse.firebaseio.com/pwa/products.json?orderBy="shopid"&equalTo="${shopid}"`
@@ -164,7 +187,7 @@ export default {
       // filter by products
       const items = orderbydatearray.filter(el => el.title)
       this.$store.commit('addProducts', items)
-      console.log('no of items', items.length)
+      // reload to show categories
       return this.$router.push('/inventory')
     },
     async getUserData() {
@@ -180,7 +203,18 @@ export default {
   }
 }
 </script>
+
 <style scoped>
+.gif-text-center {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 75vh;
+}
 #add-here-text {
   color: white;
   margin-top: -37%;

@@ -356,11 +356,12 @@
 
         <v-card-text>
           <v-text-field
+            ref="addcategory"
             v-model="category"
             label="Category"
             prepend-icon="create"
+            @keyup.enter="addNewCategory"
           ></v-text-field>
-
           <v-alert
             style="font-size: smaller;text-align: center;"
             :value="alert"
@@ -381,7 +382,6 @@
           >
             Category added successfully
           </v-alert>
-
           <v-btn
             :loading="loading2"
             style="margin-top:10px;font-weight:700;text-transform:capitalize;"
@@ -413,9 +413,11 @@
 
         <v-card-text>
           <v-text-field
+            ref="editcategory"
             v-model="category"
             label="category"
             prepend-icon="create"
+            @keyup.enter="editCategoryName"
           ></v-text-field>
 
           <v-alert
@@ -438,7 +440,6 @@
           >
             Category updated successfully
           </v-alert>
-
           <v-btn
             :loading="loading2"
             style="margin-top:12px;text-transform:capitalize;"
@@ -475,11 +476,12 @@
             label="Category"
           ></v-select>
           <v-text-field
+            ref="addsubcategory"
             v-model="subcategory"
             label="Subcategory"
             prepend-icon="create"
+            @keyup.enter="addSubcategory"
           ></v-text-field>
-
           <v-alert
             style="font-size: smaller;text-align: center;"
             :value="alert1"
@@ -500,7 +502,6 @@
           >
             Subcategory added successfully
           </v-alert>
-
           <v-btn
             style="margin-top:10px;font-weight:700;text-transform:capitalize;"
             :loading="loading2"
@@ -532,9 +533,11 @@
 
         <v-card-text>
           <v-text-field
+            ref="editsubcategory"
             v-model="subcategory"
             label="Subcategory"
             prepend-icon="create"
+            @keyup.enter="editSubcategoryName"
           ></v-text-field>
 
           <v-alert
@@ -590,14 +593,6 @@
         <!-- Deleting a category will delete all the products within
           it. -->
         <v-card-text>
-          <v-alert
-            :value="alertsuccess4"
-            transition="scale-transition"
-            style="font-size: small;"
-            type="success"
-          >
-            Category deleted successfully
-          </v-alert>
           <div>
             <v-btn
               :loading="loading2"
@@ -624,7 +619,7 @@
       </v-card>
     </v-dialog>
     <!-- Delete subcategory dialog -->
-    <v-dialog v-model="DeleteSubcategoryDialog" max-width="400">
+    <v-dialog v-model="DeleteSubcategoryDialog" max-width="420">
       <v-card class="rounded-card">
         <v-card-title class="subtitle-1"
           >Are you sure you want to delete this subcategory?
@@ -1523,6 +1518,23 @@ export default {
         this.addproduct = true
         this.addbutton = false
       }
+      if (
+        to.path === '/productuploaded' ||
+        to.path === '/productupdated' ||
+        to.path === '/productdeleted'
+      ) {
+        this.fabadd = false
+        this.bottombar = false
+        this.topbar = false
+        this.addproduct = false
+      }
+      if (
+        from.path === '/productuploaded' ||
+        from.path === '/productupdated' ||
+        from.path === '/productdeleted'
+      ) {
+        this.addproduct = true
+      }
       if (to.path === '/paymentscreen') {
         this.fabadd = false
         this.bottombar = false
@@ -1546,31 +1558,11 @@ export default {
         this.showArrow = true
         this.addproduct = false
       }
-      if (to.path === '/productupdated') {
-        this.fabadd = false
-        this.bottombar = false
-        this.showArrow = true
-        this.addproduct = false
-      }
-      if (to.path === '/productuploaded') {
-        this.fabadd = false
-        this.bottombar = false
-        this.showArrow = true
-        this.addproduct = false
-      }
       if (from.path === '/createproduct') {
         this.showArrow = false
         this.addproduct = true
       }
       if (from.path === '/editproduct') {
-        this.showArrow = false
-        this.addproduct = true
-      }
-      if (from.path === '/productupdated') {
-        this.showArrow = false
-        this.addproduct = true
-      }
-      if (from.path === '/productuploaded') {
         this.showArrow = false
         this.addproduct = true
       }
@@ -1785,11 +1777,17 @@ export default {
       this.editCategoryDialog = true
       this.category = value
       this.oldcategoryname = value
+      setTimeout(() => {
+        this.$refs.editcategory.focus()
+      }, 400)
     })
     this.$bus.$on('editSubcategoryDialog', value => {
       this.editSubcategoryDialog = true
       this.subcategory = value
       this.oldsubcategoryname = value
+      setTimeout(() => {
+        this.$refs.editsubcategory.focus()
+      }, 400)
     })
     this.$bus.$on('shareCategory', value => {
       this.sharecategoryname = value
@@ -1805,7 +1803,6 @@ export default {
       this.shareProductBottomSheet = true
     })
     this.$bus.$on('deleteProduct', value => {
-      console.log('hi')
       this.deleteid = value.id
       this.deleteProductDialog = true
     })
@@ -2305,15 +2302,11 @@ export default {
           shopid: this.$store.state.user.shopid
         })
         .then(snap => {
-          this.alertsuccess8 = true
           setTimeout(() => {
-            window.location.href = 'https://myshop.e-merse.com/inventory'
-            // this.alertsuccess8 = false
-            // this.myLogo = {}
-            // this.cropLogoDialog = false
-            // this.img = ''
-            // this.$refs.cropper.reset()
-          }, 2500)
+            this.dialogLogo = false
+            this.snackbartext = 'Logo uploaded successfully'
+            this.snackbar = true
+          }, 1500)
         })
     },
     submitCustomDomain() {
@@ -2363,19 +2356,6 @@ export default {
         this.overlay = false
       }, 1200)
     },
-    updateAccount2() {
-      // ga analytics
-      this.$ga.event({
-        eventCategory: 'edit account button',
-        eventAction: 'Edited Account details',
-        eventLabel: this.shopname,
-        eventValue: 19
-      })
-      // this.loader2 = 'loading2'
-      const shopId = this.shopname.replace(/ /g, '-').toLowerCase()
-      console.log(shopId)
-      // this.updateDb(shopId, this.shopname)
-    },
     updateAccount() {
       const shopId = this.shopname.replace(/ /g, '-').toLowerCase()
       return db
@@ -2392,10 +2372,12 @@ export default {
           instagramlink: this.instagramlink ? this.instagramlink : ''
         })
         .then(snap => {
-          this.alertsuccess6 = true
+          this.$bus.$emit('reloadShopdetails')
           setTimeout(() => {
-            window.location.href = 'https://myshop.e-merse.com/inventory'
-          }, 2000)
+            this.editAccountDialog = false
+            this.snackbartext = 'Shop details updated successfully'
+            this.snackbar = true
+          }, 1500)
         })
     },
     updateBanner(newShopId, oldId) {
@@ -2427,42 +2409,6 @@ export default {
         logo: logo,
         shopid: newShopId
       })
-    },
-    updateAllProducts(shopId, shopName) {
-      // eslint-disable-next-line prefer-const
-      let productstobeupdated = []
-      this.$store.state.products.map(el => {
-        el.shopname = shopName
-        el.shopid = shopId
-        productstobeupdated.push(el)
-      })
-      this.$store.state.categories.map(el => {
-        el.shopid = shopId
-        el.shopname = shopName
-        productstobeupdated.push(el)
-      })
-      if (productstobeupdated.length > 0) {
-        productstobeupdated.map(this.updateProductsToDB7)
-      } else {
-        this.alertsuccess6 = true
-        setTimeout(() => {
-          window.location.href = 'https://myshop.e-merse.com/inventory'
-        }, 1800)
-      }
-    },
-    updateProductsToDB7(product) {
-      return db
-        .ref(`pwa/products/${product.id}`)
-        .update({
-          shopid: product.shopid,
-          shopname: product.shopname
-        })
-        .then(snap => {
-          this.alertsuccess6 = true
-          setTimeout(() => {
-            window.location.href = 'https://myshop.e-merse.com/inventory'
-          }, 1800)
-        })
     },
     addNewCategory() {
       const categoryName = this.category.trim().replace(
@@ -2513,10 +2459,12 @@ export default {
         .ref()
         .update(updates)
         .then(snap => {
-          this.alertsuccess = true
+          this.$bus.$emit('reloadCategories')
           setTimeout(() => {
-            window.location.href = 'https://myshop.e-merse.com/inventory'
-          }, 1800)
+            this.addCategoryDialog = false
+            this.snackbartext = 'Category added successfully'
+            this.snackbar = true
+          }, 1500)
         })
     },
     editCategoryName() {
@@ -2561,7 +2509,8 @@ export default {
         })
     },
     editAllProductsCategory(newcategoryname) {
-      const productstobechanged = []
+      // eslint-disable-next-line prefer-const
+      let productstobechanged = []
       this.$store.state.products.map(el => {
         if (el.category.includes(this.oldcategoryname)) {
           const index = el.category.findIndex(
@@ -2574,10 +2523,12 @@ export default {
       if (productstobechanged.length > 0) {
         productstobechanged.map(this.updateProductsToDB)
       } else {
-        this.alertsuccess2 = true
+        this.$bus.$emit('reloadCategories')
         setTimeout(() => {
-          window.location.href = 'https://myshop.e-merse.com/inventory'
-        }, 1800)
+          this.editCategoryDialog = false
+          this.snackbartext = 'Category edited successfully'
+          this.snackbar = true
+        }, 1500)
       }
     },
     updateProductsToDB(product) {
@@ -2587,10 +2538,12 @@ export default {
           category: product.category
         })
         .then(snap => {
-          this.alertsuccess2 = true
+          this.$bus.$emit('reloadCategories')
           setTimeout(() => {
-            window.location.href = 'https://myshop.e-merse.com/inventory'
-          }, 1800)
+            this.editCategoryDialog = false
+            this.snackbartext = 'Category edited successfully'
+            this.snackbar = true
+          }, 1500)
         })
     },
     addSubcategory() {
@@ -2653,12 +2606,12 @@ export default {
         .ref(`pwa/products/${categoryid}`)
         .update({ subcategories: subcategories })
         .then(snap => {
-          this.alert1 = false
-          this.alertsuccess1 = true
-          // refresh inventory page
+          this.$bus.$emit('reloadCategories')
           setTimeout(() => {
-            window.location.href = 'https://myshop.e-merse.com/inventory'
-          }, 1800)
+            this.addSubcategoryDialog = false
+            this.snackbartext = 'Subcategory added successfully'
+            this.snackbar = true
+          }, 1500)
         })
     },
     editSubcategoryName() {
@@ -2713,23 +2666,28 @@ export default {
         })
     },
     editAllProductsSubcategory(newsubcategoryname) {
-      const productstobechanged = []
+      // eslint-disable-next-line prefer-const
+      let productstobechanged = []
       this.$store.state.products.map(el => {
-        if (el.subcategory.includes(this.oldsubcategoryname)) {
-          const index = el.subcategory.findIndex(
-            name => name === this.oldsubcategoryname
-          )
-          el.subcategory.splice(index, 1, newsubcategoryname)
-          productstobechanged.push(el)
+        if (el.subcategory) {
+          if (el.subcategory.includes(this.oldsubcategoryname)) {
+            const index = el.subcategory.findIndex(
+              name => name === this.oldsubcategoryname
+            )
+            el.subcategory.splice(index, 1, newsubcategoryname)
+            productstobechanged.push(el)
+          }
         }
       })
       if (productstobechanged.length > 0) {
         productstobechanged.map(this.updateProductsToDB2)
       } else {
-        this.alertsuccess3 = true
+        // this.$bus.$emit('reloadCategories')
         setTimeout(() => {
-          window.location.href = 'https://myshop.e-merse.com/inventory'
-        }, 1800)
+          this.editSubcategoryDialog = false
+          this.snackbartext = 'Subcategory edited successfully'
+          this.snackbar = true
+        }, 1500)
       }
     },
     updateProductsToDB2(product) {
@@ -2739,10 +2697,12 @@ export default {
           subcategory: product.subcategory
         })
         .then(snap => {
-          this.alertsuccess3 = true
+          // this.$bus.$emit('reloadCategories')
           setTimeout(() => {
-            window.location.href = 'https://myshop.e-merse.com/inventory'
-          }, 1800)
+            this.editSubcategoryDialog = false
+            this.snackbartext = 'Subcategory edited successfully'
+            this.snackbar = true
+          }, 1500)
         })
     },
     openDeleteCategoryDialog() {
@@ -2780,10 +2740,12 @@ export default {
       if (productstobedeleted.length > 0) {
         productstobedeleted.map(this.updateProductsToDB3)
       } else {
-        this.alertsuccess4 = true
+        this.$bus.$emit('reloadCategories')
         setTimeout(() => {
-          window.location.href = 'https://myshop.e-merse.com/inventory'
-        }, 1800)
+          this.DeleteCategoryDialog = false
+          this.snackbartext = 'Category deleted successfully'
+          this.snackbar = true
+        }, 1500)
       }
     },
     updateProductsToDB3(product) {
@@ -2793,15 +2755,19 @@ export default {
           category: product.category
         })
         .then(snap => {
-          this.alertsuccess4 = true
+          this.$bus.$emit('reloadCategories')
           setTimeout(() => {
-            window.location.href = 'https://myshop.e-merse.com/inventory'
-          }, 1800)
+            this.DeleteCategoryDialog = false
+            this.snackbartext = 'Category deleted successfully'
+            this.snackbar = true
+          }, 1500)
         })
     },
     openDeleteSubcategoryDialog() {
       this.editSubcategoryDialog = false
       this.DeleteSubcategoryDialog = true
+    },
+    deleteSubcategoryForSure() {
       const validsubcategories = this.$store.state.categories.filter(
         el => el.subcategories
       )
@@ -2817,8 +2783,6 @@ export default {
       )
       subcategories.splice(index, 1)
       this.subcategorydelete = subcategories
-    },
-    deleteSubcategoryForSure() {
       this.loader2 = 'loading2'
       return db
         .ref(`pwa/products/${this.categoryid}`)
@@ -2832,25 +2796,29 @@ export default {
     deleteAllProductsSubcategory() {
       const productstobedeleted = []
       this.$store.state.products.map(el => {
-        if (el.subcategory.includes(this.oldsubcategoryname)) {
-          if (Array.isArray(el.subcategory)) {
-            const index = el.subcategory.findIndex(
-              name => name === this.oldsubcategoryname
-            )
-            el.subcategory.splice(index, 1)
-            productstobedeleted.push(el)
-          } else {
-            productstobedeleted.push(el)
+        if (el.subcategory) {
+          if (el.subcategory.includes(this.oldsubcategoryname)) {
+            if (Array.isArray(el.subcategory)) {
+              const index = el.subcategory.findIndex(
+                name => name === this.oldsubcategoryname
+              )
+              el.subcategory.splice(index, 1)
+              productstobedeleted.push(el)
+            } else {
+              productstobedeleted.push(el)
+            }
           }
         }
       })
       if (productstobedeleted.length > 0) {
         productstobedeleted.map(this.updateProductsToDB4)
       } else {
-        this.alertsuccess5 = true
+        // this.$bus.$emit('reloadCategories')
         setTimeout(() => {
-          window.location.href = 'https://myshop.e-merse.com/inventory'
-        }, 1800)
+          this.DeleteSubcategoryDialog = false
+          this.snackbartext = 'Subcategory deleted successfully'
+          this.snackbar = true
+        }, 1500)
       }
     },
     updateProductsToDB4(product) {
@@ -2860,37 +2828,33 @@ export default {
           subcategory: product.subcategory
         })
         .then(snap => {
-          this.alertsuccess5 = true
+          // this.$bus.$emit('reloadCategories')
           setTimeout(() => {
-            window.location.href = 'https://myshop.e-merse.com/inventory'
-          }, 1800)
+            this.DeleteSubcategoryDialog = false
+            this.snackbartext = 'Subcategory deleted successfully'
+            this.snackbar = true
+          }, 1500)
         })
     },
     desktopAddOptionClicked(title) {
       switch (title) {
-        case 'Create an ad':
-          if (this.$store.state.products.length < 6) {
-            this.dialogAdvertise = true
-          } else {
-            this.leftDrawer = true
-            this.$router.push('/adbuying')
-          }
-          break
         case 'Add Product':
           this.$router.push('/createproduct')
           break
         case 'Add Category':
+          this.category = ''
           this.addCategoryDialog = true
+          setTimeout(() => {
+            this.$refs.addcategory.focus()
+          }, 400)
           break
         case 'Add Subcategory':
+          this.subcategory = ''
           this.addSubcategoryDialog = true
+          setTimeout(() => {
+            this.$refs.addsubcategory.focus()
+          }, 400)
           break
-        // case 'Upload/Change your Logo':
-        //   this.$refs.opengallerydesktop.click()
-        //   break
-        // case 'Upload/Change your Banner':
-        //   this.$router.push('/selectbannerdesktop')
-        //   break
         default:
           break
       }
@@ -2979,19 +2943,21 @@ export default {
           this.$router.push('/createproduct')
           break
         case 'Add Category':
+          this.category = ''
           this.addCategoryDialog = true
           this.$bus.$emit('hidecaption', 'sheetclose')
+          setTimeout(() => {
+            this.$refs.addcategory.focus()
+          }, 400)
           break
         case 'Add Subcategory':
+          this.subcategory = ''
           this.addSubcategoryDialog = true
           this.$bus.$emit('hidecaption', 'sheetclose')
+          setTimeout(() => {
+            this.$refs.addsubcategory.focus()
+          }, 400)
           break
-        // case 'Upload/Change your Logo':
-        //   this.$refs.opengallery.click()
-        //   break
-        // case 'Upload/Change your Banner':
-        //   this.$router.push('/selectbanner')
-        //   break
         default:
           break
       }
@@ -3015,6 +2981,11 @@ export default {
 </script>
 
 <style>
+.v-snack__content {
+  padding: 16px 16px !important;
+  display: block !important;
+  text-align: center !important;
+}
 .mdl-shadow--2dp {
   box-shadow: none;
 }

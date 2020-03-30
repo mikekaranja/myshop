@@ -13,12 +13,14 @@
     </v-btn>
     <sweet-alert style="margin-top:80px;" class="sweet-alert"></sweet-alert>
     <div class="headline">Product Updated Successfully</div>
-    <v-btn color="primary" rounded class="congrats-btn" to="/inventory"
-      >View your Inventory</v-btn
-    >
-    <v-btn color="primary" rounded class="congrats-btn" @click="OpenSite"
-      >Preview Shop</v-btn
-    >
+    <div style="display: inline-grid;">
+      <v-btn color="primary" rounded class="congrats-btn" to="/inventory"
+        >View your Inventory</v-btn
+      >
+      <v-btn color="primary" rounded class="congrats-btn" @click="OpenSite"
+        >Preview Shop</v-btn
+      >
+    </div>
   </div>
 </template>
 

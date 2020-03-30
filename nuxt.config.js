@@ -66,6 +66,7 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
+    '~plugins/vlazyimage.js',
     '~plugins/vue-clipper',
     '~plugins/vue-rx',
     { src: '~/plugins/hotjar', ssr: false },
