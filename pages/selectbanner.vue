@@ -262,7 +262,8 @@ export default {
           shopid: this.$store.state.user.shopid
         })
         .then(snap => {
-          this.alertsuccess9 = true
+          this.snackbartext = 'Banner uploaded successfully'
+          this.snackbar = true
           setTimeout(() => {
             this.$router.push('/inventory')
           }, 3000)
@@ -349,7 +350,7 @@ export default {
 }
 .banners-img {
   width: 100%;
-  height: 200px;
+  height: auto;
   object-fit: cover;
   border: red;
   border-style: solid;
@@ -363,7 +364,7 @@ export default {
   background: white;
   position: fixed;
   bottom: 0px;
-  width: 81%;
+  width: 100%;
   display: block;
   justify-content: center;
   z-index: 5;

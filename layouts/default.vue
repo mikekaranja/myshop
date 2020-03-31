@@ -1825,7 +1825,11 @@ export default {
     },
     bannerUpload() {
       this.editAccountDialog = false
-      this.$router.push('/selectbannerdesktop')
+      if (this.$vuetify.breakpoint.mdAndUp) {
+        this.$router.push('/selectbannerdesktop')
+      } else {
+        this.$router.push('/selectbanner')
+      }
     },
     createproduct() {
       this.dialogAdvertise = false
@@ -2304,6 +2308,7 @@ export default {
         .then(snap => {
           setTimeout(() => {
             this.dialogLogo = false
+            this.cropLogoDialog = false
             this.snackbartext = 'Logo uploaded successfully'
             this.snackbar = true
           }, 1500)

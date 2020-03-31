@@ -171,7 +171,7 @@ export default {
       // this.close = false
       this.$store.commit('closeAdBanner', false)
     },
-    async getData(reload) {
+    async getData() {
       const shopid = this.$store.state.user.shopid
       const data = await this.$axios.$get(
         `https://e-merse.firebaseio.com/pwa/products.json?orderBy="shopid"&equalTo="${shopid}"`
@@ -187,7 +187,7 @@ export default {
       // filter by products
       const items = orderbydatearray.filter(el => el.title)
       this.$store.commit('addProducts', items)
-      // reload to show categories
+      console.log('hello', orderbydatearray)
       return this.$router.push('/inventory')
     },
     async getUserData() {
