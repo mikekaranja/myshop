@@ -142,8 +142,8 @@ export default {
   width: 100%;
   height: 6px;
   border-radius: 40px;
-  background: #b13d00;
-  border: 1px solid #b13d00;
+  background: #953332;
+  border: 1px solid #953332;
   margin-left: 4px !important;
   margin-right: 4px !important;
 }

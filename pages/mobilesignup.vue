@@ -38,7 +38,7 @@
         <v-btn
           style="color:white;font-weight:700;"
           :disabled="!valid"
-          color="#B13D00"
+          color="#953332"
           class="mr-4"
           block
           x-large

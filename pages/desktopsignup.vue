@@ -44,7 +44,7 @@
                 <v-btn
                   style="color: white;font-size: x-large;height: 75px;"
                   :disabled="!valid"
-                  color="#B13D00"
+                  color="#953332"
                   class="mr-4"
                   block
                   x-large

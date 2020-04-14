@@ -44,7 +44,7 @@
           :style="{ opacity: ops }"
           class="bottom-btn"
           depressed
-          color="#B13D00"
+          color="#953332"
           x-large
           @click="validate"
           >Finish</v-btn
@@ -61,7 +61,7 @@
         </div>
         <v-btn
           id="contact-us"
-          color="#B13D00"
+          color="#953332"
           rounded
           large
           text
@@ -72,7 +72,7 @@
         >
         <v-btn
           style="color: white;"
-          color="#B13D00"
+          color="#953332"
           rounded
           large
           block
@@ -83,7 +83,7 @@
       </div>
       <v-snackbar v-model="snackbar">
         {{ text }}
-        <v-btn color="#B13D00" text @click="snackbar = false">
+        <v-btn color="#953332" text @click="snackbar = false">
           close
         </v-btn>
       </v-snackbar>
@@ -98,7 +98,7 @@
           <v-list two-line>
             <v-list-item @click="openWhatsApp">
               <v-list-item-icon>
-                <v-icon color="#B13D00">mdi-whatsapp</v-icon>
+                <v-icon color="#953332">mdi-whatsapp</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
@@ -111,7 +111,7 @@
 
             <v-list-item @click="openEmail">
               <v-list-item-icon>
-                <v-icon color="#B13D00">mdi-email</v-icon>
+                <v-icon color="#953332">mdi-email</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
@@ -124,7 +124,7 @@
 
             <v-list-item>
               <v-list-item-icon>
-                <v-icon color="#B13D00">mdi-map-marker</v-icon>
+                <v-icon color="#953332">mdi-map-marker</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>

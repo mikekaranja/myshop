@@ -6,13 +6,16 @@
       :fixed="fixed"
       app
     >
-      <v-list-item>
+      <v-list-item style="background:#953332;">
         <v-list-item-content>
-          <v-list-item-title class="title" style="text-transform:capitalize;">
+          <v-list-item-title
+            class="title"
+            style="text-transform:capitalize;color:white;"
+          >
             {{ shopname }}
           </v-list-item-title>
-          <v-list-item-subtitle>
-            Number of products {{ $store.state.products.length }}
+          <v-list-item-subtitle style="color:white;">
+            Number of products: {{ $store.state.products.length }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -37,15 +40,15 @@
         >
           <v-list-item-icon>
             <!-- <v-icon>{{ item.icon }}</v-icon> -->
-            <v-avatar v-if="item.icon !== 'online.svg'" size="32px" tile>
-              <v-icon>{{ item.icon }}</v-icon>
+            <v-avatar v-if="item.icon.startsWith('mdi')" size="24px" tile>
+              <v-icon color="#953332">{{ item.icon }}</v-icon>
             </v-avatar>
             <v-avatar
-              v-if="item.icon === 'online.svg'"
-              style="width:31px;min-width:30px;height: 30px;"
+              v-if="!item.icon.startsWith('mdi')"
+              style="width:24px;min-width:30px;height: 24px;"
               tile
             >
-              <img style="width:24px;" src="/online.svg" alt="svg" />
+              <img style="width:24px;" :src="item.icon" alt="svg" />
             </v-avatar>
           </v-list-item-icon>
 
@@ -60,7 +63,6 @@
           <v-avatar :size="81">
             <img src="https://myshop.e-merse.com/icon.png" alt="icon" />
           </v-avatar>
-          <div id="version" class="subtitle-2 font-weight-light">v1.1.0</div>
         </div>
       </template>
     </v-navigation-drawer>
@@ -225,7 +227,7 @@
     <v-footer v-show="bottombar" color="white" padless :fixed="fixed" app>
       <v-bottom-navigation v-model="bottomNav" grow>
         <v-btn value="inventory" @click="openInventory">
-          <span>My Products</span>
+          <span>Products</span>
           <v-icon>$vuetify.icons.inventory</v-icon>
         </v-btn>
 
@@ -736,10 +738,10 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <!-- Edit Shop Details dialog -->
+    <!-- Edit Account Details dialog -->
     <v-dialog v-model="editAccountDialog" max-width="600">
       <v-card class="rounded-card">
-        <v-card-title class="subtitle-1">Edit Shop Details </v-card-title>
+        <v-card-title class="subtitle-1">Edit Account Details </v-card-title>
         <v-card-text>
           <div style="margin-top:20px;display: inline-grid;">
             <div>Tap the button below to upload your logo</div>
@@ -1373,13 +1375,10 @@ export default {
         }
       ],
       draweritems: [
-        { title: 'My Products', icon: 'mdi-view-dashboard' },
-        // { title: 'Manage Ads', icon: 'online.svg' },
-        { title: 'Edit Shop Details', icon: 'mdi-account-circle-outline' },
-        // { icon: 'mdi-image-outline', title: 'Upload/Change your Logo' },
-        // { icon: 'mdi-image-outline', title: 'Upload/Change your Banner' },
-        { icon: 'mdi-eye-outline', title: 'Preview Shop' },
-        { title: 'Log out', icon: 'mdi-logout' }
+        { title: 'Home', icon: 'mdi-home' },
+        { title: 'Products', icon: '/inventoryicon.svg' },
+        { title: 'Edit Account Details', icon: '/account.svg' },
+        { title: 'Log out', icon: '/logout.svg' }
       ],
       sheet: false,
       tiles: [
@@ -2879,7 +2878,7 @@ export default {
     navDrawerClick(title) {
       // this.leftDrawer = false
       switch (title) {
-        case 'My Products':
+        case 'Products':
           this.$router.push('/inventory')
           this.leftDrawer = true
           break
@@ -2890,7 +2889,7 @@ export default {
             this.$router.push('/checkads')
           }
           break
-        case 'Edit Shop Details':
+        case 'Edit Account Details':
           this.editAccountDialog = true
           break
         case 'Upload/Change your Logo':
@@ -3031,7 +3030,7 @@ export default {
 .logo-bottom {
   display: flex;
   text-align: center;
-  margin-left: 22%;
+  margin-left: 5%;
 }
 #version {
   padding-top: 15%;

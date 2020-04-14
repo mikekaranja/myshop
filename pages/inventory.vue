@@ -3,7 +3,7 @@
     <div v-show="$vuetify.breakpoint.mdAndUp" class="desktop-div">
       <div v-if="noproducts === 1">
         <div id="categories-header-desktop" class="display-2 font-weight-bold">
-          My Products
+          Products
         </div>
         <v-row class="mb-6" style="padding-left: 23px;">
           <v-col
@@ -45,7 +45,7 @@
       </div>
       <div v-if="noproducts === 1">
         <div class="display-1 font-weight-bold">
-          My Products
+          Products
         </div>
         <category-card
           v-for="(category, index) in categories"

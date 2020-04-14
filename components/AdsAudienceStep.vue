@@ -189,7 +189,7 @@ export default {
       if (newVal === 'All') {
         // eslint-disable-next-line prefer-const
         let leftbtn = window.document.getElementById('left-btn')
-        leftbtn.style.background = '#B13D00'
+        leftbtn.style.background = '#953332'
         leftbtn.style.color = '#fff'
         // eslint-disable-next-line prefer-const
         let middlebtn = window.document.getElementById('middle-btn')
@@ -206,7 +206,7 @@ export default {
         leftbtn.style.color = 'black'
         // eslint-disable-next-line prefer-const
         let middlebtn = window.document.getElementById('middle-btn')
-        middlebtn.style.background = '#B13D00'
+        middlebtn.style.background = '#953332'
         middlebtn.style.color = 'white'
         // eslint-disable-next-line prefer-const
         let rightbtn = window.document.getElementById('right-btn')
@@ -223,7 +223,7 @@ export default {
         middlebtn.style.color = 'black'
         // eslint-disable-next-line prefer-const
         let rightbtn = window.document.getElementById('right-btn')
-        rightbtn.style.background = '#B13D00'
+        rightbtn.style.background = '#953332'
         rightbtn.style.color = 'white'
       }
     },
@@ -319,7 +319,7 @@ export default {
         let index = this.group.indexOf(title)
         if (index !== -1) this.group.splice(index, 1)
       } else {
-        card.style.background = '#B13D00'
+        card.style.background = '#953332'
         card.style.color = '#fff'
         // eslint-disable-next-line prefer-const
         let src = icon.src.replace('.svg', '')

@@ -4,8 +4,10 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import colors from 'vuetify/es5/util/colors'
 import InventoryIcon from '~/components/InventoryIcon'
-import AdvertiseIcon from '~/components/AdvertiseIcon'
-import MyshopIcon from '~/components/MyshopIcon'
+// import AdvertiseIcon from '~/components/AdvertiseIcon'
+import AccountIcon from '~/components/AccountIcon'
+import LogoutIcon from '~/components/LogoutIcon'
+// import MyshopIcon from '~/components/MyshopIcon'
 Vue.use(Vuetify)
 
 export default ctx => {
@@ -13,7 +15,7 @@ export default ctx => {
     theme: {
       themes: {
         light: {
-          primary: '#B13D00',
+          primary: '#953332',
           accent: colors.deepPurple.accent3,
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,
@@ -25,25 +27,39 @@ export default ctx => {
     },
     icons: {
       values: {
+        account: {
+          component: AccountIcon, // you can use string here if component is registered globally
+          props: {
+            // pass props to your component if needed
+            name: 'account'
+          }
+        },
+        logout: {
+          component: LogoutIcon, // you can use string here if component is registered globally
+          props: {
+            // pass props to your component if needed
+            name: 'logout'
+          }
+        },
+        advertise: {
+          component: AccountIcon, // you can use string here if component is registered globally
+          props: {
+            // pass props to your component if needed
+            name: 'account'
+          }
+        },
+        myshop: {
+          component: LogoutIcon, // you can use string here if component is registered globally
+          props: {
+            // pass props to your component if needed
+            name: 'logout'
+          }
+        },
         inventory: {
           component: InventoryIcon, // you can use string here if component is registered globally
           props: {
             // pass props to your component if needed
             name: 'inventory'
-          }
-        },
-        advertise: {
-          component: AdvertiseIcon, // you can use string here if component is registered globally
-          props: {
-            // pass props to your component if needed
-            name: 'advertise'
-          }
-        },
-        myshop: {
-          component: MyshopIcon, // you can use string here if component is registered globally
-          props: {
-            // pass props to your component if needed
-            name: 'myshop'
           }
         }
       }
