@@ -77,7 +77,8 @@ export default {
     { src: '~/plugins/vue-cropper', mode: 'client' },
     { src: '~/plugins/localStorage', ssr: false },
     { src: '~plugins/quill', mode: 'client' },
-    { src: '~/plugins/croppa.js', ssr: false }
+    { src: '~/plugins/croppa.js', ssr: false },
+    { src: '~/plugins/vue-calendar.js', ssr: false }
   ],
   /*
    ** Nuxt.js modules

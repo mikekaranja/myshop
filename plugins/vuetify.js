@@ -7,7 +7,7 @@ import InventoryIcon from '~/components/InventoryIcon'
 // import AdvertiseIcon from '~/components/AdvertiseIcon'
 import AccountIcon from '~/components/AccountIcon'
 import LogoutIcon from '~/components/LogoutIcon'
-// import MyshopIcon from '~/components/MyshopIcon'
+import CalendarIcon from '~/components/CalendarIcon'
 Vue.use(Vuetify)
 
 export default ctx => {
@@ -41,11 +41,11 @@ export default ctx => {
             name: 'logout'
           }
         },
-        advertise: {
-          component: AccountIcon, // you can use string here if component is registered globally
+        calendar: {
+          component: CalendarIcon, // you can use string here if component is registered globally
           props: {
             // pass props to your component if needed
-            name: 'account'
+            name: 'calendar'
           }
         },
         myshop: {

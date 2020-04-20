@@ -23,15 +23,6 @@
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <!-- <v-list-item link to="/inventory">
-          <v-list-item-icon>
-            <v-icon>mdi-view-dashboard</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>Categories</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item> -->
         <v-list-item
           v-for="item in draweritems"
           :key="item.title"
@@ -56,13 +47,31 @@
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item link>
+          <v-btn
+            id="website-btn"
+            rounded
+            outlined
+            color="primary"
+            @click="openSite"
+          >
+            <v-icon left dark>mdi-web</v-icon>
+            View site
+          </v-btn>
+        </v-list-item>
       </v-list>
 
       <template v-slot:append>
         <div class="logo-bottom">
-          <v-avatar :size="81">
-            <img src="https://myshop.e-merse.com/icon.png" alt="icon" />
-          </v-avatar>
+          <a
+            href="http://e-merse.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <v-avatar :size="81">
+              <img src="https://myshop.e-merse.com/icon.png" alt="icon" />
+            </v-avatar>
+          </a>
         </div>
       </template>
     </v-navigation-drawer>
@@ -226,19 +235,19 @@
     ></banner-install> -->
     <v-footer v-show="bottombar" color="white" padless :fixed="fixed" app>
       <v-bottom-navigation v-model="bottomNav" grow>
-        <v-btn value="inventory" @click="openInventory">
+        <v-btn value="inventory" to="/home">
+          <span>Home</span>
+          <v-icon color="#935552">mdi-home-outline</v-icon>
+        </v-btn>
+
+        <v-btn value="advertise" to="/inventory">
           <span>Products</span>
           <v-icon>$vuetify.icons.inventory</v-icon>
         </v-btn>
 
-        <!-- <v-btn value="advertise" @click="openAdvertise">
-          <span>Advertise</span>
-          <v-icon>$vuetify.icons.advertise</v-icon>
-        </v-btn> -->
-
         <v-btn value="catalogue" @click="openSite">
           <span>View site</span>
-          <v-icon>$vuetify.icons.myshop</v-icon>
+          <v-icon color="#935552">mdi-web</v-icon>
         </v-btn>
       </v-bottom-navigation>
       <!-- add button -->
@@ -1375,7 +1384,7 @@ export default {
         }
       ],
       draweritems: [
-        { title: 'Home', icon: 'mdi-home' },
+        { title: 'Home', icon: '/home.svg' },
         { title: 'Products', icon: '/inventoryicon.svg' },
         { title: 'Edit Account Details', icon: '/account.svg' },
         { title: 'Log out', icon: '/logout.svg' }
@@ -1563,6 +1572,15 @@ export default {
       }
       if (from.path === '/editproduct') {
         this.showArrow = false
+        this.addproduct = true
+      }
+      // home
+      if (to.path === '/home') {
+        this.fabadd = false
+        this.bottombar = false
+        this.addproduct = false
+      }
+      if (from.path === '/home') {
         this.addproduct = true
       }
       // ad buying
@@ -2878,6 +2896,10 @@ export default {
     navDrawerClick(title) {
       // this.leftDrawer = false
       switch (title) {
+        case 'Home':
+          this.$router.push('/home')
+          this.leftDrawer = true
+          break
         case 'Products':
           this.$router.push('/inventory')
           this.leftDrawer = true
@@ -2985,6 +3007,9 @@ export default {
 </script>
 
 <style>
+.vfc-main-container {
+  box-shadow: none;
+}
 .v-snack__content {
   padding: 16px 16px !important;
   display: block !important;
@@ -3026,6 +3051,11 @@ export default {
 #add-btn {
   width: 18%;
   text-transform: capitalize;
+}
+#website-btn {
+  width: 80%;
+  text-transform: capitalize;
+  margin-top: 20px;
 }
 .logo-bottom {
   display: flex;

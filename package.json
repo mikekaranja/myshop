@@ -25,6 +25,7 @@
     "v-lazy-image": "^1.4.0",
     "vue-click-outside": "^1.0.7",
     "vue-croppa": "^1.3.8",
+    "vue-functional-calendar": "^2.8.69",
     "vue-rx": "^6.2.0",
     "vue2-editor": "^2.10.2",
     "vuejs-clipper": "^1.1.4",
