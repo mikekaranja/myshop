@@ -17,8 +17,12 @@
               :nudge-width="200"
             >
               <template v-slot:activator="{ on }">
-                <v-btn class="date-btn" large v-on="on">
-                  <v-icon style="margin-right: 12px;" right color="#953332"
+                <v-btn class="date-btn" color="white" large v-on="on">
+                  <v-icon
+                    v-if="$vuetify.breakpoint.mdAndUp"
+                    style="margin-right: 12px;"
+                    right
+                    color="#953332"
                     >$vuetify.icons.calendar</v-icon
                   >
                   Select date
@@ -99,6 +103,7 @@
           :items="leads"
           :items-per-page="5"
           class="elevation-1 data-table"
+          @click:row="handleClick"
         ></v-data-table>
       </div>
       <div v-if="noproducts === 0" class="gif-text-center">
@@ -127,15 +132,205 @@
         ></v-progress-circular>
       </div>
       <div v-if="noproducts === 1">
-        <div class="display-1 font-weight-bold">
-          Home
+        <div class="header-top">
+          <div class="headline font-weight-bold header-left-mobile">
+            Home
+          </div>
+          <div class="header-right-mobile">
+            <v-menu
+              v-model="menu"
+              :close-on-content-click="false"
+              :nudge-width="200"
+            >
+              <template v-slot:activator="{ on }">
+                <v-btn class="date-btn" color="white" medium v-on="on">
+                  <v-icon style="margin-right: 12px;" right color="#953332"
+                    >$vuetify.icons.calendar</v-icon
+                  >
+                  Select date
+                  <v-icon right color="#953332">mdi-chevron-down</v-icon>
+                </v-btn>
+              </template>
+
+              <v-card>
+                <functional-calendar
+                  v-model="calendarData"
+                  :configs="calendarConfigs"
+                ></functional-calendar>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+
+                  <v-btn class="btn" text @click="menu = false">Cancel</v-btn>
+                  <v-btn class="btn" color="primary" text @click="menu = false"
+                    >Apply</v-btn
+                  >
+                </v-card-actions>
+              </v-card>
+            </v-menu>
+          </div>
         </div>
-        <functional-calendar
-          v-model="calendarData"
-          :configs="calendarConfigs"
-        ></functional-calendar>
+
+        <!-- mobile stats -->
+        <div class="sub-header">
+          <img class="img-sub" src="/stats.svg" alt="stats" />
+          <div style="margin-bottom:-10px;" class="title font-weight-bold">
+            Stats
+          </div>
+        </div>
+
+        <div style="margin-top:20px;">
+          <v-list>
+            <v-list-item>
+              <v-list-item-avatar
+                style="min-width:24px;width:24px;height:24px;"
+              >
+                <v-img width="24" src="/eyetag.svg"></v-img>
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <div
+                  style="text-align: left;"
+                  class="subtitle-1 font-weight-bold"
+                >
+                  VISITORS
+                </div>
+              </v-list-item-content>
+
+              <v-list-item-icon>
+                <div style="color:#953332;" class="headline font-weight-bold">
+                  200
+                </div>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list>
+
+          <v-divider></v-divider>
+
+          <v-list>
+            <v-list-item>
+              <v-list-item-avatar
+                style="min-width:24px;width:24px;height:24px;"
+              >
+                <v-img width="24" src="/comment.svg"></v-img>
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <div
+                  style="text-align: left;"
+                  class="subtitle-1 font-weight-bold"
+                >
+                  INQUIRIES
+                </div>
+              </v-list-item-content>
+
+              <v-list-item-icon>
+                <div style="color:#953332;" class="headline font-weight-bold">
+                  12
+                </div>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list>
+
+          <v-divider></v-divider>
+
+          <v-list>
+            <v-list-item>
+              <v-list-item-avatar
+                tile
+                style="min-width:20px;width:20px;height:20px;"
+              >
+                <v-img width="24" src="/percenttag.svg"></v-img>
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <div
+                  style="text-align: left;"
+                  class="subtitle-1 font-weight-bold"
+                >
+                  CONVERSION
+                </div>
+              </v-list-item-content>
+
+              <v-list-item-icon>
+                <div style="color:#953332;" class="headline font-weight-bold">
+                  3%
+                </div>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list>
+        </div>
+
+        <!-- mobile inquiries -->
+        <div class="sub-header">
+          <img class="img-sub" src="/comment.svg" alt="stats" />
+          <div style="margin-bottom:-10px;" class="title font-weight-bold">
+            Inquiries
+          </div>
+        </div>
+
+        <v-data-table
+          :headers="headers"
+          :items="leads"
+          :items-per-page="5"
+          disable-sort
+          hide-headers="true"
+          hide-default-header
+          class="elevation-1 data-table"
+          @click:row="handleClick"
+        ></v-data-table>
       </div>
     </div>
+    <v-dialog v-model="dialog" width="400">
+      <v-card>
+        <v-card-title primary-title>
+          <v-icon
+            style="margin-left: auto;"
+            color="#953332"
+            @click="dialog = false"
+            >mdi-close</v-icon
+          >
+        </v-card-title>
+
+        <v-card-text>
+          <v-card elevation="0" class="mx-auto">
+            <v-list two-line>
+              <v-list-item>
+                <v-list-item-icon>
+                  <img src="/nametag.svg" alt="name" />
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title>Name</v-list-item-title>
+                  <v-list-item-subtitle>Personal</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item>
+                <v-list-item-icon>
+                  <img src="/phonetag.svg" alt="phone" />
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title>Number</v-list-item-title>
+                  <v-list-item-subtitle>Personal</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item>
+                <v-list-item-icon>
+                  <img src="/emailtag.svg" alt="message" />
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title>Message</v-list-item-title>
+                  <v-list-item-subtitle>Personal</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-card>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 
@@ -144,6 +339,7 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
+      dialog: false,
       menu: false,
       noproducts: 0,
       calendarData: {},
@@ -153,13 +349,18 @@ export default {
       headers: [
         {
           text: 'Date & time',
-          align: 'start',
+          align: 'left',
           sortable: false,
           value: 'date'
         },
         { text: 'Name', align: 'center', sortable: false, value: 'name' },
         { text: 'Number', align: 'center', sortable: false, value: 'number' },
-        { text: 'Message', align: 'center', sortable: false, value: 'message' }
+        {
+          text: 'Message',
+          align: 'center',
+          sortable: false,
+          value: 'message'
+        }
       ],
       leads: [
         {
@@ -240,7 +441,12 @@ export default {
       }
     }, 50)
   },
-  methods: {}
+  methods: {
+    handleClick(value) {
+      console.log(value)
+      this.dialog = true
+    }
+  }
 }
 </script>
 
@@ -351,7 +557,30 @@ export default {
   margin-left: 5px;
   margin-top: 18px;
 }
+.header-right-mobile {
+  display: none;
+}
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
+  .header-right-mobile {
+    display: block;
+    position: absolute;
+    top: -45px;
+    z-index: 12;
+    right: 16px;
+  }
+  .header-left-mobile {
+    margin-left: 6px;
+  }
+  .img-sub {
+    width: 25px;
+    margin-right: 10px;
+  }
+  .data-table {
+    margin-top: 20px;
+    margin-left: 2.5%;
+    margin-right: 0px !important;
+    margin-bottom: 60px;
+  }
 }
 </style>

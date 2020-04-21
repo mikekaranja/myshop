@@ -240,9 +240,15 @@
           <v-icon color="#935552">mdi-home-outline</v-icon>
         </v-btn>
 
-        <v-btn value="advertise" to="/inventory">
+        <v-btn value="products" to="/inventory">
           <span>Products</span>
-          <v-icon>$vuetify.icons.inventory</v-icon>
+          <!-- <v-icon>$vuetify.icons.inventory</v-icon> -->
+          <img
+            style="margin-bottom:6px"
+            width="24"
+            src="/inventoryicon.svg"
+            alt=""
+          />
         </v-btn>
 
         <v-btn value="catalogue" @click="openSite">
@@ -3007,8 +3013,21 @@ export default {
 </script>
 
 <style>
+.theme--light.v-data-table tbody tr td {
+  max-width: 151px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.v-data-table__mobile-row__cell {
+  max-width: 165px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .vfc-main-container {
-  box-shadow: none;
+  box-shadow: none !important;
+  -webkit-box-shadow: none;
 }
 .v-snack__content {
   padding: 16px 16px !important;
@@ -3235,6 +3254,9 @@ export default {
   }
   .navbar-alert-before-24 {
     font-size: 12px;
+  }
+  .theme--light.v-data-table tbody tr td {
+    max-width: 100%;
   }
 }
 </style>

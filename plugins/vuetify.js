@@ -8,6 +8,9 @@ import InventoryIcon from '~/components/InventoryIcon'
 import AccountIcon from '~/components/AccountIcon'
 import LogoutIcon from '~/components/LogoutIcon'
 import CalendarIcon from '~/components/CalendarIcon'
+import NameIcon from '~/components/NameIcon'
+import EmailIcon from '~/components/EmailIcon'
+import PhoneIcon from '~/components/PhoneIcon'
 Vue.use(Vuetify)
 
 export default ctx => {
@@ -61,6 +64,15 @@ export default ctx => {
             // pass props to your component if needed
             name: 'inventory'
           }
+        },
+        name: {
+          component: NameIcon
+        },
+        phone: {
+          component: PhoneIcon
+        },
+        message: {
+          component: EmailIcon
         }
       }
     }
