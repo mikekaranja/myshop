@@ -1585,6 +1585,7 @@ export default {
         this.fabadd = false
         this.bottombar = false
         this.addproduct = false
+        this.cataloguescreen = '12px'
       }
       if (from.path === '/home') {
         this.addproduct = true
@@ -1732,6 +1733,19 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$router.history.current.path)
+    if (
+      this.$router.history.current.path === '/home' ||
+      this.$router.history.current.path === '/inventory'
+    ) {
+      this.cataloguescreen = '12px'
+      this.fabadd = false
+      this.addproduct = false
+    }
+    if (this.$router.history.current.path === '/home') {
+      this.fabadd = false
+      this.addproduct = false
+    }
     // if (this.$vuetify.breakpoint.smAndDown && this.$store.state.authenticated) {
     //   this.leftDrawer = false
     // }

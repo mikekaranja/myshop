@@ -17,7 +17,7 @@ export default {
   created() {
     setTimeout(() => {
       if (this.$store.state.authenticated) {
-        this.$router.push('/inventory')
+        this.$router.push('/home')
       } else if (!this.$store.state.authenticated) {
         if (this.$router.currentRoute.query.signin === 'login') {
           if (this.$vuetify.breakpoint.mdAndUp) {

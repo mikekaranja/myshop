@@ -187,7 +187,6 @@ export default {
       // filter by products
       const items = orderbydatearray.filter(el => el.title)
       this.$store.commit('addProducts', items)
-      console.log('hello', orderbydatearray)
       return this.$router.push('/inventory')
     },
     async getUserData() {

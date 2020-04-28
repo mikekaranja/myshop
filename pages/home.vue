@@ -38,8 +38,8 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
 
-                  <v-btn class="btn" text @click="menu = false">Cancel</v-btn>
-                  <v-btn class="btn" color="primary" text @click="menu = false"
+                  <v-btn class="btn" text @click="clearRange">Clear</v-btn>
+                  <v-btn class="btn" color="primary" text @click="applyDate"
                     >Apply</v-btn
                   >
                 </v-card-actions>
@@ -56,8 +56,8 @@
           <v-col cols="6" md="4">
             <v-card class="mx-auto" style="margin-right:60px !important;">
               <v-card-text style="padding:30px;">
-                <p style="color:#953332;" class="display-4">
-                  200
+                <p style="color:#953332;" class="display-3">
+                  {{ visitors }}
                 </p>
                 <div class="text--primary font-weight-bold">
                   VISITORS
@@ -69,8 +69,8 @@
           <v-col cols="6" md="4">
             <v-card class="mx-auto" style="margin-right:60px !important;">
               <v-card-text style="padding: 30px;">
-                <p style="color:#953332;" class="display-4">
-                  12
+                <p style="color:#953332;" class="display-3">
+                  {{ inquiries }}
                 </p>
                 <div class="text--primary font-weight-bold">
                   INQUIRIES
@@ -82,8 +82,8 @@
           <v-col cols="6" md="4">
             <v-card class="mx-auto" style="margin-right:60px !important;">
               <v-card-text style="padding: 30px;">
-                <p style="color:#953332;" class="display-4">
-                  3%
+                <p style="color:#953332;" class="display-3">
+                  {{ conversionrate }}%
                 </p>
                 <div class="text--primary font-weight-bold">
                   CONVERSION
@@ -138,7 +138,7 @@
           </div>
           <div class="header-right-mobile">
             <v-menu
-              v-model="menu"
+              v-model="menu2"
               :close-on-content-click="false"
               :nudge-width="200"
             >
@@ -160,8 +160,8 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
 
-                  <v-btn class="btn" text @click="menu = false">Cancel</v-btn>
-                  <v-btn class="btn" color="primary" text @click="menu = false"
+                  <v-btn class="btn" text @click="clearRange">Clear</v-btn>
+                  <v-btn class="btn" color="primary" text @click="applyDate"
                     >Apply</v-btn
                   >
                 </v-card-actions>
@@ -197,8 +197,8 @@
               </v-list-item-content>
 
               <v-list-item-icon>
-                <div style="color:#953332;" class="headline font-weight-bold">
-                  200
+                <div style="color:#953332;" class="title font-weight-bold">
+                  {{ visitors }}
                 </div>
               </v-list-item-icon>
             </v-list-item>
@@ -224,8 +224,8 @@
               </v-list-item-content>
 
               <v-list-item-icon>
-                <div style="color:#953332;" class="headline font-weight-bold">
-                  12
+                <div style="color:#953332;" class="title font-weight-bold">
+                  {{ inquiries }}
                 </div>
               </v-list-item-icon>
             </v-list-item>
@@ -252,8 +252,8 @@
               </v-list-item-content>
 
               <v-list-item-icon>
-                <div style="color:#953332;" class="headline font-weight-bold">
-                  3%
+                <div style="color:#953332;" class="title font-weight-bold">
+                  {{ conversionrate }}%
                 </div>
               </v-list-item-icon>
             </v-list-item>
@@ -273,7 +273,6 @@
           :items="leads"
           :items-per-page="5"
           disable-sort
-          hide-headers="true"
           hide-default-header
           class="elevation-1 data-table"
           @click:row="handleClick"
@@ -301,7 +300,7 @@
 
                 <v-list-item-content>
                   <v-list-item-title>Name</v-list-item-title>
-                  <v-list-item-subtitle>Personal</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{ lead.name }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
 
@@ -312,7 +311,7 @@
 
                 <v-list-item-content>
                   <v-list-item-title>Number</v-list-item-title>
-                  <v-list-item-subtitle>Personal</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{ lead.number }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
 
@@ -323,7 +322,7 @@
 
                 <v-list-item-content>
                   <v-list-item-title>Message</v-list-item-title>
-                  <v-list-item-subtitle>Personal</v-list-item-subtitle>
+                  <div style="color:grey;">{{ lead.message }}</div>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -339,8 +338,12 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
+      inquiries: '0',
+      conversion: '0%',
+      visitors: '0',
       dialog: false,
       menu: false,
+      menu2: false,
       noproducts: 0,
       calendarData: {},
       calendarConfigs: {
@@ -362,59 +365,23 @@ export default {
           value: 'message'
         }
       ],
-      leads: [
-        {
-          date: '11.01.20 12:30 am',
-          name: 'Lisa frida',
-          number: '0723457890',
-          message: 'Hi, do you have this thing I am looking for'
-        },
-        {
-          date: '11.01.20 12:30 am',
-          name: 'Lisa frida',
-          number: '0723457890',
-          message: 'Hi, do you have this thing I am looking for'
-        },
-        {
-          date: '11.01.20 12:30 am',
-          name: 'Lisa frida',
-          number: '0723457890',
-          message: 'Hi, do you have this thing I am looking for'
-        },
-        {
-          date: '11.01.20 12:30 am',
-          name: 'Lisa frida',
-          number: '0723457890',
-          message: 'Hi, do you have this thing I am looking for'
-        },
-        {
-          date: '11.01.20 12:30 am',
-          name: 'Lisa frida',
-          number: '0723457890',
-          message: 'Hi, do you have this thing I am looking for'
-        },
-        {
-          date: '11.01.20 12:30 am',
-          name: 'Lisa frida',
-          number: '0723457890',
-          message: 'Hi, do you have this thing I am looking for'
-        },
-        {
-          date: '11.01.20 12:30 am',
-          name: 'Lisa frida',
-          number: '0723457890',
-          message: 'Hi, do you have this thing I am looking for'
-        },
-        {
-          date: '11.01.20 12:30 am',
-          name: 'Lisa frida',
-          number: '0723457890',
-          message: 'Hi, do you have this thing I am looking for'
-        }
-      ]
+      alleads: [],
+      leads: [],
+      startdate: '',
+      enddate: '',
+      lead: {}
     }
   },
   computed: {
+    conversionrate() {
+      const rate = (this.inquiries / this.visitors) * 100
+      const rounded = Math.round(rate * 10) / 10
+      if (rounded === Infinity) {
+        return '0'
+      } else {
+        return rounded
+      }
+    },
     ...mapState(['adbanner', 'tour'])
   },
   mounted() {
@@ -436,15 +403,184 @@ export default {
       if (!this.$store.state.authenticated) {
         this.$router.push('/login')
       } else if (this.$store.state.authenticated) {
-        this.getData()
-        this.getUserData()
+        this.getLeadsData()
+        this.getTodayVisitorData()
       }
     }, 50)
   },
   methods: {
     handleClick(value) {
-      console.log(value)
+      this.lead = value
       this.dialog = true
+    },
+    clearRange() {
+      // close menu
+      this.menu = false
+      this.menu2 = false
+      // reset all data back
+      this.getTodayVisitorData()
+      // set total leads for today
+      const filteredleads = this.alleads.filter(item => {
+        const date = new Date(item.date2)
+        return date.toDateString() === new Date().toDateString()
+      })
+      // set total leads
+      this.inquiries = filteredleads.length
+      // clear leads
+      this.leads = []
+      this.leads = this.alleads
+    },
+    applyDate() {
+      // close menu
+      this.menu = false
+      this.menu2 = false
+      // get dates
+      const startdate = this.calendarData.dateRange.start.date
+      const enddate = this.calendarData.dateRange.end.date
+      // formatted date
+      // start date
+      const startstr = startdate.toString().split('/')
+      const start = new Date(
+        `${startstr[2]}-${startstr[1] < 10 ? '0' + startstr[1] : startstr[1]}-${
+          startstr[0] < 10 ? '0' + startstr[0] : startstr[0]
+        }`
+      )
+      this.startdate = `${startstr[2]}-${
+        startstr[1] < 10 ? '0' + startstr[1] : startstr[1]
+      }-${startstr[0] < 10 ? '0' + startstr[0] : startstr[0]}`
+      // end date
+      const endstr = enddate.toString().split('/')
+      const end = new Date(
+        `${endstr[2]}-${endstr[1] < 10 ? '0' + endstr[1] : endstr[1]}-${
+          endstr[0] < 10 ? '0' + endstr[0] : endstr[0]
+        }`
+      )
+      this.enddate = `${endstr[2]}-${
+        endstr[1] < 10 ? '0' + endstr[1] : endstr[1]
+      }-${endstr[0] < 10 ? '0' + endstr[0] : endstr[0]}`
+
+      // get visitor custom data
+      this.getCustomVisitorData()
+
+      if (startdate === enddate) {
+        const filteredleads = this.alleads.filter(item => {
+          const date = new Date(item.date2)
+          return date.toDateString() === end.toDateString()
+        })
+        // set total leads
+        this.inquiries = filteredleads.length
+        // clear leads and new filtered leads
+        this.leads = []
+        filteredleads.map(item => {
+          let dateString = item.date
+          const dateString2 = new Date(dateString)
+          // add to leads to display
+          dateString = new Date(dateString).toUTCString()
+          const itemobj2 = {
+            name: item.name,
+            number: item.number,
+            message: item.message,
+            date: dateString.slice(0, 17) + this.formatAMPM(dateString2)
+          }
+          this.leads.push(itemobj2)
+        })
+      } else {
+        const filteredleads = this.alleads.filter(item => {
+          const date = new Date(item.date)
+          return date >= start && date <= end
+        })
+        // set total leads
+        this.inquiries = filteredleads.length
+        // clear leads and new filtered leads
+        this.leads = []
+        filteredleads.map(item => {
+          let dateString = item.date
+          const dateString2 = new Date(dateString)
+          // add to leads to display
+          dateString = new Date(dateString).toUTCString()
+          const itemobj2 = {
+            name: item.name,
+            number: item.number,
+            message: item.message,
+            date: dateString.slice(0, 17) + this.formatAMPM(dateString2)
+          }
+          this.leads.push(itemobj2)
+        })
+      }
+    },
+    async getCustomVisitorData() {
+      const viewid = this.$store.state.user.analyticsid
+      const startdate = this.startdate
+      const enddate = this.enddate
+      const data = await this.$axios.$get(
+        `https://us-central1-e-merse.cloudfunctions.net/helloworld?viewid=${viewid}&startdate=${startdate}&enddate=${enddate}`
+      )
+      this.visitors = data.total
+      return this.visitors
+    },
+    async getTodayVisitorData() {
+      const viewid = this.$store.state.user.analyticsid
+      const startdate = 'today'
+      const enddate = 'today'
+      const data = await this.$axios.$get(
+        `https://us-central1-e-merse.cloudfunctions.net/helloworld?viewid=${viewid}&startdate=${startdate}&enddate=${enddate}`
+      )
+      this.visitors = data.total
+      return this.visitors
+    },
+    async getLeadsData() {
+      const shopid = this.$store.state.user.shopname
+      const data = await this.$axios.$get(
+        `https://e-merse.firebaseio.com/pwa/leads.json?orderBy="shop"&equalTo="${shopid}"`
+      )
+      const orderbydatearray = Object.values(data).sort((a, b) => {
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(b.startedAt) - new Date(a.startedAt)
+      })
+      orderbydatearray.map(item => {
+        let dateString = item.startedAt
+        const dateString2 = new Date(dateString)
+
+        // add to leads to display
+        dateString = new Date(dateString).toUTCString()
+
+        // add to all leads
+        const itemobj1 = {
+          name: item.name,
+          number: item.phone,
+          message: item.item,
+          date2: dateString2,
+          date: dateString.slice(0, 17) + this.formatAMPM(dateString2)
+        }
+        this.alleads.push(itemobj1)
+
+        const itemobj2 = {
+          name: item.name,
+          number: item.phone,
+          message: item.item,
+          date: dateString.slice(0, 17) + this.formatAMPM(dateString2)
+        }
+        this.leads.push(itemobj2)
+      })
+      // set total leads for today
+      const filteredleads = this.alleads.filter(item => {
+        const date = new Date(item.date)
+        return date.toDateString() === new Date().toDateString()
+      })
+      // set total leads
+      this.inquiries = filteredleads.length
+      return this.inquiries
+    },
+    formatAMPM(date) {
+      let hours = date.getHours()
+      let minutes = date.getMinutes()
+      const ampm = hours >= 12 ? 'pm' : 'am'
+      hours = hours % 12
+      hours = hours || 12 // the hour '0' should be '12'
+      minutes = minutes < 10 ? '0' + minutes : minutes
+      const strTime = hours + ':' + minutes + ' ' + ampm
+      return strTime
     }
   }
 }
