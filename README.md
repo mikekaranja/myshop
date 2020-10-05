@@ -1,8 +1,8 @@
-# test
+# E-merse shop backend
 
-> My striking Nuxt.js project
+> Built using Nuxt.js/vue js/firebase
 
-## Build Setup
+## Build Setup for project
 
 ``` bash
 # install dependencies
